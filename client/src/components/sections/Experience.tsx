@@ -9,8 +9,9 @@ const experiences = [
     role: "Open Source Contributor",
     company: "Elite Coders",
     period: "Present",
+    summary: "Resolving Spring Boot issues and improving test coverage via GitHub PRs.",
     description:
-      "Contributing to Elite Coders' open-source Java ecosystem. Resolved 4+ issues including a Spring Boot request-mapping conflict (PR #112) and refactored DAO layer tests to increase coverage by 18%. Collaborating via GitHub Issues, code reviews, and async team standups.",
+      "Contributing to Elite Coders' open-source Java ecosystem. Resolved 4 issues including a Spring Boot request-mapping conflict (PR #112) and refactored DAO layer tests to increase coverage by 18%. Collaborating via GitHub Issues, code reviews, and async team standups.",
     link: "https://github.com/gopaljilab",
     defaultOpen: true,
     icon: Code,
@@ -19,6 +20,7 @@ const experiences = [
     role: "Open Source Contributor",
     company: "Social Winter of Code 2025",
     period: "Nov 2025 – Jan 2026",
+    summary: "Merged a pagination fix, documented 3 REST endpoints, onboarded 2 contributors.",
     description:
       "Selected as a contributor for WoC Social 2025. Shipped a fix for broken pagination in a React + Express admin dashboard (merged PR), added missing OpenAPI documentation for 3 REST endpoints, and onboarded 2 new contributors by improving the project's CONTRIBUTING.md.",
     link: "https://github.com/gopaljilab",
@@ -29,6 +31,7 @@ const experiences = [
     role: "SQL Intern",
     company: "NativeSoftTech",
     period: "Mar 2025 – Apr 2025",
+    summary: "Cut average query time from 2.1s to 340ms via indexing and query rewrites.",
     description:
       "Optimized slow-running queries on a 500k-row production table — reduced average query time from 2.1s to 340ms via indexing and query rewriting. Documented 12 stored procedures and assisted in migrating 3 legacy views to parameterized queries.",
     link: "",
@@ -39,6 +42,7 @@ const experiences = [
     role: "Java Intern",
     company: "NativeSoftTech",
     period: "Dec 2024 – Feb 2025",
+    summary: "Built 6 REST endpoints, wrote JUnit 5 tests covering 80%+ of service logic.",
     description:
       "Built 6 RESTful API endpoints for an internal employee management module using Spring Boot 3 and Hibernate. Wrote JUnit 5 tests covering 80%+ of service-layer logic and fixed a critical NullPointerException in the JWT auth filter caught during QA.",
     link: "",
@@ -49,6 +53,7 @@ const experiences = [
     role: "Java with JSP Training",
     company: "Arcane Programming Infotech",
     period: "Jul 2023 – Sep 2023",
+    summary: "Delivered a full CRUD student portal using JSP, Servlets and JDBC.",
     description:
       "Completed intensive training in Java Server Pages and MVC architecture. Delivered a full CRUD student-portal project using JSP, Servlets, and JDBC — graded as top performer in the cohort.",
     link: "",
@@ -59,7 +64,11 @@ const experiences = [
 
 export function Experience() {
   const [openIndexes, setOpenIndexes] = useState<Set<number>>(
-    new Set(experiences.map((e, i) => (e.defaultOpen ? i : -1)).filter((i) => i !== -1))
+    new Set(
+      experiences
+        .map((e, i) => (e.defaultOpen ? i : -1))
+        .filter((i) => i !== -1),
+    ),
   );
 
   const toggle = (idx: number) => {
@@ -109,19 +118,33 @@ export function Experience() {
                   className="w-full text-left px-6 py-5 md:px-8 flex items-start justify-between gap-4"
                   aria-expanded={isOpen}
                 >
-                  <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 flex-1 min-w-0">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors truncate">
-                        {exp.role}
-                      </h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">{exp.company}</p>
+                  <div className="flex flex-col gap-1 flex-1 min-w-0">
+                    <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">
+                          {exp.role}
+                        </h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                          {exp.company}
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-300 border border-slate-100 dark:border-slate-700 whitespace-nowrap w-fit font-bold shrink-0">
+                        {exp.period}
+                      </span>
                     </div>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-300 border border-slate-100 dark:border-slate-700 whitespace-nowrap w-fit font-bold shrink-0">
-                      {exp.period}
-                    </span>
+                    {/* One-line summary — always visible when collapsed */}
+                    {!isOpen && (
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                        {exp.summary}
+                      </p>
+                    )}
                   </div>
                   <div className="shrink-0 mt-1 text-slate-400 group-hover:text-primary transition-colors">
-                    {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    {isOpen ? (
+                      <ChevronUp className="w-5 h-5" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5" />
+                    )}
                   </div>
                 </button>
 
@@ -147,7 +170,8 @@ export function Experience() {
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 mt-3 text-xs font-bold text-primary hover:underline uppercase tracking-wider"
                           >
-                            View Contributions <ExternalLink className="w-3 h-3" />
+                            View Contributions{" "}
+                            <ExternalLink className="w-3 h-3" />
                           </a>
                         )}
                       </div>

@@ -4,7 +4,7 @@ import { GitMerge, Layers3, Code2, BookOpen } from "lucide-react";
 
 const stats = [
   {
-    value: "5+",
+    value: "5",
     label: "Full-Stack Projects",
     sub: "Live & deployed",
     icon: Layers3,
@@ -22,7 +22,7 @@ const stats = [
     icon: Code2,
   },
   {
-    value: "13+",
+    value: "13",
     label: "Certifications Earned",
     sub: "Postman · Scaler · SIH 2025",
     icon: BookOpen,
@@ -59,7 +59,7 @@ export function Stats() {
                   <p className="text-xs text-slate-700 dark:text-slate-200 uppercase tracking-widest font-bold leading-tight">
                     {stat.label}
                   </p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium leading-tight">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-tight">
                     {stat.sub}
                   </p>
                 </TiltCard>

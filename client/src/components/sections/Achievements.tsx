@@ -176,11 +176,7 @@ function CertCard({ cert, index }: { cert: Cert; index: number }) {
             <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">Issued {cert.year}</p>
           </div>
 
-          {cert.credentialId && (
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono mb-3 break-all opacity-60">
-              ID: {cert.credentialId}
-            </p>
-          )}
+  
         </div>
 
         <button

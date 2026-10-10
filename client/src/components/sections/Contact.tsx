@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, MapPin, Send, Loader2, Github, Linkedin } from "lucide-react";
+import { Mail, MapPin, Send, Loader2, Github, Linkedin, Copy, CheckCheck } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
 import { Section } from "@/components/layout/Section";
@@ -11,8 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { api, type ContactSubmitInput } from "@shared/routes";
 
+const EMAIL = "gopaljilab@gmail.com";
+
 export function Contact() {
   const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
 
   const {
     register,
@@ -23,31 +27,45 @@ export function Contact() {
     resolver: zodResolver(api.contact.submit.input),
   });
 
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback: select the text
+    }
+  };
+
   const onSubmit = async (data: ContactSubmitInput) => {
     try {
-      await emailjs.send(
+      const result = await emailjs.send(
         "service_xn1ckfm",
         "template_r652hq8",
         {
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
+          from_name: data.name,
+          from_email: data.email,
+          phone: data.phone ?? "",
           message: data.message,
+          reply_to: data.email,
         },
-        "P6dp6JGpHK-ZGqUVS"
+        "P6dp6JGpHK-ZGqUVS",
       );
 
+      console.log("EmailJS result:", result);
+
       toast({
-        title: "Message Sent!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
+        title: "Message sent ✓",
+        description: "Thank you for reaching out. I'll reply within 48 hours.",
       });
 
       reset();
     } catch (error) {
+      console.error("EmailJS error:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to send message. Please try again.",
+        title: "Couldn't send message",
+        description: `Please email me directly at ${EMAIL}`,
       });
     }
   };
@@ -65,47 +83,60 @@ export function Contact() {
           className="lg:w-5/12 z-10"
         >
           <h3 className="text-3xl font-bold mb-3 text-slate-900 dark:text-slate-100 leading-tight">
-            Let’s build something awesome together.
+            Let's build something awesome together.
           </h3>
 
           <p className="text-primary font-bold mb-6 tracking-wide">
-            Open to internships, entry-level roles, and open-source opportunities.
+            Open to full-time Java full-stack roles and open-source collaboration.
           </p>
 
-<p className="text-slate-600 dark:text-slate-300 mb-10 text-lg leading-relaxed font-medium">
-            I'm currently available for full-time opportunities and backend development roles.
+          <p className="text-slate-600 dark:text-slate-300 mb-10 text-base leading-relaxed">
+            I'm a B.Tech student (graduating 2026) with 2 internships and 13 merged PRs. If you're building something with Spring Boot or React and want a focused, hands-on developer — let's talk.
           </p>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
 
-            {/* EMAIL */}
+            {/* EMAIL with copy button */}
             <div className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <Mail className="w-5 h-5 text-primary" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-xs text-primary font-bold uppercase tracking-widest mb-1">
                   Email
                 </p>
-                <a
-                  href="mailto:gopaljilab@gmail.com"
-                  className="text-lg font-bold text-slate-900 dark:text-slate-100 hover:text-primary transition"
-                >
-                  gopaljilab@gmail.com
-                </a>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className="text-base font-bold text-slate-900 dark:text-slate-100 hover:text-primary transition truncate"
+                  >
+                    {EMAIL}
+                  </a>
+                  <button
+                    onClick={copyEmail}
+                    aria-label="Copy email address"
+                    className="shrink-0 p-1.5 rounded-lg hover:bg-primary/10 text-slate-400 hover:text-primary transition-colors"
+                  >
+                    {copied ? (
+                      <CheckCheck className="w-4 h-4 text-primary" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* LOCATION */}
             <div className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <MapPin className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <p className="text-xs text-primary font-bold uppercase tracking-widest mb-1">
                   Location
                 </p>
-                <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                <p className="text-base font-bold text-slate-900 dark:text-slate-100">
                   Bengaluru, Karnataka, India
                 </p>
               </div>
@@ -114,8 +145,7 @@ export function Contact() {
           </div>
 
           {/* SOCIAL LINKS */}
-          <div className="flex gap-4 mt-12">
-
+          <div className="flex gap-4 mt-8">
             <a
               href="https://github.com/gopaljilab"
               target="_blank"
@@ -123,9 +153,8 @@ export function Contact() {
               aria-label="GitHub Profile"
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary transition bg-white dark:bg-slate-900 shadow-sm"
             >
-              <Github className="w-6 h-6" />
+              <Github className="w-5 h-5" />
             </a>
-
             <a
               href="https://www.linkedin.com/in/guptagopal001/"
               target="_blank"
@@ -133,9 +162,8 @@ export function Contact() {
               aria-label="LinkedIn Profile"
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary transition bg-white dark:bg-slate-900 shadow-sm"
             >
-              <Linkedin className="w-6 h-6" />
+              <Linkedin className="w-5 h-5" />
             </a>
-
           </div>
         </motion.div>
 
@@ -160,9 +188,7 @@ export function Contact() {
                   </label>
                   <Input {...register("name")} placeholder="John Doe" />
                   {errors.name && (
-                    <p className="text-red-500 text-sm mt-1.5">
-                      {errors.name.message}
-                    </p>
+                    <p className="text-red-500 text-sm mt-1.5">{errors.name.message}</p>
                   )}
                 </div>
 
@@ -173,9 +199,7 @@ export function Contact() {
                   </label>
                   <Input {...register("email")} type="email" placeholder="john@example.com" />
                   {errors.email && (
-                    <p className="text-red-500 text-sm mt-1.5">
-                      {errors.email.message}
-                    </p>
+                    <p className="text-red-500 text-sm mt-1.5">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -184,7 +208,8 @@ export function Contact() {
               {/* PHONE */}
               <div>
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 block">
-                  Phone Number (Optional)
+                  Phone Number{" "}
+                  <span className="font-medium text-slate-400">(Optional)</span>
                 </label>
                 <Input {...register("phone")} placeholder="+91 98765 43210" />
               </div>
@@ -194,11 +219,13 @@ export function Contact() {
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 block">
                   Message
                 </label>
-                <Textarea {...register("message")} placeholder="Tell me about your project..." />
+                <Textarea
+                  {...register("message")}
+                  placeholder="Tell me about the role or project..."
+                  className="min-h-[130px]"
+                />
                 {errors.message && (
-                  <p className="text-red-500 text-sm mt-1.5">
-                    {errors.message.message}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1.5">{errors.message.message}</p>
                 )}
               </div>
 
@@ -206,7 +233,7 @@ export function Contact() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-14 font-bold rounded-xl bg-primary text-white hover:bg-primary/90"
+                className="w-full h-14 font-bold rounded-xl bg-primary text-white hover:bg-primary/90 text-base"
               >
                 {isSubmitting ? (
                   <>
@@ -220,6 +247,17 @@ export function Contact() {
                   </>
                 )}
               </Button>
+
+              {/* Fallback */}
+              <p className="text-center text-sm text-slate-500 dark:text-slate-400">
+                Or email me directly at{" "}
+                <a
+                  href={`mailto:${EMAIL}`}
+                  className="text-primary font-bold hover:underline"
+                >
+                  {EMAIL}
+                </a>
+              </p>
 
             </form>
           </div>

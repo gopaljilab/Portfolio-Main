@@ -27,12 +27,29 @@ const projects: Project[] = [
     tagline: "Java · Spring Boot · MySQL · React",
     description:
       "A full-featured restaurant management platform handling orders, inventory tracking, staff management, and real-time analytics dashboards.",
-    problem: "Restaurant staff relied on paper-based order slips and manual inventory counts — leading to errors and slow service.",
-    outcome: "Reduced order-handling steps from 5 to 2. Full CRUD across 6 entities with Spring Boot REST APIs and a React SPA front end.",
+    problem:
+      "Restaurant staff relied on paper-based order slips and manual inventory counts — leading to errors and slow service.",
+    outcome:
+      "Reduced order-handling steps from 5 to 2. Full CRUD across 6 entities with Spring Boot REST APIs and a React SPA front end.",
     image: "/OM.jpg",
     tags: ["Java", "Spring Boot", "MySQL", "React", "REST API"],
     link: "https://omrestaurant.netlify.app/",
     github: "https://gopaljilab.github.io/OmRestaurant/",
+  },
+  {
+    title: "SamarthLoan — Smart Credit Navigator",
+    category: "Full Stack",
+    tagline: "React · Tailwind CSS · EMI Engine · Multilingual",
+    description:
+      "A public-service companion that turns India's confusing government loan schemes into a clear path — find your scheme, calculate EMI, and track your application, all in English, Hindi, or Kannada.",
+    problem:
+      "First-generation entrepreneurs and students couldn't navigate MUDRA, Standup India, and other schemes without a facilitator. Most platforms are English-only and jargon-heavy.",
+    outcome:
+      "Built a multilingual (EN/HI/KN) React SPA with a live EMI calculator, scheme-matching engine, application tracker, and a 'Talk to a Sathi' facilitator chat. Live on Netlify.",
+    image: "/SamarthLoan.png",
+    tags: ["React", "Tailwind CSS", "i18n", "EMI Calculator", "Public Service"],
+    link: "https://samarthloan.netlify.app/",
+    github: "https://github.com/gopaljilab/SamarthLoan",
   },
   {
     title: "NCVET-BlockChain Certification System",
@@ -40,8 +57,10 @@ const projects: Project[] = [
     tagline: "React · Web3.js · Chart.js",
     description:
       "A blockchain-enabled platform providing tamper-proof, instantly verifiable digital credentials for India's vocational education ecosystem.",
-    problem: "India's NCVET ecosystem faced certificate forgery, manual verification delays, and lack of interoperability between institutions.",
-    outcome: "Built a React + Web3.js UI that reads/writes credentials on-chain. Includes a Chart.js analytics dashboard and live credential-lookup flow.",
+    problem:
+      "India's NCVET ecosystem faced certificate forgery, manual verification delays, and lack of interoperability between institutions.",
+    outcome:
+      "Built a React + Web3.js UI that reads/writes credentials on-chain. Includes a Chart.js analytics dashboard and live credential-lookup flow.",
     image: "/NCVET.jpg",
     tags: ["React", "Web3.js", "Chart.js", "Blockchain", "API"],
     link: "https://www.figma.com/make/AB1LEuPmvUhr1fMaDX3q3w/Blockchain-Certificate-Platform-Prototype?fullscreen=1&t=rLkYbttE95UaCYCf-1",
@@ -50,11 +69,13 @@ const projects: Project[] = [
   {
     title: "Portfolio Website",
     category: "Frontend",
-    tagline: "React · Tailwind CSS · Framer Motion · GSAP",
+    tagline: "React · TypeScript · GSAP · Framer Motion",
     description:
-      "A modern, highly interactive personal portfolio showcasing projects and skills with GSAP scroll animations, 3D tilt cards, and a live architecture visualizer.",
-    problem: "Generic portfolio templates don't communicate technical depth — recruiters see a list of skills, not working systems.",
-    outcome: "Built a signature hero element (FullStack Visualizer) that simulates real API flows. 100% TypeScript, Lighthouse-optimised, deployed on Vercel.",
+      "A highly interactive personal portfolio with GSAP scroll animations, 3D tilt cards, and a live full-stack architecture visualizer — built to show skills, not just describe them.",
+    problem:
+      "Generic portfolio templates don't communicate technical depth — recruiters see a list of skills, not working systems.",
+    outcome:
+      "Signature hero element (FullStack Visualizer) simulates real Spring Boot → MySQL API flows. 100% TypeScript, Lighthouse-optimised, deployed on Vercel.",
     image: "/Portfolio.jpg",
     tags: ["React", "TypeScript", "Tailwind CSS", "GSAP", "Framer Motion"],
     link: "https://potfoliogopal.netlify.app/",
@@ -63,11 +84,13 @@ const projects: Project[] = [
   {
     title: "Wash'n Vibe",
     category: "UI/UX",
-    tagline: "Figma · UI/UX · Prototyping",
+    tagline: "Figma · UI/UX · Mobile Prototype",
     description:
       "A sleek mobile app prototype for a modern on-demand laundry service, designed with a focus on frictionless booking and visual delight.",
-    problem: "Existing laundry-app UX flows required 7+ taps to place an order and had no order-status feedback loop.",
-    outcome: "Designed a 3-tap booking flow and a live order-tracker screen. Interactive Figma prototype with 40+ frames and micro-interaction states.",
+    problem:
+      "Existing laundry-app UX flows required 7+ taps to place an order and had no real-time order-status feedback loop.",
+    outcome:
+      "Designed a 3-tap booking flow and a live order-tracker screen. Interactive Figma prototype with 40+ frames and micro-interaction states.",
     image: "/Wash.jpg",
     tags: ["Figma", "UI/UX", "Prototyping", "Mobile Design"],
     link: "https://www.figma.com/proto/2mdtYq2x2Y6Kjgx1QDHbhr/Wash-N-Vibe?node-id=6-3980&starting-point-node-id=1%3A3&t=IJ0sJ9JfeJj3YfqH-1",
@@ -82,7 +105,10 @@ export function Projects() {
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-  const filtered = activeFilter === "All" ? projects : projects.filter((p) => p.category === activeFilter);
+  const filtered =
+    activeFilter === "All"
+      ? projects
+      : projects.filter((p) => p.category === activeFilter);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -115,7 +141,10 @@ export function Projects() {
         {FILTERS.map((f) => (
           <button
             key={f}
-            onClick={() => { setActiveFilter(f); setExpandedIndex(null); }}
+            onClick={() => {
+              setActiveFilter(f);
+              setExpandedIndex(null);
+            }}
             className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all border ${
               activeFilter === f
                 ? "bg-primary text-white border-primary shadow-sm"
@@ -153,8 +182,9 @@ export function Projects() {
                       alt={project.title}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute top-4 left-4 z-20">
-                      <span className="px-3 py-1 text-xs font-bold rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
+                    {/* Category badge — bottom-left so it never overlaps the logo area */}
+                    <div className="absolute bottom-3 left-3 z-20">
+                      <span className="px-3 py-1 text-xs font-bold rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
                         {project.category}
                       </span>
                     </div>
@@ -184,12 +214,20 @@ export function Projects() {
                         >
                           <div className="mb-4 space-y-3 border-t border-slate-100 dark:border-slate-800 pt-4">
                             <div>
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Problem</span>
-                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">{project.problem}</p>
+                              <span className="text-[11px] font-bold text-primary uppercase tracking-widest">
+                                Problem
+                              </span>
+                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                                {project.problem}
+                              </p>
                             </div>
                             <div>
-                              <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Outcome</span>
-                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">{project.outcome}</p>
+                              <span className="text-[11px] font-bold text-primary uppercase tracking-widest">
+                                Outcome
+                              </span>
+                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                                {project.outcome}
+                              </p>
                             </div>
                           </div>
                         </motion.div>
@@ -208,7 +246,7 @@ export function Projects() {
                       ))}
                     </div>
 
-                    {/* Action buttons — always visible */}
+                    {/* Action row — always visible */}
                     <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
                       {project.link && (
                         <a
@@ -235,10 +273,12 @@ export function Projects() {
                         </a>
                       )}
                       <button
-                        onClick={() => setExpandedIndex(isExpanded ? null : index)}
-                        className="ml-auto text-xs font-bold text-slate-400 hover:text-primary transition-colors underline-offset-2 hover:underline"
+                        onClick={() =>
+                          setExpandedIndex(isExpanded ? null : index)
+                        }
+                        className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-primary/50 hover:text-primary transition-all"
                       >
-                        {isExpanded ? "Hide details ↑" : "Case study ↓"}
+                        {isExpanded ? "Hide ↑" : "Case study ↓"}
                       </button>
                     </div>
                   </div>

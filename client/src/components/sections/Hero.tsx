@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { gsap } from "@/lib/gsap";
 import { TiltCard } from "@/components/ui/tilt-card";
+import { FullStackVisualizer } from "@/components/sections/FullStackVisualizer";
 
 export function Hero() {
   const { toast } = useToast();
@@ -57,6 +58,7 @@ export function Hero() {
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-slate-200/20 dark:bg-slate-800/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* ── Row 1: Image + Text ── */}
         <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
 
           {/* Image Section */}
@@ -117,17 +119,17 @@ export function Hero() {
               <span className="text-sm font-bold">Say Hello</span>
             </div>
 
-{/* Name */}
+            {/* Name */}
             <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-slate-900 dark:text-slate-100">
-              Hi, I’m <span className="text-primary">Gopal Gupta</span>
+              Hi, I'm <span className="text-primary">Gopal Gupta</span>
             </h1>
 
             <h2 className="hero-title text-xl md:text-2xl font-display text-slate-700 dark:text-slate-300 mb-6 font-semibold">
-              Java Full-Stack Developer | Open Source Contributor
+              I build Spring Boot backends and the React interfaces on top of them.
             </h2>
 
             <p className="hero-sub text-lg text-slate-600 dark:text-slate-300 mb-6 max-w-xl mx-auto md:mx-0 leading-relaxed">
-              I build scalable Java full-stack applications using Spring Boot, React, and SQL, with hands-on experience in open-source collaboration and real-world projects.
+              Java Full-Stack Developer crafting scalable APIs with Spring Boot and polished UIs with React — with a passion for open source and clean architecture.
             </p>
 
             {/* Location + Social Links combined row */}
@@ -138,18 +140,18 @@ export function Hero() {
               </div>
               <span className="hidden sm:block text-slate-300 dark:text-slate-600">|</span>
               <div className="flex items-center gap-2">
-                <a 
-                  href="https://github.com/gopaljilab" 
-                  target="_blank" 
+                <a
+                  href="https://github.com/gopaljilab"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
                   aria-label="GitHub Profile"
                 >
                   <Github className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://www.linkedin.com/in/guptagopal001/" 
-                  target="_blank" 
+                <a
+                  href="https://www.linkedin.com/in/guptagopal001/"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
                   aria-label="LinkedIn Profile"
@@ -159,16 +161,16 @@ export function Hero() {
               </div>
             </div>
 
-            {/* ACTION BUTTONS */}
+            {/* ACTION BUTTONS — View Projects primary, Download CV secondary */}
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
               <Button
                 asChild
                 size="lg"
                 className="rounded-full px-8 bg-primary text-white hover:bg-primary/90 w-full sm:w-auto font-bold shadow-sm transition-all"
               >
-                <a href="/resume.pdf" download="Gopal_Gupta_Resume.pdf">
-                  Download CV
-                  <Download className="ml-2 w-4 h-4" />
+                <a href="#projects">
+                  View Projects
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </a>
               </Button>
 
@@ -177,15 +179,33 @@ export function Hero() {
                 size="lg"
                 variant="outline"
                 className="rounded-full px-8 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 w-full sm:w-auto font-bold transition-all"
+                onClick={handleDownloadCV}
               >
-                <a href="#contact">
-                  Contact Me
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                <a href="/resume.pdf" download="Gopal_Gupta_Resume.pdf">
+                  Download CV
+                  <Download className="ml-2 w-4 h-4" />
                 </a>
               </Button>
             </div>
           </motion.div>
         </div>
+
+        {/* ── Row 2: Full-Stack Architecture Visualizer ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
+          className="mt-16 md:mt-20"
+        >
+          <div className="text-center mb-5">
+            <span className="inline-flex items-center gap-2 text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+              <span className="w-8 h-px bg-slate-300 dark:bg-slate-700"></span>
+              Live Architecture Demo — click any scenario to simulate a real request
+              <span className="w-8 h-px bg-slate-300 dark:bg-slate-700"></span>
+            </span>
+          </div>
+          <FullStackVisualizer />
+        </motion.div>
       </div>
     </section>
   );

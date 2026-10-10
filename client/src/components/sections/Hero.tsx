@@ -1,13 +1,25 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Download, ArrowRight, Github, Linkedin, Twitter } from "lucide-react";
+import { MapPin, Download, ArrowRight, Github, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { gsap } from "@/lib/gsap";
+import { TiltCard } from "@/components/ui/tilt-card";
 
 export function Hero() {
   const { toast } = useToast();
   const heroRef = useRef<HTMLElement>(null);
+  const [imgSrc, setImgSrc] = useState<string>("/profile.jpg");
+  const [imgFailed, setImgFailed] = useState<boolean>(false);
+
+  const handleImageError = () => {
+    // If local image fails, fall back to GitHub public avatar
+    if (imgSrc !== "https://github.com/gopaljilab.png") {
+      setImgSrc("https://github.com/gopaljilab.png");
+    } else {
+      setImgFailed(true);
+    }
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,18 +66,33 @@ export function Hero() {
             transition={{ duration: 0.5 }}
             className="w-full md:w-5/12 flex justify-center md:justify-start order-1 md:order-2 md:translate-x-8"
           >
-<div className="relative">
+            <div className="relative">
               <div className="absolute inset-0 bg-primary/5 rounded-full blur-2xl"></div>
 
-              <div className="w-64 h-64 md:w-80 md:h-80 rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden relative z-10 bg-white dark:bg-slate-900 p-1.5 shadow-sm">
-                <div className="w-full h-full rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800">
-                  <img
-                    src="https://media.licdn.com/dms/image/v2/D4D03AQGqYSKt481srA/profile-displayphoto-crop_800_800/B4DZwEFFHBIsAI-/0/1769594967419?e=1787184000&v=beta&t=yLwvbEGwH2cYo4vbQDn_k7UAjDTQrHJOZ-JFQuB465s"
-                    alt="Gopal Gupta"
-                    className="w-full h-full object-cover"
-                  />
+              <TiltCard
+                maxTilt={4}
+                scale={1.02}
+                className="w-64 h-64 md:w-80 md:h-80 rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden relative z-10 bg-white dark:bg-slate-900 p-1.5 shadow-sm"
+              >
+                <div className="w-full h-full rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                  {!imgFailed ? (
+                    <img
+                      src={imgSrc}
+                      alt="Gopal Gupta"
+                      className="w-full h-full object-cover object-center select-none"
+                      loading="eager"
+                      onError={handleImageError}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5 text-primary">
+                      <span className="font-display font-bold text-5xl">GG</span>
+                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
+                        Gopal Gupta
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
+              </TiltCard>
 
               {/* Status Badge — centered below image */}
               <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-2 px-4 rounded-full flex items-center gap-2 shadow-sm z-20 whitespace-nowrap">

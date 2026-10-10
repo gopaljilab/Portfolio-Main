@@ -32,7 +32,7 @@ export function Section({ id, title, subtitle, children, className = "", darker 
               </span>
             )}
             {title && (
-              <h2 className="text-3xl md:text-5xl font-bold text-slate-900">
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100">
                 {title}
               </h2>
             )}

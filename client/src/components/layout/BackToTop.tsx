@@ -8,7 +8,7 @@ export function BackToTop() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
+      if ((window.scrollY || document.documentElement.scrollTop) > 300) {
         setIsVisible(true);
       } else {
         setIsVisible(false);

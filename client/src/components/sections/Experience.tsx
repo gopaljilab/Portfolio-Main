@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Briefcase, Database, Coffee, Globe, Code } from "lucide-react";
 import { Section } from "@/components/layout/Section";
+import { TiltCard } from "@/components/ui/tilt-card";
 
 const experiences = [
   {
@@ -58,7 +59,11 @@ export function Experience() {
               <exp.icon className="w-5 h-5 text-primary" />
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group relative overflow-hidden shadow-sm">
+            <TiltCard
+              maxTilt={3.5}
+              scale={1.01}
+              className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group relative overflow-hidden shadow-sm"
+            >
               <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/0 group-hover:bg-primary/10 transition-colors"></div>
               
               <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
@@ -75,7 +80,7 @@ export function Experience() {
 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 {exp.description}
               </p>
-            </div>
+            </TiltCard>
           </motion.div>
         ))}
       </div>

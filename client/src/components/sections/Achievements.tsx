@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Award, ExternalLink, Image as ImageIcon } from "lucide-react";
 import { Section } from "@/components/layout/Section";
+import { TiltCard } from "@/components/ui/tilt-card";
 import smartIndiaPng from "@assets/Gopal_Gupta_certificate_1772355032528.png";
 import postmanJpg from "@assets/Print_Certificate_-_Canvas_Badges_page-0001_1772355032529.jpg";
 import eliteCodersJpg from "@assets/8fcc4eb8-0637-413a-984d-012525c12ed0_page-0001_1772355072284.jpg";
@@ -120,53 +121,59 @@ export function Achievements() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group hover:shadow-md flex flex-col h-full shadow-sm"
+            className="h-full"
           >
-            <div className="relative aspect-video mb-4 overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-               <img 
-                 src={cert.image} 
-                 alt={cert.title}
-                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-               />
-               <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                 <ImageIcon className="w-8 h-8 text-white opacity-70" />
-               </div>
-            </div>
-
-            <div className="flex-1">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-primary">
-                <Award className="w-5 h-5" />
-              </div>
-              
-              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                {cert.title}
-              </h3>
-              
-              <div className="flex flex-col gap-0.5 mb-4">
-<p className="text-slate-600 dark:text-slate-300 font-bold text-sm">
-                  {cert.issuer}
-                </p>
-                <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">
-                  Issued {cert.year}
-                </p>
+            <TiltCard
+              maxTilt={4}
+              scale={1.015}
+              className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group hover:shadow-md flex flex-col h-full shadow-sm"
+            >
+              <div className="relative aspect-video mb-4 overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                 <img 
+                   src={cert.image} 
+                   alt={cert.title}
+                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                 />
+                 <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <ImageIcon className="w-8 h-8 text-white opacity-70" />
+                 </div>
               </div>
 
-              {cert.credentialId && (
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono mb-4 break-all opacity-60">
-                  ID: {cert.credentialId}
-                </p>
+              <div className="flex-1">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-primary">
+                  <Award className="w-5 h-5" />
+                </div>
+                
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                  {cert.title}
+                </h3>
+                
+                <div className="flex flex-col gap-0.5 mb-4">
+                  <p className="text-slate-600 dark:text-slate-300 font-bold text-sm">
+                    {cert.issuer}
+                  </p>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">
+                    Issued {cert.year}
+                  </p>
+                </div>
+
+                {cert.credentialId && (
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono mb-4 break-all opacity-60">
+                    ID: {cert.credentialId}
+                  </p>
+                )}
+              </div>
+
+              {cert.image && (
+                <button 
+                  onClick={() => window.open(cert.image, '_blank')}
+                  className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:underline group/link mt-auto uppercase tracking-wider"
+                >
+                  View Certificate
+                  <ExternalLink className="w-3 h-3 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                </button>
               )}
-            </div>
-
-            {cert.image && (
-              <button 
-                onClick={() => window.open(cert.image, '_blank')}
-                className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:underline group/link mt-auto uppercase tracking-wider"
-              >
-                View Certificate
-                <ExternalLink className="w-3 h-3 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-              </button>
-            )}
+            </TiltCard>
           </motion.div>
         ))}
       </div>

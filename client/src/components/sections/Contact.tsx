@@ -120,6 +120,7 @@ export function Contact() {
               href="https://github.com/gopaljilab"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub Profile"
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary transition bg-white dark:bg-slate-900 shadow-sm"
             >
               <Github className="w-6 h-6" />
@@ -129,6 +130,7 @@ export function Contact() {
               href="https://www.linkedin.com/in/guptagopal001/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn Profile"
               className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-primary hover:border-primary transition bg-white dark:bg-slate-900 shadow-sm"
             >
               <Linkedin className="w-6 h-6" />
@@ -153,7 +155,7 @@ export function Contact() {
 
                 {/* NAME */}
                 <div>
-                  <label className="text-sm font-bold text-slate-700 mb-1.5 block">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 block">
                     Your Name
                   </label>
                   <Input {...register("name")} placeholder="John Doe" />

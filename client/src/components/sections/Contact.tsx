@@ -40,9 +40,10 @@ export function Contact() {
   const onSubmit = async (data: ContactSubmitInput) => {
     try {
       const result = await emailjs.send(
-        "service_xn1ckfm",
+        "service_wo6s3k6",      // ← updated to match EmailJS dashboard
         "template_r652hq8",
         {
+          name: data.name,       // ← for {{name}} in the template header
           from_name: data.name,
           from_email: data.email,
           phone: data.phone ?? "",

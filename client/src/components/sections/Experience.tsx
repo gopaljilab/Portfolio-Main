@@ -72,7 +72,7 @@ const experiences: ExperienceItem[] = [
       "Optimized slow-running queries on a 500k-row production table — reduced average query time from 2.1s to 340ms via indexing and query rewriting. Documented 12 stored procedures and assisted in migrating 3 legacy views to parameterized queries.",
     skills: ["SQL", "MySQL", "Query Optimization", "Indexing", "Stored Procedures"],
     icon: Database,
-    logo: "/experience/rd-infro.jpg",
+    logo: "/experience/rd-infro.png",
     accentColor: "#06b6d4", // Cyan
     accentGlow: "rgba(6, 182, 212, 0.28)",
     badgeBorder: "border-cyan-500/40",

@@ -18,7 +18,7 @@ const stats = [
   {
     value: "2",
     label: "Industry Internships",
-    sub: "Java & SQL @ NativeSoftTech",
+    sub: "NativeSoftTech & RD Infro",
     icon: Code2,
   },
   {

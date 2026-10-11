@@ -10,7 +10,7 @@ interface ExperienceItem {
   description: string;
   skills: string[];
   icon: LucideIcon;
-  devicon?: string;
+  logo: string;
   link?: string;
   accentColor: string;
   accentGlow: string;
@@ -27,11 +27,11 @@ const experiences: ExperienceItem[] = [
       "Contributing to Elite Coders' open-source Java ecosystem. Resolved 4 issues including a Spring Boot request-mapping conflict (PR #112) and refactored DAO layer tests to increase coverage by 18%. Collaborating via GitHub Issues, code reviews, and async team standups.",
     skills: ["Java", "Spring Boot", "REST APIs", "JUnit 5", "GitHub PRs"],
     icon: Code2,
-    devicon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg",
+    logo: "/experience/elite-coders.png",
     link: "https://github.com/gopaljilab",
-    accentColor: "#06b6d4", // Cyan
-    accentGlow: "rgba(6, 182, 212, 0.28)",
-    badgeBorder: "border-cyan-500/40",
+    accentColor: "#f43f5e", // Rose/Pink accent matching the astronaut mascot
+    accentGlow: "rgba(244, 63, 94, 0.28)",
+    badgeBorder: "border-rose-500/40",
   },
   {
     role: "Open Source Contributor",
@@ -42,7 +42,7 @@ const experiences: ExperienceItem[] = [
       "Selected as a contributor for WoC Social 2025. Shipped a fix for broken pagination in a React + Express admin dashboard (merged PR), added missing OpenAPI documentation for 3 REST endpoints, and onboarded 2 new contributors by improving the project's CONTRIBUTING.md.",
     skills: ["React", "Express.js", "OpenAPI", "Git", "Open Source"],
     icon: Globe,
-    devicon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    logo: "/experience/swoc.png",
     link: "https://github.com/gopaljilab",
     accentColor: "#3b82f6", // Tech Blue
     accentGlow: "rgba(59, 130, 246, 0.28)",
@@ -50,17 +50,17 @@ const experiences: ExperienceItem[] = [
   },
   {
     role: "SQL Intern",
-    company: "NativeSoftTech",
+    company: "RD Infro Technology",
     date: "Mar 2025 – Apr 2025",
     summary: "Optimized 500k-row queries: reduced average response from 2.1s to 340ms.",
     description:
       "Optimized slow-running queries on a 500k-row production table — reduced average query time from 2.1s to 340ms via indexing and query rewriting. Documented 12 stored procedures and assisted in migrating 3 legacy views to parameterized queries.",
     skills: ["SQL", "MySQL", "Query Optimization", "Indexing", "Stored Procedures"],
     icon: Database,
-    devicon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-    accentColor: "#10b981", // Emerald
-    accentGlow: "rgba(16, 185, 129, 0.26)",
-    badgeBorder: "border-emerald-500/40",
+    logo: "/experience/rd-infro.jpg",
+    accentColor: "#06b6d4", // Cyan
+    accentGlow: "rgba(6, 182, 212, 0.28)",
+    badgeBorder: "border-cyan-500/40",
   },
   {
     role: "Java Intern",
@@ -71,7 +71,7 @@ const experiences: ExperienceItem[] = [
       "Built 6 RESTful API endpoints for an internal employee management module using Spring Boot 3 and Hibernate. Wrote JUnit 5 tests covering 80%+ of service-layer logic and fixed a critical NullPointerException in the JWT auth filter caught during QA.",
     skills: ["Java", "Spring Boot 3", "Hibernate", "JWT Auth", "JUnit 5"],
     icon: Coffee,
-    devicon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+    logo: "/experience/nativesofttech.jpg",
     accentColor: "#f59e0b", // Amber/Gold
     accentGlow: "rgba(245, 158, 11, 0.26)",
     badgeBorder: "border-amber-500/40",
@@ -85,9 +85,10 @@ const experiences: ExperienceItem[] = [
       "Completed intensive training in Java Server Pages and MVC architecture. Delivered a full CRUD student-portal project using JSP, Servlets, and JDBC — graded as top performer in the cohort.",
     skills: ["Core Java", "JSP", "Servlets", "JDBC", "MVC Architecture"],
     icon: Briefcase,
-    accentColor: "#8b5cf6", // Purple
-    accentGlow: "rgba(139, 92, 246, 0.26)",
-    badgeBorder: "border-purple-500/40",
+    logo: "/experience/arcane.png",
+    accentColor: "#6366f1", // Indigo/Blue matching the logo
+    accentGlow: "rgba(99, 102, 241, 0.26)",
+    badgeBorder: "border-indigo-500/40",
   },
 ];
 
@@ -118,7 +119,6 @@ export function Experience() {
   });
 
   const activeExp = experiences[activeIndex];
-  const ActiveIcon = activeExp.icon;
 
   return (
     <section id="experience" ref={containerRef} className="relative h-[320vh] w-full bg-slate-50 dark:bg-[#070b14] transition-colors">
@@ -152,10 +152,10 @@ export function Experience() {
             />
           </motion.div>
 
-          {/* Tech Watermark with smooth transition & parallax */}
+          {/* Brand Logo Watermark with smooth transition & parallax */}
           <motion.div
             style={{ y: logoY, rotate: logoRotate, scale: logoScale }}
-            className="relative z-0 flex items-center justify-center w-[240px] h-[240px] md:w-[440px] md:h-[440px] select-none opacity-20 dark:opacity-25"
+            className="relative z-0 flex items-center justify-center w-[240px] h-[240px] md:w-[440px] md:h-[440px] select-none"
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -166,25 +166,20 @@ export function Experience() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 className="relative w-full h-full flex flex-col items-center justify-center p-4"
               >
-                {activeExp.devicon ? (
+                <div className="relative w-44 h-44 md:w-72 md:h-72 rounded-2xl p-4 flex items-center justify-center overflow-hidden bg-white/10 dark:bg-black/30 backdrop-blur-sm border border-white/10 shadow-2xl">
                   <img
-                    src={activeExp.devicon}
-                    alt={`${activeExp.company} emblem`}
-                    className="w-full h-full object-contain filter drop-shadow-[0_0_35px_rgba(255,255,255,0.1)]"
+                    src={activeExp.logo}
+                    alt={`${activeExp.company} official logo`}
+                    className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(255,255,255,0.12)]"
                     loading="lazy"
                   />
-                ) : (
-                  <ActiveIcon
-                    className="w-3/4 h-3/4 stroke-[1.2]"
-                    style={{ color: activeExp.accentColor }}
-                  />
-                )}
+                </div>
                 <div
-                  className="mt-4 px-3 py-1 rounded-full text-[11px] font-mono tracking-widest uppercase border"
+                  className="mt-4 px-3.5 py-1 rounded-full text-[11px] font-mono tracking-widest uppercase border font-semibold backdrop-blur-sm"
                   style={{
                     borderColor: `${activeExp.accentColor}50`,
                     color: activeExp.accentColor,
-                    backgroundColor: `${activeExp.accentColor}10`,
+                    backgroundColor: `${activeExp.accentColor}15`,
                   }}
                 >
                   {activeExp.company}
@@ -243,7 +238,6 @@ export function Experience() {
 
             {experiences.map((exp, idx) => {
               const isActive = idx === activeIndex;
-              const ExpIcon = exp.icon;
 
               return (
                 <div
@@ -266,7 +260,7 @@ export function Experience() {
                     }}
                   />
 
-                  {/* Header Row: Date & Badge */}
+                  {/* Header Row: Date & Company Logo Badge */}
                   <div className="flex flex-wrap items-center gap-2.5">
                     <span
                       className="font-mono text-xs md:text-sm tracking-wider font-semibold transition-colors duration-300"
@@ -275,15 +269,22 @@ export function Experience() {
                       {exp.date}
                     </span>
 
+                    {/* Company Logo Badge */}
                     <div
-                      className={`px-2 py-0.5 rounded-md border text-[11px] font-mono flex items-center gap-1.5 transition-all duration-300 ${
+                      className={`px-2 py-1 rounded-md border text-[11px] font-mono flex items-center gap-2 transition-all duration-300 ${
                         isActive
                           ? `${exp.badgeBorder} bg-white dark:bg-slate-900 shadow-sm font-bold`
                           : "border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900/50 text-slate-500"
                       }`}
                       style={{ color: isActive ? exp.accentColor : undefined }}
                     >
-                      <ExpIcon className="w-3 h-3" />
+                      <div className="w-4 h-4 rounded overflow-hidden flex items-center justify-center bg-white/90 shrink-0">
+                        <img
+                          src={exp.logo}
+                          alt={exp.company}
+                          className="w-full h-full object-contain p-0.5"
+                        />
+                      </div>
                       <span>{exp.company}</span>
                     </div>
                   </div>

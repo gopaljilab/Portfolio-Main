@@ -19,17 +19,32 @@ interface ExperienceItem {
 
 const experiences: ExperienceItem[] = [
   {
-    role: "Open Source Contributor",
+    role: "Project Admin & Contributor",
+    company: "GirlScript Summer of Code",
+    date: "May 2026 – Aug 2026",
+    summary: "Leading project administration, reviewing PRs, and mentoring contributors across Java & web modules.",
+    description:
+      "Serving as Project Admin and Open Source Contributor for GirlScript Summer of Code (GSSoC). Managing repository roadmaps, triaging incoming GitHub issues, mentoring cohort participants on best Git/Java practices, and reviewing pull requests for full-stack modules.",
+    skills: ["Project Management", "Open Source", "Code Review", "Java", "Git & GitHub"],
+    icon: Code2,
+    logo: "/experience/gssoc.png",
+    link: "https://github.com/gopaljilab",
+    accentColor: "#f97316", // Warm Orange matching GirlScript branding
+    accentGlow: "rgba(249, 115, 22, 0.28)",
+    badgeBorder: "border-orange-500/40",
+  },
+  {
+    role: "ECWoC'26 Contributor",
     company: "Elite Coders",
-    date: "Present",
+    date: "Jan 2026 – Feb 2026",
     summary: "Resolving Spring Boot issues and optimizing test coverage via GitHub PRs.",
     description:
-      "Contributing to Elite Coders' open-source Java ecosystem. Resolved 4 issues including a Spring Boot request-mapping conflict (PR #112) and refactored DAO layer tests to increase coverage by 18%. Collaborating via GitHub Issues, code reviews, and async team standups.",
+      "Selected as contributor for Elite Coders Winter of Code (ECWoC'26). Resolved 4 key issues including Spring Boot request-mapping conflicts (PR #112) and refactored DAO layer tests to increase test coverage by 18%. Collaborated via distributed GitHub pull requests and code reviews.",
     skills: ["Java", "Spring Boot", "REST APIs", "JUnit 5", "GitHub PRs"],
     icon: Code2,
     logo: "/experience/elite-coders.png",
     link: "https://github.com/gopaljilab",
-    accentColor: "#f43f5e", // Rose/Pink accent matching the astronaut mascot
+    accentColor: "#f43f5e", // Rose/Pink accent matching the mascot
     accentGlow: "rgba(244, 63, 94, 0.28)",
     badgeBorder: "border-rose-500/40",
   },
@@ -121,7 +136,7 @@ export function Experience() {
   const activeExp = experiences[activeIndex];
 
   return (
-    <section id="experience" ref={containerRef} className="relative h-[320vh] w-full bg-slate-50 dark:bg-[#070b14] transition-colors">
+    <section id="experience" ref={containerRef} className="relative h-[360vh] w-full bg-slate-50 dark:bg-[#070b14] transition-colors">
       <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* ================= BACKGROUND BRAND WATERMARK & GLOW LAYER ================= */}
@@ -129,7 +144,7 @@ export function Experience() {
           
           {/* Dynamic Radial Ambient Glow */}
           <motion.div
-            key={`glow-${activeExp.company}`}
+            key={`glow-${activeExp.company}-${activeExp.role}`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1 }}
@@ -159,7 +174,7 @@ export function Experience() {
           >
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeExp.company}
+                key={`${activeExp.company}-${activeExp.role}`}
                 initial={{ opacity: 0, scale: 0.82, filter: "blur(14px)", y: 15 }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 0 }}
                 exit={{ opacity: 0, scale: 1.12, filter: "blur(14px)", y: -15 }}
@@ -222,7 +237,7 @@ export function Experience() {
           </div>
 
           {/* Timeline List Column */}
-          <div className="lg:w-7/12 flex flex-col justify-center gap-5 md:gap-6 relative w-full">
+          <div className="lg:w-7/12 flex flex-col justify-center gap-4 sm:gap-5 relative w-full">
             
             {/* Continuous vertical progress bar */}
             <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-slate-200 dark:bg-slate-800">
@@ -290,7 +305,7 @@ export function Experience() {
                   </div>
 
                   {/* Role Title */}
-                  <h4 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                  <h4 className="text-base sm:text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">
                     {exp.role}
                   </h4>
                   <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
@@ -304,16 +319,16 @@ export function Experience() {
                     transition={{ duration: 0.35, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <p className="text-slate-600 dark:text-slate-300 mt-2.5 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl">
+                    <p className="text-slate-600 dark:text-slate-300 mt-2 text-xs sm:text-sm md:text-base leading-relaxed max-w-2xl">
                       {exp.description}
                     </p>
 
                     {/* Skill Tags */}
-                    <div className="flex flex-wrap gap-1.5 mt-3.5 mb-1.5">
+                    <div className="flex flex-wrap gap-1.5 mt-3 mb-1">
                       {exp.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-mono rounded-md hover:border-primary/50 transition-colors shadow-2xs"
+                          className="px-2.5 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-mono rounded-md hover:border-primary/50 transition-colors shadow-2xs"
                         >
                           {skill}
                         </span>

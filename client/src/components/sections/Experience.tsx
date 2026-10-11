@@ -86,7 +86,7 @@ const experiences: ExperienceItem[] = [
       "Built 6 RESTful API endpoints for an internal employee management module using Spring Boot 3 and Hibernate. Wrote JUnit 5 tests covering 80%+ of service-layer logic and fixed a critical NullPointerException in the JWT auth filter caught during QA.",
     skills: ["Java", "Spring Boot 3", "Hibernate", "JWT Auth", "JUnit 5"],
     icon: Coffee,
-    logo: "/experience/nativesofttech.jpg",
+    logo: "/experience/nativesofttech.png",
     accentColor: "#f59e0b", // Amber/Gold
     accentGlow: "rgba(245, 158, 11, 0.26)",
     badgeBorder: "border-amber-500/40",
@@ -181,7 +181,7 @@ export function Experience() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 className="relative w-full h-full flex flex-col items-center justify-center p-4"
               >
-                <div className="relative w-44 h-44 md:w-72 md:h-72 rounded-2xl p-4 flex items-center justify-center overflow-hidden bg-white/10 dark:bg-black/30 backdrop-blur-sm border border-white/10 shadow-2xl">
+                <div className={`relative w-44 h-44 md:w-72 md:h-72 rounded-2xl p-4 flex items-center justify-center overflow-hidden backdrop-blur-sm border border-white/10 shadow-2xl ${activeExp.company === "NativeSoftTech" ? "bg-slate-900/90 dark:bg-black/60" : "bg-white/10 dark:bg-black/30"}`}>
                   <img
                     src={activeExp.logo}
                     alt={`${activeExp.company} official logo`}
@@ -293,7 +293,7 @@ export function Experience() {
                       }`}
                       style={{ color: isActive ? exp.accentColor : undefined }}
                     >
-                      <div className="w-4 h-4 rounded overflow-hidden flex items-center justify-center bg-white/90 shrink-0">
+                      <div className={`w-4 h-4 rounded overflow-hidden flex items-center justify-center shrink-0 ${exp.company === "NativeSoftTech" ? "bg-slate-900" : "bg-white/90"}`}>
                         <img
                           src={exp.logo}
                           alt={exp.company}

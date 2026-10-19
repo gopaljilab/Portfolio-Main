@@ -205,7 +205,7 @@ export function Experience() {
         </div>
 
         {/* ================= FOREGROUND CONTENT LAYER ================= */}
-        <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-16 relative z-10 py-8">
+        <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-10 relative z-10 py-4">
           
           {/* Header Column */}
           <div className="lg:w-5/12 flex flex-col justify-center">
@@ -216,12 +216,12 @@ export function Experience() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
               Work Experience.
             </h2>
-            <p className="mt-4 text-slate-600 dark:text-slate-400 font-normal text-sm md:text-base leading-relaxed max-w-md">
+            <p className="mt-3 text-slate-600 dark:text-slate-400 font-normal text-sm md:text-base leading-relaxed max-w-md">
               Scroll through my journey across open-source communities, real-world backend engineering, and database optimization roles.
             </p>
 
             {/* Quick Milestone Summary Bar */}
-            <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800/80 flex items-center gap-3">
+            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                 <Terminal className="w-5 h-5" />
               </div>
@@ -234,10 +234,29 @@ export function Experience() {
                 </p>
               </div>
             </div>
+
+            <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Choose an experience">
+              {experiences.map((experience, index) => (
+                <button
+                  key={`${experience.company}-${experience.role}`}
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`Show ${experience.role} at ${experience.company}`}
+                  aria-pressed={activeIndex === index}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full border text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
+                    activeIndex === index
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Timeline List Column */}
-          <div className="lg:w-7/12 flex flex-col justify-center gap-4 sm:gap-5 relative w-full">
+          <div className="lg:w-7/12 flex flex-col justify-center gap-3 sm:gap-4 relative w-full">
             
             {/* Continuous vertical progress bar */}
             <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-slate-200 dark:bg-slate-800">

@@ -44,11 +44,11 @@ export function Education() {
             <TiltCard
               maxTilt={3.5}
               scale={1.015}
-              className="bg-white dark:bg-slate-900 p-7 md:p-8 rounded-2xl relative overflow-hidden group border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all shadow-sm flex flex-col h-full"
+              className="bg-white dark:bg-slate-900 p-5 rounded-2xl relative overflow-hidden group border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all shadow-sm flex flex-col h-full"
             >
               <div className="absolute -right-6 -top-6 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
 
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/30 transition-all">
                   {item.certificateImg ? (
                     <Award className="w-6 h-6 text-primary" />
@@ -75,7 +75,7 @@ export function Education() {
                 {item.institution}
               </p>
 
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
                 {item.description}
               </p>
 

@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import type { MouseEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useLenis } from "@/components/layout/SmoothScrollProvider";
 
 const navLinks = [
   { name: "Home", href: "#home", id: "home" },
@@ -19,6 +21,33 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("home");
   const [scrollProgress, setScrollProgress] = useState<number>(0);
+  const lenisRef = useLenis();
+
+  const handleMobileNavigation = (
+    event: MouseEvent<HTMLAnchorElement>,
+    targetId: string,
+  ) => {
+    event.preventDefault();
+    setIsMobileMenuOpen(false);
+
+    // Let the mobile menu finish closing before measuring the destination.
+    window.setTimeout(() => {
+      const section = document.getElementById(targetId);
+      if (!section) return;
+
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+      const headerOffset = 80;
+      window.history.pushState(null, "", `#${targetId}`);
+      if (lenisRef?.current) {
+        lenisRef.current.scrollTo(section, { offset: -headerOffset, duration: 0.9 });
+      } else {
+        window.scrollTo({
+          top: Math.max(0, sectionTop - headerOffset),
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        });
+      }
+    }, 300);
+  };
 
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
@@ -112,6 +141,8 @@ export function Navbar() {
               className="text-foreground p-2"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
             </button>
@@ -128,12 +159,12 @@ export function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass-panel border-t border-slate-200 dark:border-slate-800 overflow-hidden"
           >
-            <nav className="flex flex-col px-4 py-6 gap-4">
+            <nav id="mobile-navigation" className="flex flex-col px-4 py-6 gap-4">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(event) => handleMobileNavigation(event, link.id)}
                   className={`text-lg font-medium transition-colors py-2 border-b border-slate-200 dark:border-slate-800 ${
                     activeSection === link.id
                       ? "text-primary"
@@ -144,7 +175,12 @@ export function Navbar() {
                 </a>
               ))}
               <Button asChild className="mt-4 rounded-full w-full bg-primary text-primary-foreground">
-                <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Hire Me</a>
+                <a
+                  href="#contact"
+                  onClick={(event) => handleMobileNavigation(event, "contact")}
+                >
+                  Hire Me
+                </a>
               </Button>
             </nav>
           </motion.div>

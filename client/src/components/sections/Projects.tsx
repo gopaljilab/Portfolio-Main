@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Github, Filter } from "lucide-react";
+import { ExternalLink, Github, Filter, ChevronDown, FileText } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { gsap } from "@/lib/gsap";
 import { TiltCard } from "@/components/ui/tilt-card";
@@ -18,6 +18,7 @@ interface Project {
   tags: string[];
   link: string;
   github: string;
+  documentation?: string;
 }
 
 const projects: Project[] = [
@@ -33,8 +34,8 @@ const projects: Project[] = [
       "Reduced order-handling steps from 5 to 2. Full CRUD across 6 entities with Spring Boot REST APIs and a React SPA front end.",
     image: "/OM.jpg",
     tags: ["Java", "Spring Boot", "MySQL", "React", "REST API"],
-    link: "https://omrestaurant.netlify.app/",
-    github: "https://gopaljilab.github.io/OmRestaurant/",
+    link: "https://gopaljilab.github.io/OmRestaurant/",
+    github: "https://github.com/gopaljilab/OmRestaurant",
   },
   {
     title: "SamarthLoan — Smart Credit Navigator",
@@ -50,6 +51,7 @@ const projects: Project[] = [
     tags: ["React", "Tailwind CSS", "i18n", "EMI Calculator", "Public Service"],
     link: "https://samarthloan.netlify.app/",
     github: "https://github.com/gopaljilab/SamarthLoan",
+    documentation: "https://github.com/gopaljilab/SamarthLoan/blob/main/docs/phase-2-architecture.md",
   },
   {
     title: "NCVET-BlockChain Certification System",
@@ -65,6 +67,7 @@ const projects: Project[] = [
     tags: ["React", "Web3.js", "Chart.js", "Blockchain", "API"],
     link: "https://www.figma.com/make/AB1LEuPmvUhr1fMaDX3q3w/Blockchain-Certificate-Platform-Prototype?fullscreen=1&t=rLkYbttE95UaCYCf-1",
     github: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System",
+    documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System/blob/main/docs/architecture.md",
   },
   {
     title: "Portfolio Website",
@@ -75,10 +78,10 @@ const projects: Project[] = [
     problem:
       "Generic portfolio templates don't communicate technical depth — recruiters see a list of skills, not working systems.",
     outcome:
-      "Signature hero element (FullStack Visualizer) simulates real Spring Boot → MySQL API flows. 100% TypeScript, Lighthouse-optimised, deployed on Vercel.",
+      "Signature hero element (FullStack Visualizer) simulates real Spring Boot → MySQL API flows. 100% TypeScript and optimized for Lighthouse.",
     image: "/Portfolio.jpg",
     tags: ["React", "TypeScript", "Tailwind CSS", "GSAP", "Framer Motion"],
-    link: "https://potfoliogopal.netlify.app/",
+    link: "",
     github: "https://github.com/gopaljilab/portfolio",
   },
   {
@@ -104,18 +107,23 @@ export function Projects() {
   const gridRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   const filtered =
     activeFilter === "All"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
+  const visibleProjects = showAll ? filtered : filtered.slice(0, 2);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".project-card-wrapper",
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 30 },
         {
+          immediateRender: false,
           opacity: 1,
           y: 0,
           duration: 0.8,
@@ -124,7 +132,7 @@ export function Projects() {
           scrollTrigger: {
             trigger: gridRef.current,
             start: "top 85%",
-            toggleActions: "play none none reverse",
+            once: true,
           },
         },
       );
@@ -136,7 +144,7 @@ export function Projects() {
   return (
     <Section id="projects" title="Featured Projects" subtitle="My Work" darker>
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-2 mb-10">
+      <div className="flex flex-wrap items-center gap-2 mb-6">
         <Filter className="w-4 h-4 text-slate-400 shrink-0" />
         {FILTERS.map((f) => (
           <button
@@ -144,6 +152,7 @@ export function Projects() {
             onClick={() => {
               setActiveFilter(f);
               setExpandedIndex(null);
+              setShowAll(false);
             }}
             className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all border ${
               activeFilter === f
@@ -156,9 +165,9 @@ export function Projects() {
         ))}
       </div>
 
-      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 mb-6">
         <AnimatePresence mode="popLayout">
-          {filtered.map((project, index) => {
+          {visibleProjects.map((project, index) => {
             const isExpanded = expandedIndex === index;
             return (
               <motion.div
@@ -184,21 +193,21 @@ export function Projects() {
                     />
                     {/* Category badge — bottom-left so it never overlaps the logo area */}
                     <div className="absolute bottom-3 left-3 z-20">
-                      <span className="px-3 py-1 text-xs font-bold rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
+                      <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
                         {project.category}
                       </span>
                     </div>
                   </div>
 
                   {/* Card body */}
-                  <div className="p-6 md:p-8 flex flex-col flex-1">
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1 group-hover:text-primary transition-colors">
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1.5 group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
                     <p className="text-xs font-bold text-primary mb-3 uppercase tracking-wider">
                       {project.tagline}
                     </p>
-                    <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed text-sm">
+                    <p className="text-slate-600 dark:text-slate-300 mb-3 leading-relaxed text-sm">
                       {project.description}
                     </p>
 
@@ -235,11 +244,11 @@ export function Projects() {
                     </AnimatePresence>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mt-auto mb-5">
+                    <div className="flex flex-wrap gap-1.5 mt-auto mb-4">
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
+                          className="text-xs font-bold px-2 py-0.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
                         >
                           {tag}
                         </span>
@@ -254,7 +263,7 @@ export function Projects() {
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`View ${project.title} live demo`}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-all shadow-sm"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-all shadow-sm"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           Live Demo
@@ -266,10 +275,22 @@ export function Projects() {
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`View ${project.title} on GitHub`}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:border-primary/50 hover:text-primary transition-all"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:border-primary/50 hover:text-primary transition-all"
                         >
                           <Github className="w-3.5 h-3.5" />
                           GitHub
+                        </a>
+                      )}
+                      {project.documentation && (
+                        <a
+                          href={project.documentation}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`View ${project.title} architecture documentation`}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:border-primary/50 hover:text-primary transition-all"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          Architecture
                         </a>
                       )}
                       <button
@@ -288,6 +309,22 @@ export function Projects() {
           })}
         </AnimatePresence>
       </div>
+
+      {filtered.length > 2 && (
+        <div className="flex justify-center mt-4">
+          <button
+            type="button"
+            aria-expanded={showAll}
+            onClick={() => setShowAll((expanded) => !expanded)}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-5 py-2 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/5"
+          >
+            {showAll ? "See Less" : "See More Projects"}
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-300 ${showAll ? "rotate-180" : ""}`}
+            />
+          </button>
+        </div>
+      )}
     </Section>
   );
 }

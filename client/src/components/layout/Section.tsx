@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { ReactNode, useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
 interface SectionProps {
   id: string;
@@ -11,32 +11,54 @@ interface SectionProps {
 }
 
 export function Section({ id, title, subtitle, children, className = "", darker = false }: SectionProps) {
+  const headingRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (!heading || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const context = gsap.context(() => {
+      gsap.from(heading.querySelectorAll("[data-section-reveal]"), {
+        immediateRender: false,
+        autoAlpha: 0,
+        y: 24,
+        duration: 0.7,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: heading,
+          start: "top 85%",
+          once: true,
+        },
+      });
+    }, heading);
+
+    return () => context.revert();
+  }, []);
+
   return (
     <section 
       id={id} 
-      className={`py-24 md:py-32 ${darker ? 'bg-slate-50/50 dark:bg-slate-950/50' : 'bg-white dark:bg-slate-950'} ${className}`}
+      className={`py-10 md:py-12 ${darker ? 'bg-slate-50/50 dark:bg-slate-950/50' : 'bg-white dark:bg-slate-950'} ${className}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {(title || subtitle) && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-            className="mb-16 md:mb-20"
+          <div
+            ref={headingRef}
+            className="mb-6 md:mb-8"
           >
             {subtitle && (
-              <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block flex items-center gap-2">
+              <span data-section-reveal className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block flex items-center gap-2">
                 <span className="w-10 h-0.5 bg-primary"></span>
                 {subtitle}
               </span>
             )}
             {title && (
-              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100">
+              <h2 data-section-reveal className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100">
                 {title}
               </h2>
             )}
-          </motion.div>
+          </div>
         )}
         {children}
       </div>

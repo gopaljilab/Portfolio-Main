@@ -147,10 +147,10 @@ function CertCard({ cert, index }: { cert: Cert; index: number }) {
       <TiltCard
         maxTilt={4}
         scale={1.015}
-        className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group hover:shadow-md flex flex-col h-full shadow-sm"
+        className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all group hover:shadow-md flex flex-col h-full shadow-sm"
       >
         {/* Certificate thumbnail */}
-        <div className="relative aspect-video mb-4 overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+        <div className="relative aspect-video mb-3 overflow-hidden rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
           <img
             src={cert.image}
             alt={cert.title}
@@ -208,7 +208,7 @@ export function Achievements() {
 
       {/* View all / Collapse toggle */}
       {extra.length > 0 && (
-        <div className="flex justify-center mt-10">
+          <div className="flex justify-center mt-4">
           <button
             onClick={() => setShowAll((v) => !v)}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-primary/50 hover:text-primary transition-all shadow-sm"

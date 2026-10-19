@@ -61,7 +61,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+    scroll-padding-top: 6rem;
   }
 
   body {
@@ -103,4 +104,26 @@
 
 .dark {
   color-scheme: dark;
+}
+
+@media (pointer: fine) {
+  html,
+  body,
+  body * {
+    cursor: url("/cursors/megumi.ani"), url("/cursors/megumi-default.png") 32 31, auto;
+  }
+
+  a,
+  button,
+  [role="button"],
+  summary,
+  select {
+    cursor: url("/cursors/megumi-pointer-small.png") 0 0, pointer;
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
+  }
 }

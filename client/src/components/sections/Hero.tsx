@@ -92,15 +92,17 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".hero-title",
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 36 },
         { opacity: 1, y: 0, duration: 1, stagger: 0.12, ease: "power3.out" },
       );
       gsap.fromTo(
         ".hero-sub",
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 24 },
         { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: "power3.out" },
       );
     }, heroRef);
@@ -144,7 +146,7 @@ export function Hero() {
                 maxTilt={4}
                 scale={1.02}
                 disabled
-                className="w-64 h-64 md:w-80 md:h-80 rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden relative z-10 bg-white dark:bg-slate-900 p-1.5 shadow-sm"
+                className="w-64 h-64 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden relative z-10 bg-white dark:bg-slate-900 p-1.5 shadow-sm"
               >
                 <div className="w-full h-full rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                   <video
@@ -197,37 +199,16 @@ export function Hero() {
               Java Full-Stack Developer crafting scalable APIs with Spring Boot and polished UIs with React — with a passion for open source and clean architecture.
             </p>
 
-            {/* Location + Social Links combined row */}
-            <div className="hero-sub flex flex-wrap items-center justify-center md:justify-start gap-4 mb-8">
+            {/* Location */}
+            <div className="hero-sub flex flex-wrap items-center justify-center md:justify-start gap-4 mb-5">
               <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
                 <MapPin className="w-5 h-5 text-primary" />
                 <span>Bengaluru, Karnataka, India</span>
               </div>
-              <span className="hidden sm:block text-slate-300 dark:text-slate-600">|</span>
-              <div className="flex items-center gap-2">
-                <a
-                  href="https://github.com/gopaljilab"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
-                  aria-label="GitHub Profile"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/guptagopal001/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              </div>
             </div>
 
-            {/* ACTION BUTTONS — View Projects primary, Download CV secondary */}
-            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+            {/* ACTIONS — social links sit alongside the primary CTAs */}
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap md:justify-start">
               <Button
                 asChild
                 size="lg"
@@ -251,6 +232,27 @@ export function Hero() {
                   <Download className="ml-2 w-4 h-4" />
                 </a>
               </Button>
+
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://github.com/gopaljilab"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
+                  aria-label="GitHub Profile"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/guptagopal001/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
+                  aria-label="LinkedIn Profile"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>

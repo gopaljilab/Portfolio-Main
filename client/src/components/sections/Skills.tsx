@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Binary } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { TiltCard } from "@/components/ui/tilt-card";
 
@@ -58,6 +59,7 @@ const skillGroups: { title: string; description: string; skills: Skill[] }[] = [
     title: "Learning",
     description: "Currently expanding into these",
     skills: [
+      { name: "DSA", level: "learning" },
       { name: "AWS", level: "learning" },
       { name: "Docker", level: "learning" },
     ],
@@ -65,6 +67,14 @@ const skillGroups: { title: string; description: string; skills: Skill[] }[] = [
 ];
 
 function SkillIcon({ name }: { name: string }) {
+  if (name === "DSA") {
+    return (
+      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+        <Binary className="w-7 h-7" aria-hidden="true" />
+      </div>
+    );
+  }
+
   const src = ICONS[name];
   if (!src) {
     return (
@@ -86,11 +96,11 @@ function SkillIcon({ name }: { name: string }) {
 export function Skills() {
   return (
     <Section id="skills" title="Tech Stack" subtitle="Technologies I work with">
-      <div className="space-y-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {skillGroups.map((group, i) => (
           <div key={i}>
             {/* Group header */}
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-4">
               <span
                 className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border ${
                   group.title === "Daily Use"
@@ -108,7 +118,7 @@ export function Skills() {
             </div>
 
             {/* Skill cards */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {group.skills.map((skill, index) => (
                 <motion.div
                   key={skill.name}

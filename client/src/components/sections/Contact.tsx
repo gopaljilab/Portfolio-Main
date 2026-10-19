@@ -73,7 +73,7 @@ export function Contact() {
 
   return (
     <Section id="contact" title="Get In Touch" subtitle="Contact Me">
-      <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
 
         {/* CONTACT INFO */}
         <motion.div
@@ -91,14 +91,14 @@ export function Contact() {
             Open to full-time Java full-stack roles and open-source collaboration.
           </p>
 
-          <p className="text-slate-600 dark:text-slate-300 mb-10 text-base leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 mb-6 text-base leading-relaxed">
             I'm a B.Tech student (graduating 2026) with 2 internships and 13 merged PRs. If you're building something with Spring Boot or React and want a focused, hands-on developer — let's talk.
           </p>
 
           <div className="space-y-4">
 
             {/* EMAIL with copy button */}
-            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <Mail className="w-5 h-5 text-primary" />
               </div>
@@ -129,7 +129,7 @@ export function Contact() {
             </div>
 
             {/* LOCATION */}
-            <div className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <MapPin className="w-5 h-5 text-primary" />
               </div>
@@ -176,11 +176,11 @@ export function Contact() {
           transition={{ duration: 0.5 }}
           className="lg:w-7/12 z-10"
         >
-          <div className="bg-white dark:bg-slate-900 p-8 md:p-10 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 {/* NAME */}
                 <div>

@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLenis } from "@/components/layout/SmoothScrollProvider";
 
 export function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const lenisRef = useLenis();
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -20,10 +22,11 @@ export function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    if (lenisRef?.current) {
+      lenisRef.current.scrollTo(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
   };
 
   return (

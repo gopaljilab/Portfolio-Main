@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Download, ArrowRight, Github, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,17 +10,86 @@ import { FullStackVisualizer } from "@/components/sections/FullStackVisualizer";
 export function Hero() {
   const { toast } = useToast();
   const heroRef = useRef<HTMLElement>(null);
-  const [imgSrc, setImgSrc] = useState<string>("/profile.jpg");
-  const [imgFailed, setImgFailed] = useState<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handleImageError = () => {
-    // If local image fails, fall back to GitHub public avatar
-    if (imgSrc !== "https://github.com/gopaljilab.png") {
-      setImgSrc("https://github.com/gopaljilab.png");
-    } else {
-      setImgFailed(true);
-    }
-  };
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let metadataReady = false;
+    let lastX: number | null = null;
+    let targetTime = 0;
+    let seekInProgress = false;
+    let pendingTarget: number | null = null;
+
+    const seekTo = (time: number) => {
+      const duration = video.duration;
+      if (!metadataReady || !Number.isFinite(duration) || duration <= 0) return;
+      const clampedTime = Math.max(0, Math.min(duration, time));
+      targetTime = clampedTime;
+      if (seekInProgress) {
+        pendingTarget = clampedTime;
+        return;
+      }
+      if (Math.abs(video.currentTime - clampedTime) < 0.01) return;
+
+      try {
+        seekInProgress = true;
+        video.currentTime = clampedTime;
+      } catch {
+        seekInProgress = false;
+      }
+    };
+
+    const handleMetadata = () => {
+      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+      metadataReady = true;
+      targetTime = video.currentTime;
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const previousX = lastX;
+      lastX = event.clientX;
+      if (
+        previousX === null ||
+        window.matchMedia("(max-width: 767px)").matches ||
+        !metadataReady ||
+        !Number.isFinite(video.duration) ||
+        video.duration <= 0
+      ) return;
+
+      const deltaX = event.clientX - previousX;
+      seekTo(targetTime + (deltaX / window.innerWidth) * 0.8 * video.duration);
+    };
+
+    const handleSeeked = () => {
+      seekInProgress = false;
+      const nextTarget = pendingTarget;
+      pendingTarget = null;
+      if (nextTarget !== null && Math.abs(nextTarget - video.currentTime) >= 0.01) {
+        seekTo(nextTarget);
+      }
+    };
+
+    const handleError = () => {
+      metadataReady = false;
+      seekInProgress = false;
+      pendingTarget = null;
+    };
+
+    video.addEventListener("loadedmetadata", handleMetadata);
+    video.addEventListener("seeked", handleSeeked);
+    video.addEventListener("error", handleError);
+    window.addEventListener("mousemove", handleMouseMove);
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) handleMetadata();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleMetadata);
+      video.removeEventListener("seeked", handleSeeked);
+      video.removeEventListener("error", handleError);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -74,25 +143,21 @@ export function Hero() {
               <TiltCard
                 maxTilt={4}
                 scale={1.02}
+                disabled
                 className="w-64 h-64 md:w-80 md:h-80 rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden relative z-10 bg-white dark:bg-slate-900 p-1.5 shadow-sm"
               >
                 <div className="w-full h-full rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                  {!imgFailed ? (
-                    <img
-                      src={imgSrc}
-                      alt="Gopal Gupta"
-                      className="w-full h-full object-cover object-center select-none"
-                      loading="eager"
-                      onError={handleImageError}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5 text-primary">
-                      <span className="font-display font-bold text-5xl">GG</span>
-                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
-                        Gopal Gupta
-                      </span>
-                    </div>
-                  )}
+                  <video
+                    ref={videoRef}
+                    src="/profile-animation.mp4"
+                    aria-label="Animated portrait of Gopal Gupta"
+                    muted
+                    playsInline
+                    preload="auto"
+                    controls={false}
+                    disablePictureInPicture
+                    className="w-full h-full rounded-full object-cover object-center select-none pointer-events-none"
+                  />
                 </div>
               </TiltCard>
 

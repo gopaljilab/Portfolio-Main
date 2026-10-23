@@ -95,7 +95,7 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           <a href="#home" className="flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <img src="/favicon.svg" alt="" aria-hidden="true" className="w-full h-full rounded-xl object-contain" />
+              <img src="/favicon.png" alt="" aria-hidden="true" className="w-full h-full rounded-xl object-contain" />
             </div>
             <span className="font-display font-bold text-xl tracking-tight text-foreground group-hover:text-primary transition-colors">
               Gopal Gupta

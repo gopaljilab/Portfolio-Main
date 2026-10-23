@@ -8,7 +8,7 @@ export function ThemeToggle() {
     const stored = localStorage.getItem("theme");
     if (stored === "dark") return true;
     if (stored === "light") return false;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return false;
   });
 
   useEffect(() => {

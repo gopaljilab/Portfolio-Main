@@ -6,7 +6,7 @@ A modern dark-themed personal portfolio web application for Gopal Gupta, showcas
 
 - **Frontend**: React, TypeScript, Tailwind CSS, Framer Motion
 - **Backend**: Express.js, Node.js
-- **Database**: PostgreSQL (Replit hosted)
+- **Database**: PostgreSQL
 - **Form Handling**: React Hook Form with Zod validation
 - **Styling**: Custom dark theme with neon green (#00ff88) accent color
 

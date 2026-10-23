@@ -31,6 +31,22 @@ export function Section({ id, title, subtitle, children, className = "", darker 
           once: true,
         },
       });
+
+      gsap.fromTo(
+        heading,
+        { x: -18 },
+        {
+          immediateRender: false,
+          x: 18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heading.closest("section") ?? heading,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        },
+      );
     }, heading);
 
     return () => context.revert();

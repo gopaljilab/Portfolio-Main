@@ -105,6 +105,31 @@ export function Hero() {
         { opacity: 0, y: 24 },
         { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: "power3.out" },
       );
+
+      gsap.to(".hero-orb--upper", {
+        y: 150,
+        x: -45,
+        scale: 1.12,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current ?? undefined,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+      gsap.to(".hero-orb--lower", {
+        y: -100,
+        x: 35,
+        scale: 0.9,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current ?? undefined,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      });
     }, heroRef);
 
     return () => ctx.revert();
@@ -125,8 +150,8 @@ export function Hero() {
       className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-slate-50/50 dark:bg-slate-950"
     >
       {/* Background decoration */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-slate-200/20 dark:bg-slate-800/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+      <div className="hero-orb--upper absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+      <div className="hero-orb--lower absolute bottom-1/4 right-1/4 w-96 h-96 bg-slate-200/20 dark:bg-slate-800/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* ── Row 1: Image + Text ── */}

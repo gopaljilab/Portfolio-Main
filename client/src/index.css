@@ -100,30 +100,33 @@
 
 :root {
   color-scheme: light;
+  --mascot-body: #6f6f6f;
+  --mascot-tail: #4e4e4e;
+  --mascot-joint: #444444;
+  --mascot-antenna: #777777;
 }
 
 .dark {
   color-scheme: dark;
+  --mascot-body: #a6b1bf;
+  --mascot-tail: #9aa8b8;
+  --mascot-joint: #718096;
+  --mascot-antenna: #c0cad6;
 }
 
-@media (pointer: fine) {
-  html,
-  body,
-  body * {
-    cursor: url("/cursors/megumi.ani"), url("/cursors/megumi-default.png") 32 31, auto;
-  }
+.mascot-cursor-canvas { display: none; }
 
-  a,
-  button,
-  [role="button"],
-  summary,
-  select {
-    cursor: url("/cursors/megumi-pointer-small.png") 0 0, pointer;
-  }
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button { cursor: none !important; }
 
-  input,
-  textarea,
-  [contenteditable="true"] {
-    cursor: text;
+  .mascot-cursor-canvas {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2147483647;
+    pointer-events: none;
+    will-change: transform;
   }
 }

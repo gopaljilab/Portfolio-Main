@@ -5,11 +5,12 @@ import { TiltCard } from "@/components/ui/tilt-card";
 
 const education = [
   {
-    degree: "B.Tech in Computer Science & Engineering",
+    degree: "B.E. in Computer Science & Engineering",
     institution: "Bengaluru Technological Institute",
     period: "2025 – Present",
     status: "Pursuing",
-    description: "Focusing on advanced algorithms, distributed software systems, database internals, and full-stack architecture.",
+    subtitle: "Lateral Entry",
+    description: "Admitted directly to the second year (third semester) through diploma lateral entry. Focusing on software engineering, databases, and full-stack development.",
   },
   {
     degree: "Diploma in Computer Science & Engineering",
@@ -71,6 +72,11 @@ export function Education() {
               <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2 leading-snug">
                 {item.degree}
               </h3>
+              {item.subtitle && (
+                <span className="w-fit text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 mb-2 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  {item.subtitle}
+                </span>
+              )}
               <p className="text-sm font-semibold text-primary mb-3">
                 {item.institution}
               </p>

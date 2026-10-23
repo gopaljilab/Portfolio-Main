@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Binary } from "lucide-react";
+import { Code2 } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { TiltCard } from "@/components/ui/tilt-card";
 
@@ -56,10 +57,9 @@ const skillGroups: { title: string; description: string; skills: Skill[] }[] = [
     ],
   },
   {
-    title: "Learning",
+    title: "Cloud, DevOps & Tools",
     description: "Currently expanding into these",
     skills: [
-      { name: "DSA", level: "learning" },
       { name: "AWS", level: "learning" },
       { name: "Docker", level: "learning" },
     ],
@@ -67,14 +67,6 @@ const skillGroups: { title: string; description: string; skills: Skill[] }[] = [
 ];
 
 function SkillIcon({ name }: { name: string }) {
-  if (name === "DSA") {
-    return (
-      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
-        <Binary className="w-7 h-7" aria-hidden="true" />
-      </div>
-    );
-  }
-
   const src = ICONS[name];
   if (!src) {
     return (
@@ -83,19 +75,21 @@ function SkillIcon({ name }: { name: string }) {
       </div>
     );
   }
-  return (
-    <img
-      src={src}
-      alt={name}
-      className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
-      loading="lazy"
-    />
-  );
+  return <SkillImage name={name} src={src} />;
+}
+
+function SkillImage({ name, src }: { name: string; src: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return <div role="img" aria-label={`${name} icon unavailable`} className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Code2 className="w-6 h-6" aria-hidden="true" /></div>;
+  }
+  return <img src={src} alt={name} onError={() => setFailed(true)} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300" loading="lazy" />;
 }
 
 export function Skills() {
   return (
     <Section id="skills" title="Tech Stack" subtitle="Technologies I work with">
+      <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">Engineering fundamentals: Data Structures and Algorithms</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {skillGroups.map((group, i) => (
           <div key={i}>

@@ -57,7 +57,7 @@ export function Contact() {
 
       toast({
         title: "Message sent ✓",
-        description: "Thank you for reaching out. I'll reply within 48 hours.",
+        description: "Thank you for reaching out. Your message has been sent.",
       });
 
       reset();
@@ -92,7 +92,7 @@ export function Contact() {
           </p>
 
           <p className="text-slate-600 dark:text-slate-300 mb-6 text-base leading-relaxed">
-            I'm a B.Tech student (graduating 2026) with 2 internships and 13 merged PRs. If you're building something with Spring Boot or React and want a focused, hands-on developer — let's talk.
+            I'm a Java-focused full-stack developer building backend services, APIs, and practical web applications, with a strong focus on Spring Boot, SQL, and React. I'm pursuing my B.E. in Computer Science & Engineering and graduating in 2028.
           </p>
 
           <div className="space-y-4">

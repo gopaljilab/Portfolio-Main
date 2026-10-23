@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Server, Database, Globe, Play, CheckCircle2, Zap, ArrowRight } from "lucide-react";
+import { Server, Database, Globe, Play, CheckCircle2, Zap, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface RequestScenario {
@@ -51,6 +51,17 @@ export function FullStackVisualizer() {
   const [activeScenario, setActiveScenario] = useState<RequestScenario>(scenarios[0]);
   const [stage, setStage] = useState<"idle" | "client-to-server" | "server-to-db" | "complete">("idle");
   const [isSimulating, setIsSimulating] = useState(false);
+  const [copyFeedback, setCopyFeedback] = useState<{ kind: "json" | "sql"; message: string } | null>(null);
+
+  const copyCode = async (kind: "json" | "sql", value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyFeedback({ kind, message: "Copied" });
+    } catch {
+      setCopyFeedback({ kind, message: "Copy failed" });
+    }
+    window.setTimeout(() => setCopyFeedback(null), 2200);
+  };
 
   const runSimulation = (scenario: RequestScenario) => {
     setActiveScenario(scenario);
@@ -97,7 +108,7 @@ export function FullStackVisualizer() {
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-primary/10 text-primary border border-primary/20 font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-            ACTIVE MOCK
+            SYSTEM STATUS: SIMULATED • HTTP 200 MOCK
           </span>
         </div>
       </div>
@@ -218,15 +229,25 @@ export function FullStackVisualizer() {
           <div className="p-3 rounded-xl bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed overflow-x-auto">
             <div className="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-1 mb-2">
               <span className="text-cyan-400 font-bold">SQL Transaction Statement</span>
-              <span className="text-[10px]">Dialect: MySQL 8</span>
+              <div className="flex items-center gap-2 text-[10px]">
+                <span>Dialect: MySQL 8</span>
+                <button type="button" onClick={() => copyCode("sql", activeScenario.dbQuery)} className="inline-flex items-center gap-1 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded" aria-label="Copy SQL">
+                  {copyFeedback?.kind === "sql" && copyFeedback.message === "Copied" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copyFeedback?.kind === "sql" ? copyFeedback.message : "Copy SQL"}
+                </button>
+              </div>
             </div>
             <code className="text-slate-300">{activeScenario.dbQuery}</code>
           </div>
 
           <div className="p-3 rounded-xl bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed overflow-x-auto">
             <div className="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-1 mb-2">
-              <span className="text-emerald-400 font-bold">HTTP 200 OK Response</span>
-              <span className="text-[10px] text-primary">Latency: {activeScenario.latency}</span>
+              <span className="text-emerald-400 font-bold">Simulated JSON Response</span>
+              <div className="flex items-center gap-2 text-[10px]">
+                <span className="text-primary">{activeScenario.latency} simulated</span>
+                <button type="button" onClick={() => copyCode("json", activeScenario.response)} className="inline-flex items-center gap-1 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded" aria-label="Copy JSON">
+                  {copyFeedback?.kind === "json" && copyFeedback.message === "Copied" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copyFeedback?.kind === "json" ? copyFeedback.message : "Copy JSON"}
+                </button>
+              </div>
             </div>
             <code className="text-slate-300">{activeScenario.response}</code>
           </div>

@@ -58,7 +58,7 @@ const certifications: Cert[] = [
     year: "2026",
     credentialId: "WOCS-2025-CONTRIB",
     image: wocPng,
-    featured: true,
+    featured: false,
   },
   {
     title: "Elite Coders Winter of Code",
@@ -91,7 +91,7 @@ const certifications: Cert[] = [
     year: "2024",
     credentialId: "ERD/D/21/07312",
     image: coreJavaJpeg,
-    featured: false,
+    featured: true,
   },
   {
     title: "Building YouTube Clone API Bootcamp",
@@ -200,7 +200,7 @@ export function Achievements() {
 
   return (
     <Section id="achievements" title="Certifications" subtitle="Professional Credentials">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div id="certifications-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {visibleCerts.map((cert, index) => (
           <CertCard key={cert.credentialId} cert={cert} index={index} />
         ))}
@@ -211,6 +211,8 @@ export function Achievements() {
           <div className="flex justify-center mt-4">
           <button
             onClick={() => setShowAll((v) => !v)}
+            aria-expanded={showAll}
+            aria-controls="certifications-grid"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-primary/50 hover:text-primary transition-all shadow-sm"
           >
             {showAll ? (
@@ -221,7 +223,7 @@ export function Achievements() {
             ) : (
               <>
                 <ChevronDown className="w-4 h-4" />
-                View all {certifications.length} certifications
+                View All {certifications.length} Certifications
               </>
             )}
           </button>

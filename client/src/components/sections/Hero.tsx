@@ -267,7 +267,7 @@ export function Hero() {
           <div className="text-center mb-5">
             <span className="inline-flex items-center gap-2 text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               <span className="w-8 h-px bg-slate-300 dark:bg-slate-700"></span>
-              Live Architecture Demo — click any scenario to simulate a real request
+              Interactive Backend Flow &amp; DB Execution Engine
               <span className="w-8 h-px bg-slate-300 dark:bg-slate-700"></span>
             </span>
           </div>

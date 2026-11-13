@@ -4,6 +4,7 @@ import { ExternalLink, Github, Filter, ChevronDown, FileText } from "lucide-reac
 import { Section } from "@/components/layout/Section";
 import { gsap } from "@/lib/gsap";
 import { TiltCard } from "@/components/ui/tilt-card";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 type FilterKey = "All" | "Full Stack" | "Frontend" | "UI/UX" | "Web3";
 
@@ -182,22 +183,30 @@ export function Projects() {
                 <TiltCard
                   maxTilt={4}
                   scale={1.015}
-                  className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col h-full"
+                  className="h-full"
                 >
-                  {/* Project image */}
-                  <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                    />
-                    {/* Category badge — bottom-left so it never overlaps the logo area */}
-                    <div className="absolute bottom-3 left-3 z-20">
-                      <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
-                        {project.category}
-                      </span>
+                  <SpotlightCard
+                    spotlightColor="rgba(6, 182, 212, 0.12)"
+                    borderGlowColor="rgba(6, 182, 212, 0.45)"
+                    className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col h-full"
+                  >
+                    {/* Project image with Skiper-style perspective depth & overlay */}
+                    <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                      {/* Interactive depth gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none" />
+
+                      {/* Category badge — bottom-left so it never overlaps the logo area */}
+                      <div className="absolute bottom-3 left-3 z-20">
+                        <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
+                          {project.category}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
                   {/* Card body */}
                   <div className="p-5 flex flex-col flex-1">
@@ -303,6 +312,7 @@ export function Projects() {
                       </button>
                     </div>
                   </div>
+                </SpotlightCard>
                 </TiltCard>
               </motion.div>
             );

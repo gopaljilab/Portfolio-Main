@@ -6,6 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import { gsap } from "@/lib/gsap";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { FullStackVisualizer } from "@/components/sections/FullStackVisualizer";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { TextReveal } from "@/components/ui/text-reveal";
 
 export function Hero() {
   const { toast } = useToast();
@@ -213,12 +215,18 @@ export function Hero() {
 
             {/* Name */}
             <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-slate-900 dark:text-slate-100">
-              Hi, I'm <span className="text-primary">Gopal Gupta</span>
+              Hi, I'm <span className="text-primary text-glow">Gopal Gupta</span>
             </h1>
 
-            <h2 className="hero-title text-xl md:text-2xl font-display text-slate-700 dark:text-slate-300 mb-6 font-semibold">
-              I build Spring Boot backends and the React interfaces on top of them.
-            </h2>
+            <div className="hero-title mb-6">
+              <TextReveal
+                text="I build Spring Boot backends and the React interfaces on top of them."
+                as="h2"
+                className="text-xl md:text-2xl font-display text-slate-700 dark:text-slate-300 font-semibold"
+                gradientWords={["Spring", "Boot", "React"]}
+                gradientClass="text-primary font-bold text-glow"
+              />
+            </div>
 
             <p className="hero-sub text-lg text-slate-600 dark:text-slate-300 mb-6 max-w-xl mx-auto md:mx-0 leading-relaxed">
               Java Full-Stack Developer crafting scalable APIs with Spring Boot and polished UIs with React — with a passion for open source and clean architecture.
@@ -232,18 +240,18 @@ export function Hero() {
               </div>
             </div>
 
-            {/* ACTIONS — social links sit alongside the primary CTAs */}
+            {/* ACTIONS — ShimmerButton (Vengeance UI) + CV download + Socials */}
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap md:justify-start">
-              <Button
-                asChild
-                size="lg"
-                className="rounded-full px-8 bg-primary text-white hover:bg-primary/90 w-full sm:w-auto font-bold shadow-sm transition-all"
-              >
-                <a href="#projects">
+              <a href="#projects" className="w-full sm:w-auto">
+                <ShimmerButton
+                  className="w-full sm:w-auto px-8 py-3.5"
+                  shimmerColor="#38bdf8"
+                  background="var(--primary-color, #06b6d4)"
+                >
                   View Projects
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </a>
-              </Button>
+                  <ArrowRight className="w-4 h-4" />
+                </ShimmerButton>
+              </a>
 
               <Button
                 asChild

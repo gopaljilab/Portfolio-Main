@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Code2 } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { TiltCard } from "@/components/ui/tilt-card";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 // ── Devicon CDN SVG icons — consistent set, no emoji ──────────────────────
 const ICONS: Record<string, string> = {
@@ -125,21 +126,27 @@ export function Skills() {
                   <TiltCard
                     maxTilt={5}
                     scale={1.04}
-                    className={`h-full bg-white dark:bg-slate-900 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 group border transition-all duration-300 text-center shadow-sm cursor-default ${
-                      skill.level === "learning"
-                        ? "border-amber-200 dark:border-amber-800/50 hover:border-amber-400"
-                        : "border-slate-100 dark:border-slate-800 hover:border-primary/40 hover:shadow-md"
-                    }`}
+                    className="h-full"
                   >
-                    <SkillIcon name={skill.name} />
-                    <h4 className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors text-xs leading-tight">
-                      {skill.name}
-                    </h4>
-                    {skill.level === "learning" && (
-                      <span className="text-[10px] font-bold text-amber-500 dark:text-amber-400 uppercase tracking-wider leading-none">
-                        Learning
-                      </span>
-                    )}
+                    <SpotlightCard
+                      spotlightColor={skill.level === "learning" ? "rgba(245, 158, 11, 0.12)" : "rgba(6, 182, 212, 0.12)"}
+                      borderGlowColor={skill.level === "learning" ? "rgba(245, 158, 11, 0.45)" : "rgba(6, 182, 212, 0.45)"}
+                      className={`h-full bg-white dark:bg-slate-900 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 group border transition-all duration-300 text-center shadow-sm cursor-default ${
+                        skill.level === "learning"
+                          ? "border-amber-200 dark:border-amber-800/50 hover:border-amber-400"
+                          : "border-slate-100 dark:border-slate-800 hover:border-primary/40 hover:shadow-md"
+                      }`}
+                    >
+                      <SkillIcon name={skill.name} />
+                      <h4 className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors text-xs leading-tight">
+                        {skill.name}
+                      </h4>
+                      {skill.level === "learning" && (
+                        <span className="text-[10px] font-bold text-amber-500 dark:text-amber-400 uppercase tracking-wider leading-none">
+                          Learning
+                        </span>
+                      )}
+                    </SpotlightCard>
                   </TiltCard>
                 </motion.div>
               ))}

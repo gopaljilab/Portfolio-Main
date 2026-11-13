@@ -7,6 +7,7 @@ import emailjs from "@emailjs/browser";
 
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -230,11 +231,14 @@ export function Contact() {
                 )}
               </div>
 
-              {/* SUBMIT */}
-              <Button
+              {/* SUBMIT — ShimmerButton (Vengeance UI micro-interaction) */}
+              <ShimmerButton
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-14 font-bold rounded-xl bg-primary text-white hover:bg-primary/90 text-base"
+                borderRadius="14px"
+                shimmerColor="#38bdf8"
+                background="var(--primary-color, #06b6d4)"
+                className="w-full h-14 font-bold rounded-xl text-white text-base disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
@@ -247,7 +251,7 @@ export function Contact() {
                     <Send className="w-5 h-5 ml-2" />
                   </>
                 )}
-              </Button>
+              </ShimmerButton>
 
               {/* Fallback */}
               <p className="text-center text-sm text-slate-500 dark:text-slate-400">

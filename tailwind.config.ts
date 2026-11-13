@@ -84,7 +84,7 @@ export default {
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
+        serif: ['"Instrument Serif"', "var(--font-serif)", "Georgia", "serif"],
         mono: ["var(--font-mono)"],
       },
       keyframes: {

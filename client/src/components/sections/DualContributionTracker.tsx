@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Code2, ExternalLink, Flame, Trophy, GitCommit, Sparkles } from "lucide-react";
+import { Github, Code2, ExternalLink, Flame, Trophy, GitCommit, Sparkles, CheckCircle2 } from "lucide-react";
 
 export function DualContributionTracker() {
   const [ghError, setGhError] = useState(false);
-  const [lcError, setLcError] = useState(false);
 
   return (
     <div className="w-full">
@@ -69,16 +68,17 @@ export function DualContributionTracker() {
                   <GitCommit className="w-3.5 h-3.5 text-emerald-400" />
                   Contributions Heatmap
                 </span>
-                <span className="text-[11px] text-slate-500">Live SVG from ghchart</span>
+                <span className="text-[11px] text-slate-500">Live commits via ghchart</span>
               </div>
 
+              {/* Clean container without filter/inversion to let emerald green pop */}
               <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-800">
                 <div className="min-w-[580px] p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-center">
                   {!ghError ? (
                     <img
-                      src="https://ghchart.rshah.org/06b6d4/gopaljilab"
+                      src="https://ghchart.rshah.org/10b981/gopaljilab"
                       alt="Gopal Gupta's GitHub Contribution Chart"
-                      className="w-full h-auto max-h-[140px] object-contain filter contrast-125"
+                      className="w-full h-auto max-h-[145px] object-contain"
                       loading="lazy"
                       onError={() => setGhError(true)}
                     />
@@ -86,7 +86,7 @@ export function DualContributionTracker() {
                     <img
                       src="https://ghchart.rshah.org/gopaljilab"
                       alt="Gopal Gupta's GitHub Contribution Chart"
-                      className="w-full h-auto max-h-[140px] object-contain"
+                      className="w-full h-auto max-h-[145px] object-contain"
                       loading="lazy"
                     />
                   )}
@@ -102,7 +102,7 @@ export function DualContributionTracker() {
               <span className="text-slate-200 font-semibold font-mono text-sm mt-0.5 block">Full-Stack &amp; Systems</span>
             </div>
             <div className="p-2.5 rounded-lg bg-slate-950/50 border border-slate-800/60">
-              <span className="text-slate-400 text-[11px] block">Primary Focus</span>
+              <span className="text-slate-400 text-[11px] block">Primary Stack</span>
               <span className="text-emerald-400 font-semibold font-mono text-sm mt-0.5 block">Spring Boot &amp; React</span>
             </div>
           </div>
@@ -114,7 +114,7 @@ export function DualContributionTracker() {
           transition={{ duration: 0.2 }}
           className="lg:col-span-5 flex flex-col justify-between rounded-2xl p-5 md:p-6 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl relative overflow-hidden group"
         >
-          {/* Subtle amber/cyan backdrop glow */}
+          {/* Subtle amber backdrop glow */}
           <div className="absolute -top-24 -right-24 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/15 transition-all duration-500" />
 
           <div>
@@ -147,41 +147,72 @@ export function DualContributionTracker() {
               </a>
             </div>
 
-            {/* LeetCode SVG Widget */}
+            {/* Custom LeetCode Stats Summary Card */}
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">
                 <span className="flex items-center gap-1.5">
                   <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                  Problems Solved Card
+                  Problems Solved Summary
                 </span>
-                <span className="text-[11px] text-slate-500">Live stats badge</span>
+                <span className="text-[11px] text-emerald-400 font-medium">Verified Profile</span>
               </div>
 
-              <div className="w-full flex items-center justify-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 min-h-[175px]">
-                {!lcError ? (
-                  <img
-                    src="https://leetcard.jacoblin.cool/gopaljilab?theme=dark&font=DM%20Sans&extension=null"
-                    alt="Gopal Gupta's LeetCode Stats"
-                    className="w-full h-auto max-h-[195px] object-contain rounded-lg"
-                    loading="lazy"
-                    onError={() => setLcError(true)}
-                  />
-                ) : (
-                  <div className="text-center p-4">
-                    <p className="text-sm font-medium text-slate-200">LeetCode Profile: @gopaljilab</p>
-                    <p className="text-xs text-slate-400 mt-1">
-                      Solved 80+ algorithmic challenges in Data Structures &amp; Algorithms.
-                    </p>
-                    <a
-                      href="https://leetcode.com/gopaljilab/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium"
-                    >
-                      View solved problems on LeetCode <ExternalLink className="w-3 h-3" />
-                    </a>
+              {/* Clean container matching GitHub section with emerald/amber accents */}
+              <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800/80">
+                <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
+                  <div>
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
+                      Total Solved
+                    </span>
+                    <div className="flex items-baseline gap-2 mt-0.5">
+                      <span className="text-3xl font-extrabold font-mono text-slate-100 tracking-tight">204</span>
+                      <span className="text-xs text-slate-500 font-mono">/ 4,110</span>
+                    </div>
                   </div>
-                )}
+                  <div className="text-right">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Java &amp; SQL
+                    </span>
+                    <span className="text-[11px] text-slate-400 font-mono block mt-1">Acceptance ~80%</span>
+                  </div>
+                </div>
+
+                {/* Difficulty Bars */}
+                <div className="grid grid-cols-3 gap-2.5 mt-3.5">
+                  {/* Easy */}
+                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800/80 flex flex-col">
+                    <div className="flex items-center justify-between text-[11px] font-medium text-emerald-400 mb-1">
+                      <span>Easy</span>
+                      <span className="font-mono text-slate-300">175</span>
+                    </div>
+                    <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-emerald-400 h-1.5 rounded-full" style={{ width: "85%" }} />
+                    </div>
+                  </div>
+
+                  {/* Medium */}
+                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800/80 flex flex-col">
+                    <div className="flex items-center justify-between text-[11px] font-medium text-amber-400 mb-1">
+                      <span>Med</span>
+                      <span className="font-mono text-slate-300">27</span>
+                    </div>
+                    <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-amber-400 h-1.5 rounded-full" style={{ width: "35%" }} />
+                    </div>
+                  </div>
+
+                  {/* Hard */}
+                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800/80 flex flex-col">
+                    <div className="flex items-center justify-between text-[11px] font-medium text-rose-400 mb-1">
+                      <span>Hard</span>
+                      <span className="font-mono text-slate-300">2</span>
+                    </div>
+                    <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-rose-400 h-1.5 rounded-full" style={{ width: "10%" }} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -193,8 +224,8 @@ export function DualContributionTracker() {
               <span className="text-slate-200 font-semibold font-mono text-sm mt-0.5 block">Arrays, Trees &amp; DP</span>
             </div>
             <div className="p-2.5 rounded-lg bg-slate-950/50 border border-slate-800/60">
-              <span className="text-slate-400 text-[11px] block">Consistency</span>
-              <span className="text-amber-400 font-semibold font-mono text-sm mt-0.5 block">Active Practice</span>
+              <span className="text-slate-400 text-[11px] block">Active Practice</span>
+              <span className="text-amber-400 font-semibold font-mono text-sm mt-0.5 block">Daily Problem Solving</span>
             </div>
           </div>
         </motion.div>

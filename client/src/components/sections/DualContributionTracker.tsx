@@ -6,9 +6,9 @@ export function DualContributionTracker() {
   const [ghError, setGhError] = useState(false);
 
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full space-y-8 my-8">
       {/* Section Header Badge */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-8">
         <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 text-emerald-600 dark:text-emerald-400">
           <Sparkles className="w-3.5 h-3.5 animate-pulse text-emerald-500" />
           <span>CONTINUOUS PROD COMMITMENT &amp; PROBLEM SOLVING</span>
@@ -25,15 +25,15 @@ export function DualContributionTracker() {
       <motion.div
         whileHover={{ y: -2 }}
         transition={{ duration: 0.2 }}
-        className="w-full rounded-2xl p-6 md:p-8 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl relative overflow-hidden group"
+        className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden group"
       >
         {/* Subtle backdrop glow */}
         <div className="absolute -top-32 -left-32 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/15 transition-all duration-500" />
 
         {/* Card Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800/60 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center text-emerald-400 shadow-inner">
+            <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 shadow-inner">
               <Github className="w-6 h-6" />
             </div>
             <div>
@@ -52,7 +52,7 @@ export function DualContributionTracker() {
             href="https://github.com/gopaljilab"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700/90 text-slate-200 hover:text-white border border-slate-700/80 transition-colors self-start sm:self-auto shadow-sm"
+            className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 transition-colors self-start sm:self-auto shadow-sm"
           >
             <span>View GitHub Profile</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -69,9 +69,9 @@ export function DualContributionTracker() {
             <span className="text-[11px] text-slate-500">Live commits via GitHub SVG</span>
           </div>
 
-          {/* Horizontally scrollable wrapper on narrow screens, perfectly centered on wide displays */}
+          {/* Horizontally scrollable wrapper on narrow screens, perfectly centered on wide displays with zero clipping */}
           <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            <div className="min-w-[720px] p-5 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-center">
+            <div className="min-w-[720px] p-5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center">
               {!ghError ? (
                 <img
                   src="https://ghchart.rshah.org/gopaljilab"
@@ -93,9 +93,9 @@ export function DualContributionTracker() {
         </div>
 
         {/* GitHub Highlights Footer */}
-        <div className="mt-6 pt-5 border-t border-slate-800/60 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
-          <div className="p-3 rounded-xl bg-slate-950/50 border border-slate-800/60 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <div className="mt-6 pt-5 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
               <Zap className="w-4 h-4" />
             </div>
             <div>
@@ -104,8 +104,8 @@ export function DualContributionTracker() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/50 border border-slate-800/60 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
               <Target className="w-4 h-4" />
             </div>
             <div>
@@ -114,8 +114,8 @@ export function DualContributionTracker() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/50 border border-slate-800/60 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
@@ -130,15 +130,15 @@ export function DualContributionTracker() {
       <motion.div
         whileHover={{ y: -2 }}
         transition={{ duration: 0.2 }}
-        className="w-full rounded-2xl p-6 md:p-8 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-xl relative overflow-hidden group"
+        className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden group"
       >
         {/* Subtle backdrop glow */}
         <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/15 transition-all duration-500" />
 
         {/* Card Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800/60 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center text-amber-400 shadow-inner">
+            <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 shadow-inner">
               <Code2 className="w-6 h-6" />
             </div>
             <div>
@@ -157,7 +157,7 @@ export function DualContributionTracker() {
             href="https://leetcode.com/gopaljilab/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700/90 text-slate-200 hover:text-white border border-slate-700/80 transition-colors self-start sm:self-auto shadow-sm"
+            className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 transition-colors self-start sm:self-auto shadow-sm"
           >
             <span>View LeetCode Profile</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -165,10 +165,10 @@ export function DualContributionTracker() {
         </div>
 
         {/* Multi-Column LeetCode Stats Breakdown */}
-        <div className="mt-6 bg-slate-950/80 p-5 md:p-6 rounded-xl border border-slate-800/80">
+        <div className="mt-6 bg-slate-950/80 p-5 md:p-6 rounded-xl border border-slate-800">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             {/* Total Problems Banner (4 cols on md) */}
-            <div className="md:col-span-4 pb-4 md:pb-0 md:pr-6 md:border-r border-slate-800/80">
+            <div className="md:col-span-4 pb-4 md:pb-0 md:pr-6 md:border-r border-slate-800">
               <div className="flex items-center justify-between md:block">
                 <div>
                   <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block">
@@ -193,13 +193,13 @@ export function DualContributionTracker() {
             {/* Difficulty Trackers (8 cols on md) */}
             <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               {/* Easy */}
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800/90 flex flex-col justify-between">
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between text-xs font-medium text-emerald-400 mb-1.5">
                     <span>Easy</span>
                     <span className="font-mono text-slate-200 font-bold text-sm">175</span>
                   </div>
-                  <span className="text-[11px] text-slate-400 block mb-2">Fundamentals &amp; Logic</span>
+                  <span className="text-[11px] text-slate-400 block mb-3 font-sans">Fundamentals &amp; Logic</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                   <div className="bg-emerald-400 h-2 rounded-full" style={{ width: "85%" }} />
@@ -207,13 +207,13 @@ export function DualContributionTracker() {
               </div>
 
               {/* Medium */}
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800/90 flex flex-col justify-between">
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between text-xs font-medium text-amber-400 mb-1.5">
                     <span>Medium</span>
                     <span className="font-mono text-slate-200 font-bold text-sm">27</span>
                   </div>
-                  <span className="text-[11px] text-slate-400 block mb-2">Core DSA &amp; Patterns</span>
+                  <span className="text-[11px] text-slate-400 block mb-3 font-sans">Core DSA &amp; Patterns</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                   <div className="bg-amber-400 h-2 rounded-full" style={{ width: "35%" }} />
@@ -221,13 +221,13 @@ export function DualContributionTracker() {
               </div>
 
               {/* Hard */}
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800/90 flex flex-col justify-between">
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between text-xs font-medium text-rose-400 mb-1.5">
                     <span>Hard</span>
                     <span className="font-mono text-slate-200 font-bold text-sm">2</span>
                   </div>
-                  <span className="text-[11px] text-slate-400 block mb-2">Advanced Optimization</span>
+                  <span className="text-[11px] text-slate-400 block mb-3 font-sans">Advanced Optimization</span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                   <div className="bg-rose-400 h-2 rounded-full" style={{ width: "10%" }} />
@@ -238,9 +238,9 @@ export function DualContributionTracker() {
         </div>
 
         {/* LeetCode Highlights Footer */}
-        <div className="mt-6 pt-5 border-t border-slate-800/60 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
-          <div className="p-3 rounded-xl bg-slate-950/50 border border-slate-800/60 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+        <div className="mt-6 pt-5 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
               <Trophy className="w-4 h-4" />
             </div>
             <div>
@@ -249,8 +249,8 @@ export function DualContributionTracker() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/50 border border-slate-800/60 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
@@ -259,8 +259,8 @@ export function DualContributionTracker() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/50 border border-slate-800/60 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
               <Flame className="w-4 h-4" />
             </div>
             <div>

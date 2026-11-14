@@ -35,7 +35,7 @@ const projects: Project[] = [
       "Reduced order-handling steps from 5 to 2. Full CRUD across 6 entities with Spring Boot REST APIs and a React SPA front end.",
     image: "/OM.jpg",
     tags: ["Java", "Spring Boot", "MySQL", "React", "REST API"],
-    link: "https://gopaljilab.github.io/OmRestaurant/",
+    link: "https://omrestaurant.vercel.app/",
     github: "https://github.com/gopaljilab/OmRestaurant",
   },
   {

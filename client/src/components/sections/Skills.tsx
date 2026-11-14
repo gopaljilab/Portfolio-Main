@@ -20,7 +20,7 @@ const ICONS: Record<string, string> = {
   GitHub: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
   Figma: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
   MySQL: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-  AWS: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg",
+  AWS: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg",
   Docker: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
   Postman: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg",
 };
@@ -133,23 +133,25 @@ export function Skills() {
                     <SpotlightCard
                       spotlightColor={skill.level === "learning" ? "rgba(245, 158, 11, 0.12)" : "rgba(6, 182, 212, 0.12)"}
                       borderGlowColor={skill.level === "learning" ? "rgba(245, 158, 11, 0.45)" : "rgba(6, 182, 212, 0.45)"}
-                      className={`relative h-full w-full bg-white dark:bg-slate-900 px-3 py-4 rounded-2xl flex flex-col items-center justify-center gap-2 group border transition-all duration-300 text-center shadow-sm cursor-default ${
+                      className={`relative h-full w-full bg-white dark:bg-slate-900 rounded-2xl group border transition-all duration-300 text-center shadow-sm cursor-default ${
                         skill.level === "learning"
                           ? "border-amber-200 dark:border-amber-800/50 hover:border-amber-400"
                           : "border-slate-100 dark:border-slate-800 hover:border-primary/40 hover:shadow-md"
                       }`}
                     >
-                      {skill.level === "learning" && (
-                        <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider leading-none shadow-2xs">
-                          Learning
-                        </span>
-                      )}
-                      <div className="h-10 w-10 flex items-center justify-center shrink-0">
-                        <SkillIcon name={skill.name} />
+                      <div className="relative flex flex-col items-center justify-center h-full w-full p-3.5 gap-2">
+                        {skill.level === "learning" && (
+                          <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider leading-none shadow-2xs">
+                            Learning
+                          </span>
+                        )}
+                        <div className="h-10 w-10 flex items-center justify-center shrink-0">
+                          <SkillIcon name={skill.name} />
+                        </div>
+                        <h4 className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors text-xs leading-tight">
+                          {skill.name}
+                        </h4>
                       </div>
-                      <h4 className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors text-xs leading-tight">
-                        {skill.name}
-                      </h4>
                     </SpotlightCard>
                   </TiltCard>
                 </motion.div>

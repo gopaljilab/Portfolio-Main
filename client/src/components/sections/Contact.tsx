@@ -237,8 +237,7 @@ export function Contact() {
                 disabled={isSubmitting}
                 borderRadius="14px"
                 shimmerColor="#38bdf8"
-                background="var(--primary-color, #06b6d4)"
-                className="w-full h-14 font-bold rounded-xl text-white text-base disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full h-14 font-bold rounded-xl text-white text-base shadow-lg shadow-cyan-500/20"
               >
                 {isSubmitting ? (
                   <>

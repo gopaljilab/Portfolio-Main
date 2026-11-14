@@ -71,26 +71,24 @@ export function DualContributionTracker() {
                 <span className="text-[11px] text-slate-500">Live commits via ghchart</span>
               </div>
 
-              {/* Clean container without filter/inversion to let emerald green pop */}
-              <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-800">
-                <div className="min-w-[580px] p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-center">
-                  {!ghError ? (
-                    <img
-                      src="https://ghchart.rshah.org/10b981/gopaljilab"
-                      alt="Gopal Gupta's GitHub Contribution Chart"
-                      className="w-full h-auto max-h-[145px] object-contain"
-                      loading="lazy"
-                      onError={() => setGhError(true)}
-                    />
-                  ) : (
-                    <img
-                      src="https://ghchart.rshah.org/gopaljilab"
-                      alt="Gopal Gupta's GitHub Contribution Chart"
-                      className="w-full h-auto max-h-[145px] object-contain"
-                      loading="lazy"
-                    />
-                  )}
-                </div>
+              {/* Clean container without scroll, perfectly responsive */}
+              <div className="w-full overflow-hidden p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-center">
+                {!ghError ? (
+                  <img
+                    src="https://ghchart.rshah.org/gopaljilab"
+                    alt="Gopal Gupta's GitHub Contribution Chart"
+                    className="w-full h-auto object-contain max-w-full"
+                    loading="lazy"
+                    onError={() => setGhError(true)}
+                  />
+                ) : (
+                  <img
+                    src="https://ghchart.rshah.org/10b981/gopaljilab"
+                    alt="Gopal Gupta's GitHub Contribution Chart"
+                    className="w-full h-auto object-contain max-w-full"
+                    loading="lazy"
+                  />
+                )}
               </div>
             </div>
           </div>

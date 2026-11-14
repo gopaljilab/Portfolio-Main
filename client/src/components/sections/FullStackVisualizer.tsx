@@ -231,8 +231,27 @@ export function FullStackVisualizer() {
               <span className="text-cyan-400 font-bold">SQL Transaction Statement</span>
               <div className="flex items-center gap-2 text-[10px]">
                 <span>Dialect: MySQL 8</span>
-                <button type="button" onClick={() => copyCode("sql", activeScenario.dbQuery)} className="inline-flex items-center gap-1 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded" aria-label="Copy SQL">
-                  {copyFeedback?.kind === "sql" && copyFeedback.message === "Copied" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copyFeedback?.kind === "sql" ? copyFeedback.message : "Copy SQL"}
+                <button
+                  type="button"
+                  onClick={() => copyCode("sql", activeScenario.dbQuery)}
+                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
+                    copyFeedback?.kind === "sql"
+                      ? "bg-cyan-500/20 text-cyan-300 font-bold"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800"
+                  }`}
+                  aria-label="Copy SQL"
+                >
+                  {copyFeedback?.kind === "sql" ? (
+                    <>
+                      <Check className="w-3 h-3 text-cyan-400" />
+                      <span className="text-cyan-300">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Copy SQL</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -244,8 +263,27 @@ export function FullStackVisualizer() {
               <span className="text-emerald-400 font-bold">Simulated JSON Response</span>
               <div className="flex items-center gap-2 text-[10px]">
                 <span className="text-primary">{activeScenario.latency} simulated</span>
-                <button type="button" onClick={() => copyCode("json", activeScenario.response)} className="inline-flex items-center gap-1 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded" aria-label="Copy JSON">
-                  {copyFeedback?.kind === "json" && copyFeedback.message === "Copied" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copyFeedback?.kind === "json" ? copyFeedback.message : "Copy JSON"}
+                <button
+                  type="button"
+                  onClick={() => copyCode("json", activeScenario.response)}
+                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
+                    copyFeedback?.kind === "json"
+                      ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800"
+                  }`}
+                  aria-label="Copy JSON"
+                >
+                  {copyFeedback?.kind === "json" ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-400" />
+                      <span className="text-emerald-300">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Copy JSON</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

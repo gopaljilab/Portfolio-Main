@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { gsap } from "@/lib/gsap";
 import { TiltCard } from "@/components/ui/tilt-card";
-import { FullStackVisualizer } from "@/components/sections/FullStackVisualizer";
+import { DualContributionTracker } from "@/components/sections/DualContributionTracker";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { TextReveal } from "@/components/ui/text-reveal";
 
@@ -290,21 +290,14 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* ── Row 2: Full-Stack Architecture Visualizer ── */}
+        {/* ── Row 2: Dual Contribution Tracker (GitHub + LeetCode) ── */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.9 }}
           className="mt-16 md:mt-20"
         >
-          <div className="text-center mb-5">
-            <span className="inline-flex items-center gap-2 text-xs font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-              <span className="w-8 h-px bg-slate-300 dark:bg-slate-700"></span>
-              Interactive Backend Flow &amp; DB Execution Engine
-              <span className="w-8 h-px bg-slate-300 dark:bg-slate-700"></span>
-            </span>
-          </div>
-          <FullStackVisualizer />
+          <DualContributionTracker />
         </motion.div>
       </div>
     </section>

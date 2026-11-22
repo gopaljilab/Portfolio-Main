@@ -4,7 +4,7 @@ import { ExternalLink, Github, ChevronDown, FileText, ArrowUpRight } from "lucid
 import { Section } from "@/components/layout/Section";
 import { gsap } from "@/lib/gsap";
 
-type FilterKey = "All" | "Full Stack" | "Frontend" | "UI/UX" | "Web3";
+type FilterKey = "All" | "Full Stack" | "AI & ML" | "Security" | "Web3";
 
 interface Project {
   id: string;
@@ -24,8 +24,62 @@ interface Project {
 
 const projects: Project[] = [
   {
-    id: "om-restaurant",
+    id: "gavs-munim",
     number: "01",
+    title: "GAVS-MUNIM — AI Procurement & Profitability Engine",
+    category: "Full Stack",
+    tagline: "Java 21 · Spring Boot 4 · PostgreSQL · React 18 · TypeScript",
+    description:
+      "A mission-critical procurement, commercial quotation, and continuous supplier intelligence platform engineered for MSME sheet-metal fabrication factories to stop raw-material overpayment and unprofitable quoting.",
+    problem:
+      "Small manufacturing workshops fly blind on volatile metal pricing, quote customer RFQs at net losses due to hidden cutting/scrap overheads, and lack verifiable supplier lead-time and quality tracking.",
+    outcome:
+      "Engineered an advisory AI quote engine paired with deterministic Java arithmetic, SHA-256 sealed approval gates, 4-pillar supplier intelligence ratings, and 171 passing backend tests.",
+    image: "/gavs-munim.png",
+    tags: ["Java 21", "Spring Boot", "PostgreSQL", "React", "TypeScript", "Docker"],
+    link: "",
+    github: "https://github.com/gopaljilab/GAVS-MUNIM",
+    documentation: "https://github.com/gopaljilab/GAVS-MUNIM#readme",
+  },
+  {
+    id: "clinical-insight-engine",
+    number: "02",
+    title: "Clinical Insight Engine",
+    category: "AI & ML",
+    tagline: "Python · React 18 · Express · PostgreSQL · Scikit-Learn · GSSoC'26",
+    description:
+      "A clinical decision support platform surfacing early, interpretable diabetes risk signals from patient physiological data with dedicated physician and patient analytics modes.",
+    problem:
+      "Clinicians lack rapid, interpretable risk stratification tools during routine consultations, while patients struggle with opaque medical jargon and uncontextualized diagnostic lab numbers.",
+    outcome:
+      "Built an interpretable scikit-learn ML pipeline with SHAP-style factor importance, dual clinician/patient dashboards, interactive scenario simulations, and full GSSoC 2026 open-source governance.",
+    image: "/clinical-insight.png",
+    tags: ["Python", "Machine Learning", "React", "Express.js", "PostgreSQL", "Healthcare"],
+    link: "",
+    github: "https://github.com/gopaljilab/Clinical-Insight-Engine",
+    documentation: "https://github.com/gopaljilab/Clinical-Insight-Engine#readme",
+  },
+  {
+    id: "netshield",
+    number: "03",
+    title: "NetShield — AI Network Intrusion Detection System",
+    category: "Security",
+    tagline: "FastAPI · XGBoost · React 18 · TypeScript · Vite · Docker",
+    description:
+      "A high-throughput defensive security telemetry platform classifying high-velocity network packet flows into Benign or Malicious attack vectors in sub-10ms real-time latency.",
+    problem:
+      "Modern SOCs face overwhelming telemetry volume and high false-positive alerts, while legacy rule-based firewalls fail against zero-day packet anomalies and polymorphic DDoS/Infiltration attacks.",
+    outcome:
+      "Trained zero-leakage XGBoost & Random Forest models on CIC-IDS2017 with sub-10ms FastAPI inference, live interactive SOC packet simulator, and 70/70 comprehensive test coverage.",
+    image: "/netshield.png",
+    tags: ["FastAPI", "Python", "XGBoost", "React", "TypeScript", "Cybersecurity", "Docker"],
+    link: "",
+    github: "https://github.com/gopaljilab/NetShield",
+    documentation: "https://github.com/gopaljilab/NetShield#readme",
+  },
+  {
+    id: "om-restaurant",
+    number: "04",
     title: "Om Restaurant Management System",
     category: "Full Stack",
     tagline: "Java · Spring Boot · MySQL · React",
@@ -42,7 +96,7 @@ const projects: Project[] = [
   },
   {
     id: "samarth-loan",
-    number: "02",
+    number: "05",
     title: "SamarthLoan — Smart Credit Navigator",
     category: "Full Stack",
     tagline: "React · Tailwind CSS · EMI Engine · Multilingual",
@@ -60,7 +114,7 @@ const projects: Project[] = [
   },
   {
     id: "ncvet-blockchain",
-    number: "03",
+    number: "06",
     title: "NCVET-BlockChain Certification System",
     category: "Web3",
     tagline: "React · Web3.js · Chart.js",
@@ -76,43 +130,9 @@ const projects: Project[] = [
     github: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System",
     documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System/blob/main/docs/architecture.md",
   },
-  {
-    id: "portfolio-website",
-    number: "04",
-    title: "Portfolio Website",
-    category: "Frontend",
-    tagline: "React · TypeScript · GSAP · Framer Motion",
-    description:
-      "A highly interactive personal portfolio with GSAP scroll animations, 3D tilt cards, and a live full-stack architecture visualizer — built to show skills, not just describe them.",
-    problem:
-      "Generic portfolio templates don't communicate technical depth — recruiters see a list of skills, not working systems.",
-    outcome:
-      "Signature hero element (FullStack Visualizer) simulates real Spring Boot → MySQL API flows. 100% TypeScript and optimized for Lighthouse.",
-    image: "/Portfolio.jpg",
-    tags: ["React", "TypeScript", "Tailwind CSS", "GSAP", "Framer Motion"],
-    link: "",
-    github: "https://github.com/gopaljilab/portfolio",
-  },
-  {
-    id: "wash-n-vibe",
-    number: "05",
-    title: "Wash'n Vibe",
-    category: "UI/UX",
-    tagline: "Figma · UI/UX · Mobile Prototype",
-    description:
-      "A sleek mobile app prototype for a modern on-demand laundry service, designed with a focus on frictionless booking and visual delight.",
-    problem:
-      "Existing laundry-app UX flows required 7+ taps to place an order and had no real-time order-status feedback loop.",
-    outcome:
-      "Designed a 3-tap booking flow and a live order-tracker screen. Interactive Figma prototype with 40+ frames and micro-interaction states.",
-    image: "/Wash.jpg",
-    tags: ["Figma", "UI/UX", "Prototyping", "Mobile Design"],
-    link: "https://www.figma.com/proto/2mdtYq2x2Y6Kjgx1QDHbhr/Wash-N-Vibe?node-id=6-3980&starting-point-node-id=1%3A3&t=IJ0sJ9JfeJj3YfqH-1",
-    github: "",
-  },
 ];
 
-const FILTERS: FilterKey[] = ["All", "Full Stack", "Frontend", "UI/UX", "Web3"];
+const FILTERS: FilterKey[] = ["All", "Full Stack", "AI & ML", "Security", "Web3"];
 
 export function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);

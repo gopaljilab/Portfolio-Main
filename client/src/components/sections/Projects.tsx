@@ -78,8 +78,26 @@ const projects: Project[] = [
     documentation: "https://github.com/gopaljilab/NetShield#readme",
   },
   {
-    id: "om-restaurant",
+    id: "mealsync",
     number: "04",
+    title: "MealSync — Intelligent Food Management Platform",
+    category: "Full Stack",
+    tagline: "React 19 · TypeScript 5 · Express 5 · PostgreSQL 16 · Drizzle ORM",
+    description:
+      "A smart food management and redistribution platform for hostels and shared-living communities that predicts demand, tracks kitchen waste analytics, and automates surplus redistribution to partner NGOs.",
+    problem:
+      "Hostels and PGs face chronic 20-35% daily food waste due to unpredictable attendance, uncoordinated bulk purchasing, and zero direct linkage to nearby food-rescue organizations.",
+    outcome:
+      "Engineered automated meal-confirmation flows, dynamic quantity forecasting, multi-stakeholder dashboards (Resident, PG Owner, NGO), and audit-ready food donation tracking.",
+    image: "/mealsync.png",
+    tags: ["React 19", "TypeScript", "Express 5", "PostgreSQL", "Drizzle ORM", "Tailwind CSS"],
+    link: "",
+    github: "https://github.com/gopaljilab/MealSync",
+    documentation: "https://github.com/gopaljilab/MealSync#readme",
+  },
+  {
+    id: "om-restaurant",
+    number: "05",
     title: "Om Restaurant Management System",
     category: "Full Stack",
     tagline: "Java · Spring Boot · MySQL · React",
@@ -96,7 +114,7 @@ const projects: Project[] = [
   },
   {
     id: "samarth-loan",
-    number: "05",
+    number: "06",
     title: "SamarthLoan — Smart Credit Navigator",
     category: "Full Stack",
     tagline: "React · Tailwind CSS · EMI Engine · Multilingual",
@@ -114,7 +132,7 @@ const projects: Project[] = [
   },
   {
     id: "ncvet-blockchain",
-    number: "06",
+    number: "07",
     title: "NCVET-BlockChain Certification System",
     category: "Web3",
     tagline: "React · Web3.js · Chart.js",

@@ -197,31 +197,39 @@ export default function CertificateCarousel() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-border">
           {/* Categories */}
           <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Certificate category filters">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                role="tab"
-                aria-selected={activeCategory === cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all ${
-                  activeCategory === cat
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                    : "bg-secondary/60 text-muted-foreground hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                {cat}
-                {cat === "All" && <span className="ml-1 opacity-60">({certificatesList.length})</span>}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat;
+              const count = cat === "All" ? certificatesList.length : certificatesList.filter((c) => c.category === cat).length;
+              return (
+                <button
+                  key={cat}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-pressed={isActive}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
+                      : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
+                  }`}
+                >
+                  {cat}
+                  <span className={`ml-1 text-[10px] ${isActive ? "text-primary-foreground/90 font-bold" : "opacity-60"}`}>
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           {/* View Toggle */}
-          <div className="flex items-center gap-1.5 bg-secondary/60 p-1 rounded-xl border border-border self-start sm:self-auto font-mono text-xs">
+          <div className="flex items-center gap-1.5 bg-secondary/80 p-1.5 rounded-xl border border-border self-start sm:self-auto font-mono text-xs">
             <button
               onClick={() => setViewMode("grid")}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-colors ${
+              aria-pressed={viewMode === "grid"}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 viewMode === "grid"
-                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  ? "bg-card text-foreground font-semibold shadow-xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -230,9 +238,10 @@ export default function CertificateCarousel() {
             </button>
             <button
               onClick={() => setViewMode("carousel")}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-colors ${
+              aria-pressed={viewMode === "carousel"}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 viewMode === "carousel"
-                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  ? "bg-card text-foreground font-semibold shadow-xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >

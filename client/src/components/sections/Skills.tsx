@@ -65,10 +65,10 @@ const skillGroups: {
   {
     title: "Cloud & Containerization",
     categoryNumber: "03",
-    description: "Active technical expansion into cloud deployment and container orchestration",
+    description: "Multi-container orchestration, microservice isolation, and cloud deployment pipelines",
     skills: [
-      { name: "AWS", role: "Cloud Services", level: "learning" },
-      { name: "Docker", role: "Containerization", level: "learning" },
+      { name: "Docker", role: "Multi-Stage Builds & Compose" },
+      { name: "AWS", role: "Cloud Services & Hosting", level: "learning" },
     ],
   },
 ];
@@ -152,7 +152,7 @@ export function Skills() {
                     </span>
                     {group.title.includes("Cloud") && (
                       <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-mono uppercase tracking-wider">
-                        In Progress
+                        Production &amp; Expansion
                       </span>
                     )}
                   </div>

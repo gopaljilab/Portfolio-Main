@@ -181,20 +181,24 @@ export function Projects() {
         <div className="flex flex-wrap items-center gap-2 mb-12 pb-4 border-b border-border/80" role="tablist" aria-label="Project category filters">
           {FILTERS.map((cat) => {
             const isActive = activeFilter === cat;
+            const count = cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length;
             return (
               <button
                 key={cat}
                 role="tab"
                 aria-selected={isActive}
+                aria-pressed={isActive}
                 onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all ${
+                className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                    : "bg-secondary/60 text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
+                    : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
                 }`}
               >
                 {cat}
-                {cat === "All" && <span className="ml-1.5 opacity-60">({projects.length})</span>}
+                <span className={`ml-1.5 text-[10px] ${isActive ? "text-primary-foreground/90 font-bold" : "opacity-60"}`}>
+                  ({count})
+                </span>
               </button>
             );
           })}
@@ -219,7 +223,9 @@ export function Projects() {
                       <img
                         src={project.image}
                         alt={`${project.title} screenshot`}
-                        className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                        className={`w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.02] ${
+                          project.id === "om-restaurant" ? "object-cover object-center" : "object-cover object-top"
+                        }`}
                         loading="lazy"
                       />
                       <div className="absolute top-3 left-3 bg-card/90 backdrop-blur-xs border border-border px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest text-foreground">
@@ -255,13 +261,13 @@ export function Projects() {
                     </div>
 
                     {/* Action Links & Expandable Case Study Button */}
-                    <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border">
+                    <div className="flex flex-wrap items-center gap-2.5 pt-4 border-t border-border">
                       {project.link ? (
                         <a
                           href={project.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs"
                         >
                           <span>Live Demo</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />
@@ -296,10 +302,14 @@ export function Projects() {
                         onClick={() => toggleCaseStudy(project.id)}
                         aria-expanded={isExpanded}
                         aria-controls={`case-study-${project.id}`}
-                        className="inline-flex items-center gap-1 px-3 py-2 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors ml-auto"
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-mono text-xs uppercase tracking-wider transition-all border ${
+                          isExpanded
+                            ? "bg-secondary text-foreground border-primary/50 shadow-xs"
+                            : "bg-secondary/40 hover:bg-secondary text-muted-foreground hover:text-foreground border-border"
+                        } sm:ml-auto cursor-pointer`}
                       >
                         <span>{isExpanded ? "Hide Details" : "Read Breakdown"}</span>
-                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? "rotate-180 text-primary" : ""}`} />
                       </button>
                     </div>
 

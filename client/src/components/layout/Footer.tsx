@@ -33,19 +33,23 @@ export function Footer() {
               href="https://github.com/gopaljilab"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
-              aria-label="GitHub Profile (@gopaljilab)"
+              className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all focus:outline-hidden focus:ring-2 focus:ring-primary/40"
+              aria-label="Visit Gopal Gupta's GitHub profile (@gopaljilab)"
+              title="GitHub Profile"
             >
-              <Github className="w-4 h-4" />
+              <Github className="w-4 h-4" aria-hidden="true" />
+              <span className="sr-only">GitHub</span>
             </a>
             <a
               href="https://www.linkedin.com/in/guptagopal001/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
-              aria-label="LinkedIn Profile (guptagopal001)"
+              className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all focus:outline-hidden focus:ring-2 focus:ring-primary/40"
+              aria-label="Visit Gopal Gupta's LinkedIn profile (guptagopal001)"
+              title="LinkedIn Profile"
             >
-              <Linkedin className="w-4 h-4" />
+              <Linkedin className="w-4 h-4" aria-hidden="true" />
+              <span className="sr-only">LinkedIn</span>
             </a>
             <button
               onClick={scrollToTop}

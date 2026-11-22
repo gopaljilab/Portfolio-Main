@@ -178,15 +178,15 @@ export function Contact() {
                 </label>
                 <Input
                   id="name"
-                  placeholder="Jane Doe"
+                  placeholder="e.g. Alex Henderson"
                   autoComplete="name"
                   {...register("name")}
-                  className={`bg-secondary/40 border-border focus:border-primary h-11 text-sm rounded-lg ${
-                    errors.name ? "border-destructive" : ""
+                  className={`bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 h-11 text-sm rounded-lg ${
+                    errors.name ? "border-destructive focus:border-destructive" : ""
                   }`}
                 />
                 {errors.name && (
-                  <p className="text-xs font-sans text-destructive">{errors.name.message}</p>
+                  <p className="text-xs font-sans text-destructive" role="alert">{errors.name.message}</p>
                 )}
               </div>
 
@@ -198,15 +198,15 @@ export function Contact() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="jane@company.com"
+                  placeholder="e.g. alex@company.com"
                   autoComplete="email"
                   {...register("email")}
-                  className={`bg-secondary/40 border-border focus:border-primary h-11 text-sm rounded-lg ${
-                    errors.email ? "border-destructive" : ""
+                  className={`bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 h-11 text-sm rounded-lg ${
+                    errors.email ? "border-destructive focus:border-destructive" : ""
                   }`}
                 />
                 {errors.email && (
-                  <p className="text-xs font-sans text-destructive">{errors.email.message}</p>
+                  <p className="text-xs font-sans text-destructive" role="alert">{errors.email.message}</p>
                 )}
               </div>
             </div>
@@ -219,10 +219,10 @@ export function Contact() {
               <Input
                 id="phone"
                 type="tel"
-                placeholder="+91 98765 43210"
+                placeholder="e.g. +91 98765 43210"
                 autoComplete="tel"
                 {...register("phone")}
-                className="bg-secondary/40 border-border focus:border-primary h-11 text-sm rounded-lg"
+                className="bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 h-11 text-sm rounded-lg"
               />
             </div>
 
@@ -234,36 +234,42 @@ export function Contact() {
               <Textarea
                 id="message"
                 rows={5}
-                placeholder="Share your project goals, team role requirements, or collaboration idea..."
+                placeholder="Share your project goals, technical role requirements, timeline, or collaboration scope..."
                 {...register("message")}
-                className={`bg-secondary/40 border-border focus:border-primary text-sm rounded-lg resize-y ${
-                  errors.message ? "border-destructive" : ""
+                className={`bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 text-sm rounded-lg resize-y ${
+                  errors.message ? "border-destructive focus:border-destructive" : ""
                 }`}
               />
               {errors.message && (
-                <p className="text-xs font-sans text-destructive">{errors.message.message}</p>
+                <p className="text-xs font-sans text-destructive" role="alert">{errors.message.message}</p>
               )}
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-2">
+            {/* Submit Button & Direct Email Fallback */}
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:w-auto px-8 h-12 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-mono text-xs uppercase tracking-wider transition-all disabled:opacity-50"
+                className="rounded-full px-8 h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-mono text-xs uppercase tracking-wider transition-all disabled:opacity-60 shadow-xs cursor-pointer"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Transmitting...</span>
-                  </span>
+                    <span>Sending Message...</span>
+                  </div>
                 ) : (
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <span>Send Message</span>
-                    <Send className="w-4 h-4" />
-                  </span>
+                    <Send className="w-3.5 h-3.5" />
+                  </div>
                 )}
               </Button>
+              <span className="text-[11px] font-mono text-muted-foreground">
+                Or email directly:{" "}
+                <a href={`mailto:${EMAIL}`} className="text-primary hover:underline">
+                  {EMAIL}
+                </a>
+              </span>
             </div>
           </form>
         </div>

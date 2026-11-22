@@ -4,9 +4,9 @@ import { DualContributionTracker } from "@/components/sections/DualContributionT
 
 const stats = [
   {
-    value: "5",
-    label: "Full-Stack Projects",
-    sub: "Production & prototypes",
+    value: "7",
+    label: "Featured Builds",
+    sub: "Full-Stack, AI & Systems",
     icon: Layers3,
   },
   {

@@ -30,17 +30,17 @@ export function Preloader() {
       setIsVisible(false);
     };
 
-    // Never leave the portfolio covered if an animation fails to finish.
-    const safetyTimeout = window.setTimeout(finish, 2200);
+    // Fast editorial reveal under 1.1s so user content is never blocked
+    const safetyTimeout = window.setTimeout(finish, 1300);
     let revertAnimation: (() => void) | null = null;
 
     try {
       const context = gsap.context(() => {
         gsap
           .timeline({ onComplete: finish })
-          .fromTo(name, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out" })
-          .fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: "power2.inOut" }, "-=0.08")
-          .to(overlay, { yPercent: -100, duration: 0.65, ease: "power3.inOut" }, "+=0.12");
+          .fromTo(name, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" })
+          .fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, "-=0.05")
+          .to(overlay, { autoAlpha: 0, duration: 0.35, ease: "power2.out" }, "+=0.08");
       }, overlay);
       revertAnimation = () => context.revert();
     } catch {
@@ -59,14 +59,25 @@ export function Preloader() {
   return (
     <div
       ref={overlayRef}
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background text-foreground"
       aria-hidden="true"
-      className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-background"
     >
-      <span ref={nameRef} className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
-        Gopal Gupta.
-      </span>
-      <div className="mt-6 h-[2px] w-32 overflow-hidden rounded-full bg-primary/15 sm:w-40">
-        <div ref={progressRef} className="h-full w-full origin-left rounded-full bg-primary" />
+      <div className="flex flex-col items-center gap-3">
+        <span
+          ref={nameRef}
+          className="font-serif text-3xl sm:text-4xl tracking-tight text-foreground"
+        >
+          Gopal Gupta
+        </span>
+        <div className="w-36 h-[1.5px] bg-border overflow-hidden rounded-full">
+          <div
+            ref={progressRef}
+            className="w-full h-full bg-primary origin-left"
+          />
+        </div>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+          Portfolio &amp; Selected Works
+        </span>
       </div>
     </div>
   );

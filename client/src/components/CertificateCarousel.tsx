@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Award, ExternalLink, LayoutGrid, Sparkles, X } from "lucide-react";
+import { Award, ExternalLink, LayoutGrid, SlidersHorizontal, X, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Section } from "@/components/layout/Section";
 import { Carousel_003, CarouselImageItem } from "@/components/v1/skiper49";
 
 import smartIndiaPng from "@assets/Gopal_Gupta_certificate_1772355032528.png";
@@ -139,15 +140,15 @@ export const certificatesList: CertificateData[] = [
   {
     id: "web-tech-workshop",
     src: mecatredzJpg,
-    alt: "Web Technologies Workshop - Mecatredz",
-    title: "Web Technologies Workshop",
-    issuer: "Mecatredz Technology (MMIT Aligarh)",
-    year: "2022",
+    alt: "National Level Workshop on Web Tech",
+    title: "National Level Workshop on Web Tech",
+    issuer: "Mecatredz Technology",
+    year: "2023",
     category: "Foundations",
     featured: false,
   },
   {
-    id: "trivedi-advance-diploma",
+    id: "trivedi-diploma",
     src: trivediJpg,
     alt: "Advance Diploma in IT & System Management",
     title: "Advance Diploma in IT & System Management",
@@ -158,176 +159,210 @@ export const certificatesList: CertificateData[] = [
   },
 ];
 
+type CategoryFilter = "All" | "Backend" | "Database" | "Open Source" | "Foundations";
+
 export default function CertificateCarousel() {
   const [selectedCert, setSelectedCert] = useState<CertificateData | null>(null);
-  const [viewMode, setViewMode] = useState<"carousel" | "grid">("carousel");
+  const [activeCategory, setActiveCategory] = useState<CategoryFilter>("All");
+  const [viewMode, setViewMode] = useState<"grid" | "carousel">("grid");
+
+  const categories: CategoryFilter[] = ["All", "Backend", "Database", "Open Source", "Foundations"];
+
+  const filteredCerts =
+    activeCategory === "All"
+      ? certificatesList
+      : certificatesList.filter((c) => c.category === activeCategory);
+
+  // Accessible Modal Keyboard Trapping & Escape listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && selectedCert) {
+        setSelectedCert(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedCert]);
 
   return (
-    <section id="achievements" className="py-20 md:py-28 relative overflow-hidden bg-background">
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary/5 rounded-full blur-[140px] pointer-events-none -z-10" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header styled with Instrument Serif */}
-        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary mb-4 text-xs font-mono font-semibold tracking-widest uppercase">
-            <Award className="w-3.5 h-3.5" />
-            <span>Credentials & Accreditations</span>
+    <Section
+      id="achievements"
+      chapterNumber="05"
+      subtitle="Accreditations"
+      title="Professional Credentials"
+      description="Thirteen verified technical credentials across Java development, SQL optimization, Postman API architectures, and national hackathons."
+    >
+      <div>
+        {/* Controls Bar: Category Filters + View Mode Toggle */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-border">
+          {/* Categories */}
+          <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Certificate category filters">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                role="tab"
+                aria-selected={activeCategory === cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all ${
+                  activeCategory === cat
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                    : "bg-secondary/60 text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                {cat}
+                {cat === "All" && <span className="ml-1 opacity-60">({certificatesList.length})</span>}
+              </button>
+            ))}
           </div>
 
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif tracking-tight text-slate-900 dark:text-slate-100 mb-4 leading-tight">
-            Professional Credentials
-          </h2>
-
-          <p className="text-slate-600 dark:text-slate-400 font-sans text-sm sm:text-base leading-relaxed">
-            Drag or swipe across the 3D perspective deck to explore my technical certifications,
-            hackathon recognitions, and production-level developer internships.
-          </p>
-
-          {/* Controls toggle between 3D Carousel & Grid view */}
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <button
-              onClick={() => setViewMode("carousel")}
-              className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                viewMode === "carousel"
-                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                  : "bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-foreground"
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>3D Carousel</span>
-            </button>
+          {/* View Toggle */}
+          <div className="flex items-center gap-1.5 bg-secondary/60 p-1 rounded-xl border border-border self-start sm:self-auto font-mono text-xs">
             <button
               onClick={() => setViewMode("grid")}
-              className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-colors ${
                 viewMode === "grid"
-                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                  : "bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-foreground"
+                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
-              <span>All ({certificatesList.length}) Grid</span>
+              <span>Grid ({filteredCerts.length})</span>
+            </button>
+            <button
+              onClick={() => setViewMode("carousel")}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-colors ${
+                viewMode === "carousel"
+                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Carousel</span>
             </button>
           </div>
         </div>
 
-        {/* Inverted Perspective Carousel Component View */}
-        {viewMode === "carousel" ? (
-          <div className="w-full flex justify-center">
+        {/* View Mode 1: Clean Editorial Grid */}
+        {viewMode === "grid" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCerts.map((cert) => (
+              <article
+                key={cert.id}
+                onClick={() => setSelectedCert(cert)}
+                className="bg-card border border-border rounded-2xl overflow-hidden p-4 sm:p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="relative aspect-[16/11] rounded-xl overflow-hidden bg-secondary border border-border/80 mb-4">
+                    <img
+                      src={cert.src}
+                      alt={cert.alt}
+                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-2.5 right-2.5 bg-card/90 backdrop-blur-xs border border-border px-2.5 py-0.5 rounded-full font-mono text-[10px] text-foreground">
+                      {cert.year}
+                    </div>
+                  </div>
+
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-medium block mb-1">
+                    {cert.category}
+                  </span>
+                  <h3 className="font-serif text-lg sm:text-xl text-foreground font-normal tracking-tight line-clamp-2 mb-1 group-hover:text-primary transition-colors">
+                    {cert.title}
+                  </h3>
+                  <p className="text-xs font-sans text-muted-foreground">
+                    {cert.issuer}
+                  </p>
+                </div>
+
+                <div className="pt-3 mt-4 border-t border-border flex items-center justify-between text-xs font-mono text-muted-foreground">
+                  <span>Inspect Credential</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {/* View Mode 2: Restrained Perspective Carousel */}
+        {viewMode === "carousel" && (
+          <div className="w-full flex justify-center py-4">
             <Carousel_003
-              images={certificatesList}
-              showPagination={true}
-              showNavigation={true}
-              loop={true}
-              autoplay={{ delay: 3200, disableOnInteraction: false }}
-              spaceBetween={0}
+              images={filteredCerts}
               onImageClick={(item) => setSelectedCert(item as CertificateData)}
             />
           </div>
-        ) : (
-          /* Grid View of all 13 certificates */
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {certificatesList.map((cert) => (
-              <div
-                key={cert.id}
-                onClick={() => setSelectedCert(cert)}
-                className="cursor-pointer group relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800">
-                  <img
-                    src={cert.src}
-                    alt={cert.title || cert.alt}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg">
-                      View Certificate <ExternalLink className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </div>
-                <div className="p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors line-clamp-1">
-                      {cert.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{cert.issuer}</p>
-                  </div>
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 font-mono">
-                    <span>{cert.category}</span>
-                    <span>{cert.year}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
         )}
-      </div>
 
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {selectedCert && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedCert(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 sm:p-6"
-          >
+        {/* Accessible Lightbox Modal */}
+        <AnimatePresence>
+          {selectedCert && (
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-w-4xl w-full bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedCert(null)}
+              className="fixed inset-0 z-50 bg-nordic-charcoal/80 dark:bg-black/85 backdrop-blur-sm p-4 sm:p-6 md:p-10 flex items-center justify-center"
+              role="dialog"
+              aria-modal="true"
+              aria-label={selectedCert.title}
             >
-              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800">
-                <div className="min-w-0 pr-4">
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 truncate">
-                    {selectedCert.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans mt-0.5">
-                    {selectedCert.issuer} • Issued {selectedCert.year}
-                  </p>
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-card border border-border rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
+              >
+                {/* Modal Header */}
+                <div className="p-4 sm:p-5 border-b border-border flex items-center justify-between">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-primary block">
+                      {selectedCert.category} · {selectedCert.year}
+                    </span>
+                    <h4 className="font-serif text-xl sm:text-2xl text-foreground font-normal">
+                      {selectedCert.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground font-sans">
+                      Issued by {selectedCert.issuer}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedCert(null)}
+                    aria-label="Close modal"
+                    className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+
+                {/* Modal Image Display */}
+                <div className="p-4 sm:p-6 flex-1 overflow-auto flex items-center justify-center bg-secondary/30">
+                  <img
+                    src={selectedCert.src}
+                    alt={selectedCert.alt}
+                    className="max-h-[60vh] w-auto object-contain rounded-lg shadow-sm border border-border"
+                  />
+                </div>
+
+                {/* Modal Footer */}
+                <div className="p-4 border-t border-border flex items-center justify-between bg-card text-xs font-mono">
+                  <span className="text-muted-foreground">Original Verified Document</span>
                   <a
                     href={selectedCert.src}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:text-primary transition-colors text-slate-600 dark:text-slate-300"
-                    title="Open in new tab"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <span>Open Full Resolution</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </a>
-                  <button
-                    onClick={() => setSelectedCert(null)}
-                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:text-primary transition-colors text-slate-600 dark:text-slate-300"
-                    title="Close"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
                 </div>
-              </div>
-
-              <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-slate-950/20 p-2 sm:p-4 flex items-center justify-center">
-                <img
-                  src={selectedCert.src}
-                  alt={selectedCert.title}
-                  className="max-h-full max-w-full object-contain rounded-xl shadow-lg"
-                />
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
+          )}
+        </AnimatePresence>
+      </div>
+    </Section>
   );
 }
-
-export { CertificateCarousel };

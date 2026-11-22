@@ -1,14 +1,14 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Github, Filter, ChevronDown, FileText } from "lucide-react";
+import { ExternalLink, Github, ChevronDown, FileText, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { gsap } from "@/lib/gsap";
-import { TiltCard } from "@/components/ui/tilt-card";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 type FilterKey = "All" | "Full Stack" | "Frontend" | "UI/UX" | "Web3";
 
 interface Project {
+  id: string;
+  number: string;
   title: string;
   category: FilterKey;
   tagline: string;
@@ -24,6 +24,8 @@ interface Project {
 
 const projects: Project[] = [
   {
+    id: "om-restaurant",
+    number: "01",
     title: "Om Restaurant Management System",
     category: "Full Stack",
     tagline: "Java · Spring Boot · MySQL · React",
@@ -39,6 +41,8 @@ const projects: Project[] = [
     github: "https://github.com/gopaljilab/OmRestaurant",
   },
   {
+    id: "samarth-loan",
+    number: "02",
     title: "SamarthLoan — Smart Credit Navigator",
     category: "Full Stack",
     tagline: "React · Tailwind CSS · EMI Engine · Multilingual",
@@ -55,6 +59,8 @@ const projects: Project[] = [
     documentation: "https://github.com/gopaljilab/SamarthLoan/blob/main/docs/phase-2-architecture.md",
   },
   {
+    id: "ncvet-blockchain",
+    number: "03",
     title: "NCVET-BlockChain Certification System",
     category: "Web3",
     tagline: "React · Web3.js · Chart.js",
@@ -71,6 +77,8 @@ const projects: Project[] = [
     documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System/blob/main/docs/architecture.md",
   },
   {
+    id: "portfolio-website",
+    number: "04",
     title: "Portfolio Website",
     category: "Frontend",
     tagline: "React · TypeScript · GSAP · Framer Motion",
@@ -86,6 +94,8 @@ const projects: Project[] = [
     github: "https://github.com/gopaljilab/portfolio",
   },
   {
+    id: "wash-n-vibe",
+    number: "05",
     title: "Wash'n Vibe",
     category: "UI/UX",
     tagline: "Figma · UI/UX · Mobile Prototype",
@@ -105,145 +115,181 @@ const projects: Project[] = [
 const FILTERS: FilterKey[] = ["All", "Full Stack", "Frontend", "UI/UX", "Web3"];
 
 export function Projects() {
-  const gridRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [showAll, setShowAll] = useState<boolean>(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState<boolean>(true); // Default to showcasing all 5 projects cleanly
 
   const filtered =
     activeFilter === "All"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
-  const visibleProjects = showAll ? filtered : filtered.slice(0, 2);
+  const visibleProjects = showAll ? filtered : filtered.slice(0, 3);
 
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".project-card-wrapper",
-        { opacity: 0, y: 30 },
-        {
-          immediateRender: false,
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        },
-      );
-    }, gridRef);
-
-    return () => ctx.revert();
-  }, []);
+  const toggleCaseStudy = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+  };
 
   return (
-    <Section id="projects" title="Featured Projects" subtitle="My Work" darker>
-      {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-2 mb-6">
-        <Filter className="w-4 h-4 text-slate-400 shrink-0" />
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            onClick={() => {
-              setActiveFilter(f);
-              setExpandedIndex(null);
-              setShowAll(false);
-            }}
-            className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all border ${
-              activeFilter === f
-                ? "bg-primary text-white border-primary shadow-sm"
-                : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:text-primary"
-            }`}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
-      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 mb-6">
-        <AnimatePresence mode="popLayout">
-          {visibleProjects.map((project, index) => {
-            const isExpanded = expandedIndex === index;
+    <Section
+      id="projects"
+      chapterNumber="01"
+      subtitle="Selected Works"
+      title="Architecture & Engineering"
+      description="Production software, client solutions, and technical prototypes built with Java Spring Boot, React, and modern system architectures."
+    >
+      <div ref={containerRef}>
+        {/* Editorial Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-2 mb-12 pb-4 border-b border-border/80" role="tablist" aria-label="Project category filters">
+          {FILTERS.map((cat) => {
+            const isActive = activeFilter === cat;
             return (
-              <motion.div
-                key={project.title}
-                layout
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.35 }}
-                className="project-card-wrapper"
+              <button
+                key={cat}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveFilter(cat)}
+                className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                    : "bg-secondary/60 text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
               >
-                <TiltCard
-                  maxTilt={4}
-                  scale={1.015}
-                  className="h-full"
-                >
-                  <SpotlightCard
-                    spotlightColor="rgba(6, 182, 212, 0.12)"
-                    borderGlowColor="rgba(6, 182, 212, 0.45)"
-                    className="group rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col h-full"
-                  >
-                    {/* Project image with Skiper-style perspective depth & overlay */}
-                    <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800">
+                {cat}
+                {cat === "All" && <span className="ml-1.5 opacity-60">({projects.length})</span>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Project Gallery - Editorial Layout */}
+        <div className="space-y-12 md:space-y-16">
+          {visibleProjects.map((project, index) => {
+            const isExpanded = expandedId === project.id;
+            const isFeatured = index === 0 && activeFilter === "All";
+
+            return (
+              <article
+                key={project.id}
+                className="bg-card border border-border rounded-2xl overflow-hidden p-6 sm:p-8 lg:p-10 shadow-sm transition-all hover:border-primary/40 group"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                  
+                  {/* Left: Project Imagery with Architectural Framing (6 cols or 7 cols) */}
+                  <div className={`w-full ${isFeatured ? "lg:col-span-7" : "lg:col-span-6"} order-1`}>
+                    <div className="relative rounded-xl overflow-hidden border border-border bg-secondary aspect-[16/10] group-hover:border-primary/30 transition-colors">
                       <img
                         src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                        alt={`${project.title} screenshot`}
+                        className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                        loading="lazy"
                       />
-                      {/* Interactive depth gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none" />
-
-                      {/* Category badge — bottom-left so it never overlaps the logo area */}
-                      <div className="absolute bottom-3 left-3 z-20">
-                        <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm">
-                          {project.category}
-                        </span>
+                      <div className="absolute top-3 left-3 bg-card/90 backdrop-blur-xs border border-border px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest text-foreground">
+                        {project.number} / {project.category}
                       </div>
                     </div>
+                  </div>
 
-                  {/* Card body */}
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1.5 group-hover:text-primary transition-colors">
+                  {/* Right: Project Storytelling & Action Links (6 cols or 5 cols) */}
+                  <div className={`w-full ${isFeatured ? "lg:col-span-5" : "lg:col-span-6"} order-2`}>
+                    <div className="flex items-center gap-2 mb-2 font-mono text-xs text-primary font-medium tracking-wide">
+                      <span>{project.tagline}</span>
+                    </div>
+
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif text-foreground font-normal tracking-tight mb-4 group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
-                    <p className="text-xs font-bold text-primary mb-3 uppercase tracking-wider">
-                      {project.tagline}
-                    </p>
-                    <p className="text-slate-600 dark:text-slate-300 mb-3 leading-relaxed text-sm">
+
+                    <p className="text-sm sm:text-base font-sans text-muted-foreground leading-relaxed mb-6">
                       {project.description}
                     </p>
 
-                    {/* Case-study expand */}
-                    <AnimatePresence initial={false}>
+                    {/* Technology Chips */}
+                    <div className="flex flex-wrap gap-2 mb-6" aria-label="Technologies used">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-1 rounded-md bg-secondary text-foreground/80 border border-border/80 font-mono text-[11px]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Action Links & Expandable Case Study Button */}
+                    <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border">
+                      {project.link ? (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs"
+                        >
+                          <span>Live Demo</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </a>
+                      ) : null}
+
+                      {project.github ? (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border font-mono text-xs uppercase tracking-wider transition-colors"
+                        >
+                          <Github className="w-3.5 h-3.5" />
+                          <span>Codebase</span>
+                        </a>
+                      ) : null}
+
+                      {project.documentation ? (
+                        <a
+                          href={project.documentation}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border font-mono text-xs uppercase tracking-wider transition-colors"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-primary" />
+                          <span>Docs</span>
+                        </a>
+                      ) : null}
+
+                      <button
+                        onClick={() => toggleCaseStudy(project.id)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`case-study-${project.id}`}
+                        className="inline-flex items-center gap-1 px-3 py-2 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors ml-auto"
+                      >
+                        <span>{isExpanded ? "Hide Details" : "Read Breakdown"}</span>
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                      </button>
+                    </div>
+
+                    {/* Expandable Case Study Drawer */}
+                    <AnimatePresence>
                       {isExpanded && (
                         <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.28, ease: "easeInOut" }}
-                          className="overflow-hidden"
+                          id={`case-study-${project.id}`}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="mt-6 pt-5 border-t border-border overflow-hidden"
                         >
-                          <div className="mb-4 space-y-3 border-t border-slate-100 dark:border-slate-800 pt-4">
-                            <div>
-                              <span className="text-[11px] font-bold text-primary uppercase tracking-widest">
-                                Problem
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
+                            <div className="p-4 rounded-xl bg-secondary/50 border border-border">
+                              <span className="font-mono uppercase tracking-wider text-[10px] text-muted-foreground font-semibold block mb-1">
+                                The Challenge
                               </span>
-                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                              <p className="text-foreground leading-relaxed">
                                 {project.problem}
                               </p>
                             </div>
-                            <div>
-                              <span className="text-[11px] font-bold text-primary uppercase tracking-widest">
-                                Outcome
+                            <div className="p-4 rounded-xl bg-secondary/50 border border-border">
+                              <span className="font-mono uppercase tracking-wider text-[10px] text-primary font-semibold block mb-1">
+                                Technical Outcome
                               </span>
-                              <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                              <p className="text-foreground leading-relaxed">
                                 {project.outcome}
                               </p>
                             </div>
@@ -251,90 +297,14 @@ export function Projects() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mt-auto mb-4">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs font-bold px-2 py-0.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action row — always visible */}
-                    <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
-                      {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`View ${project.title} live demo`}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-all shadow-sm"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          Live Demo
-                        </a>
-                      )}
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`View ${project.title} on GitHub`}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:border-primary/50 hover:text-primary transition-all"
-                        >
-                          <Github className="w-3.5 h-3.5" />
-                          GitHub
-                        </a>
-                      )}
-                      {project.documentation && (
-                        <a
-                          href={project.documentation}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`View ${project.title} architecture documentation`}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:border-primary/50 hover:text-primary transition-all"
-                        >
-                          <FileText className="w-3.5 h-3.5" />
-                          Architecture
-                        </a>
-                      )}
-                      <button
-                        onClick={() =>
-                          setExpandedIndex(isExpanded ? null : index)
-                        }
-                        className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-primary/50 hover:text-primary transition-all"
-                      >
-                        {isExpanded ? "Hide ↑" : "Case study ↓"}
-                      </button>
-                    </div>
                   </div>
-                </SpotlightCard>
-                </TiltCard>
-              </motion.div>
+
+                </div>
+              </article>
             );
           })}
-        </AnimatePresence>
-      </div>
-
-      {filtered.length > 2 && (
-        <div className="flex justify-center mt-4">
-          <button
-            type="button"
-            aria-expanded={showAll}
-            onClick={() => setShowAll((expanded) => !expanded)}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-5 py-2 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/5"
-          >
-            {showAll ? "See Less" : "See More Projects"}
-            <ChevronDown
-              className={`h-4 w-4 transition-transform duration-300 ${showAll ? "rotate-180" : ""}`}
-            />
-          </button>
         </div>
-      )}
+      </div>
     </Section>
   );
 }

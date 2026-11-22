@@ -1,16 +1,10 @@
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Download, ArrowRight, Github, Linkedin } from "lucide-react";
+import { MapPin, Download, ArrowRight, Github, Linkedin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { gsap } from "@/lib/gsap";
-import { TiltCard } from "@/components/ui/tilt-card";
-import { DualContributionTracker } from "@/components/sections/DualContributionTracker";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
-import { TextReveal } from "@/components/ui/text-reveal";
 
 export function Hero() {
-  const { toast } = useToast();
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -18,6 +12,7 @@ export function Hero() {
     const video = videoRef.current;
     if (!video) return;
 
+    // Graceful subtle desktop-only interactive enhancement with strict bounds
     let metadataReady = false;
     let lastX: number | null = null;
     let targetTime = 0;
@@ -55,13 +50,14 @@ export function Hero() {
       if (
         previousX === null ||
         window.matchMedia("(max-width: 767px)").matches ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
         !metadataReady ||
         !Number.isFinite(video.duration) ||
         video.duration <= 0
       ) return;
 
       const deltaX = event.clientX - previousX;
-      seekTo(targetTime + (deltaX / window.innerWidth) * 0.8 * video.duration);
+      seekTo(targetTime + (deltaX / window.innerWidth) * 0.5 * video.duration);
     };
 
     const handleSeeked = () => {
@@ -98,207 +94,173 @@ export function Hero() {
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        ".hero-title",
-        { opacity: 0, y: 36 },
-        { opacity: 1, y: 0, duration: 1, stagger: 0.12, ease: "power3.out" },
+        ".hero-label-reveal",
+        { autoAlpha: 0, y: 16 },
+        { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
       );
       gsap.fromTo(
-        ".hero-sub",
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: "power3.out" },
+        ".hero-title-reveal",
+        { autoAlpha: 0, y: 28 },
+        { autoAlpha: 1, y: 0, duration: 0.85, delay: 0.15, ease: "power3.out" },
       );
-
-      gsap.to(".hero-orb--upper", {
-        y: 150,
-        x: -45,
-        scale: 1.12,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current ?? undefined,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-      gsap.to(".hero-orb--lower", {
-        y: -100,
-        x: 35,
-        scale: 0.9,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current ?? undefined,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-        },
-      });
+      gsap.fromTo(
+        ".hero-sub-reveal",
+        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 1, y: 0, duration: 0.7, delay: 0.35, ease: "power3.out" },
+      );
+      gsap.fromTo(
+        ".hero-actions-reveal",
+        { autoAlpha: 0, y: 16 },
+        { autoAlpha: 1, y: 0, duration: 0.65, delay: 0.5, ease: "power3.out" },
+      );
+      gsap.fromTo(
+        ".hero-portrait-frame",
+        { autoAlpha: 0, scale: 0.96 },
+        { autoAlpha: 1, scale: 1, duration: 0.9, delay: 0.25, ease: "power2.out" },
+      );
     }, heroRef);
 
     return () => ctx.revert();
   }, []);
 
-  const handleDownloadCV = () => {
-    window.open("/resume.pdf", "_blank");
-    toast({
-      title: "Opening Resume",
-      description: "Gopal's resume is opening in a new tab.",
-    });
-  };
-
   return (
     <section
       id="home"
       ref={heroRef}
-      className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-slate-50/50 dark:bg-slate-950"
+      className="relative pt-32 pb-16 md:pt-44 md:pb-24 overflow-hidden border-b border-border bg-background"
     >
-      {/* Background decoration */}
-      <div className="hero-orb--upper absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-      <div className="hero-orb--lower absolute bottom-1/4 right-1/4 w-96 h-96 bg-slate-200/20 dark:bg-slate-800/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+      {/* Subtle architectural grid lines */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" aria-hidden="true">
+        <div className="w-full h-full bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* ── Row 1: Image + Text ── */}
-        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-
-          {/* Image Section */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-full md:w-5/12 flex justify-center md:justify-start order-1 md:order-2 md:translate-x-8"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/5 rounded-full blur-2xl"></div>
-
-              <TiltCard
-                maxTilt={4}
-                scale={1.02}
-                disabled
-                className="w-64 h-64 md:w-80 md:h-80 lg:w-[420px] lg:h-[420px] rounded-full border border-slate-200 dark:border-slate-800 overflow-hidden relative z-10 bg-white dark:bg-slate-900 p-1.5 shadow-sm"
-              >
-                <div className="w-full h-full rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                  <video
-                    ref={videoRef}
-                    src="/profile-animation.mp4"
-                    aria-label="Animated portrait of Gopal Gupta"
-                    muted
-                    playsInline
-                    preload="auto"
-                    controls={false}
-                    disablePictureInPicture
-                    className="w-full h-full rounded-full object-cover object-center select-none pointer-events-none"
-                  />
-                </div>
-              </TiltCard>
-
-              {/* Status Badge — centered below image */}
-              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-2 px-4 rounded-full flex items-center gap-2 shadow-sm z-20 whitespace-nowrap">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                </span>
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Available for work</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Text Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full md:w-7/12 order-2 md:order-1 text-center md:text-left"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 mb-6">
-              <span className="text-lg">👋</span>
-              <span className="text-sm font-bold">Say Hello</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+          
+          {/* Left: Editorial Hero Content (7 cols on lg) */}
+          <div className="lg:col-span-7 text-left order-2 lg:order-1">
+            
+            {/* Eyebrow Label */}
+            <div className="hero-label-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-foreground/80 border border-border mb-6 text-xs font-mono tracking-wider uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              <span>Java Full-Stack Developer · UI-Focused Engineer</span>
             </div>
 
-            {/* Name */}
-            <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-slate-900 dark:text-slate-100">
-              Hi, I'm <span className="text-primary text-glow">Gopal Gupta</span>
+            {/* Editorial Serif Headline */}
+            <h1 className="hero-title-reveal text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-foreground tracking-tight leading-[0.98] mb-6">
+              Crafting <span className="italic font-normal text-primary">thoughtful</span> digital experiences.
             </h1>
 
-            <div className="hero-title mb-6">
-              <TextReveal
-                text="I build Spring Boot backends and the React interfaces on top of them."
-                as="h2"
-                className="text-xl md:text-2xl font-display text-slate-700 dark:text-slate-300 font-semibold"
-                gradientWords={["Spring", "Boot", "React"]}
-                gradientClass="text-primary font-bold text-glow"
-              />
-            </div>
-
-            <p className="hero-sub text-lg text-slate-600 dark:text-slate-300 mb-6 max-w-xl mx-auto md:mx-0 leading-relaxed">
-              Java Full-Stack Developer crafting scalable APIs with Spring Boot and polished UIs with React — with a passion for open source and clean architecture.
+            {/* Supporting Copy */}
+            <p className="hero-sub-reveal text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8 font-sans">
+              I specialize in architecting resilient backend services and REST APIs with{" "}
+              <strong className="text-foreground font-semibold">Java &amp; Spring Boot</strong>, paired with intuitive, high-performance interfaces built in{" "}
+              <strong className="text-foreground font-semibold">React &amp; TypeScript</strong>. Driven by clean architecture, system design, and open-source craftsmanship.
             </p>
 
-            {/* Location */}
-            <div className="hero-sub flex flex-wrap items-center justify-center md:justify-start gap-4 mb-5">
-              <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium">
-                <MapPin className="w-5 h-5 text-primary" />
+            {/* Metadata Chips: Location & Availability */}
+            <div className="hero-sub-reveal flex flex-wrap items-center gap-4 text-xs font-mono text-muted-foreground mb-9 pb-6 border-b border-border/80">
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-primary" />
                 <span>Bengaluru, Karnataka, India</span>
+              </div>
+              <span className="text-border">/</span>
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                </span>
+                <span className="text-foreground font-medium">Available for full-time roles &amp; open source</span>
               </div>
             </div>
 
-            {/* ACTIONS — ShimmerButton (Vengeance UI) + CV download + Socials */}
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap md:justify-start">
-              <a href="#projects" className="w-full sm:w-auto">
-                <ShimmerButton
-                  className="w-full sm:w-auto px-8 py-3.5"
-                  shimmerColor="#38bdf8"
-                  background="var(--primary-color, #06b6d4)"
-                >
-                  View Projects
-                  <ArrowRight className="w-4 h-4" />
-                </ShimmerButton>
-              </a>
-
+            {/* Call to Actions & Social Links */}
+            <div className="hero-actions-reveal flex flex-wrap items-center gap-4">
               <Button
                 asChild
-                size="lg"
-                variant="outline"
-                className="rounded-full px-8 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 w-full sm:w-auto font-bold transition-all"
-                onClick={handleDownloadCV}
+                className="rounded-full px-7 h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-mono text-xs uppercase tracking-wider shadow-sm transition-all hover:-translate-y-0.5"
               >
-                <a href="/resume.pdf" download="Gopal_Gupta_Resume.pdf">
-                  Download CV
-                  <Download className="ml-2 w-4 h-4" />
+                <a href="#projects" className="flex items-center gap-2">
+                  <span>Explore My Work</span>
+                  <ArrowRight className="w-4 h-4" />
                 </a>
               </Button>
 
-              <div className="flex items-center gap-3">
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-full px-6 h-12 border-border bg-card hover:bg-secondary text-foreground font-mono text-xs uppercase tracking-wider transition-all hover:-translate-y-0.5"
+              >
+                <a href="/resume.pdf" download="Gopal_Gupta_Resume.pdf" className="flex items-center gap-2">
+                  <span>Download CV</span>
+                  <Download className="w-3.5 h-3.5" />
+                </a>
+              </Button>
+
+              <div className="flex items-center gap-2 pl-2">
                 <a
                   href="https://github.com/gopaljilab"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
-                  aria-label="GitHub Profile"
+                  className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
+                  aria-label="GitHub Profile (@gopaljilab)"
                 >
-                  <Github className="w-5 h-5" />
+                  <Github className="w-4 h-4" />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/guptagopal001/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary hover:border-primary/50 transition-all shadow-sm"
-                  aria-label="LinkedIn Profile"
+                  className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
+                  aria-label="LinkedIn Profile (guptagopal001)"
                 >
-                  <Linkedin className="w-5 h-5" />
+                  <Linkedin className="w-4 h-4" />
                 </a>
               </div>
             </div>
-          </motion.div>
-        </div>
+          </div>
 
-        {/* ── Row 2: Dual Contribution Tracker (GitHub + LeetCode) ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9 }}
-          className="mt-16 md:mt-20"
-        >
-          <DualContributionTracker />
-        </motion.div>
+          {/* Right: Architectural Portrait Frame (5 cols on lg) */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2">
+            <div className="hero-portrait-frame relative w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[400px]">
+              {/* Asymmetrical Paper Framing Backing */}
+              <div className="absolute -inset-3 rounded-2xl border border-primary/25 bg-secondary/40 -rotate-1 pointer-events-none" />
+              <div className="absolute inset-0 rounded-2xl border border-border bg-card shadow-sm rotate-1 pointer-events-none" />
+
+              {/* Main Photo / Interactive Video Container */}
+              <div className="relative rounded-2xl border border-border bg-card overflow-hidden p-2.5 shadow-md">
+                <div className="aspect-[4/5] w-full rounded-xl overflow-hidden bg-secondary relative">
+                  <video
+                    ref={videoRef}
+                    src="/profile-animation.mp4"
+                    poster="/profile.jpg"
+                    aria-label="Portrait of Gopal Gupta, Java Full-Stack Developer"
+                    muted
+                    playsInline
+                    preload="metadata"
+                    controls={false}
+                    disablePictureInPicture
+                    className="w-full h-full object-cover object-center select-none"
+                  />
+                  {/* Stable fallback image is always present underneath if video fails */}
+                  <img
+                    src="/profile.jpg"
+                    alt="Gopal Gupta"
+                    className="absolute inset-0 w-full h-full object-cover object-center -z-10"
+                    loading="eager"
+                  />
+                </div>
+
+                {/* Editorial Caption Plate */}
+                <div className="pt-3 pb-1 px-1 flex items-center justify-between text-xs font-mono text-muted-foreground">
+                  <span className="tracking-wider uppercase font-semibold text-foreground">Gopal Gupta</span>
+                  <span className="text-[11px]">B.E. CSE ’28 · Bengaluru</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );

@@ -20,7 +20,7 @@
     <meta name="twitter:image" content="https://raw.githubusercontent.com/gopaljilab/Portfolio-Main/main/client/public/Portfolio.jpg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#F7F2E9" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -37,7 +37,7 @@
       }
     </script>
     <script>
-      // Set theme before React mounts to avoid flash of wrong theme
+      // Set theme before React mounts to avoid flash of wrong theme (Default: Light Nordic Paper)
       (function () {
         try {
           var stored = localStorage.getItem("theme");
@@ -45,19 +45,19 @@
             document.documentElement.classList.add("dark");
             document
               .querySelector('meta[name="theme-color"]')
-              .setAttribute("content", "#0a0a0a");
+              .setAttribute("content", "#1D211F");
           } else {
             document.documentElement.classList.remove("dark");
             document
               .querySelector('meta[name="theme-color"]')
-              .setAttribute("content", "#ffffff");
+              .setAttribute("content", "#F7F2E9");
           }
         } catch (e) {}
       })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="root"></div>

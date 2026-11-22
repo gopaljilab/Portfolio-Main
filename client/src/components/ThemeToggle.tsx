@@ -8,7 +8,7 @@ export function ThemeToggle() {
     const stored = localStorage.getItem("theme");
     if (stored === "dark") return true;
     if (stored === "light") return false;
-    return false;
+    return false; // Default: Light Nordic Paper
   });
 
   useEffect(() => {
@@ -19,11 +19,11 @@ export function ThemeToggle() {
     if (dark) {
       root.classList.add("dark");
       localStorage.setItem("theme", "dark");
-      themeColor?.setAttribute("content", "#0a0a0a");
+      themeColor?.setAttribute("content", "#1D211F");
     } else {
       root.classList.remove("dark");
       localStorage.setItem("theme", "light");
-      themeColor?.setAttribute("content", "#ffffff");
+      themeColor?.setAttribute("content", "#F7F2E9");
     }
   }, [dark]);
 
@@ -32,11 +32,10 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setDark((d) => !d)}
-      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-className="rounded-full text-foreground hover:text-primary hover:bg-primary/10 min-w-[44px] min-h-[44px]"
+      aria-label={dark ? "Switch to Nordic Paper light mode" : "Switch to Nordic Night dark mode"}
+      className="rounded-full text-foreground/80 hover:text-primary hover:bg-primary/10 min-w-[44px] min-h-[44px] transition-colors"
     >
-      {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </Button>
   );
 }
-

@@ -5,12 +5,23 @@ interface SectionProps {
   id: string;
   title?: string;
   subtitle?: string;
+  chapterNumber?: string;
+  description?: string;
   children: ReactNode;
   className?: string;
   darker?: boolean;
 }
 
-export function Section({ id, title, subtitle, children, className = "", darker = false }: SectionProps) {
+export function Section({
+  id,
+  title,
+  subtitle,
+  chapterNumber,
+  description,
+  children,
+  className = "",
+  darker = false,
+}: SectionProps) {
   const headingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,8 +32,8 @@ export function Section({ id, title, subtitle, children, className = "", darker 
       gsap.from(heading.querySelectorAll("[data-section-reveal]"), {
         immediateRender: false,
         autoAlpha: 0,
-        y: 24,
-        duration: 0.7,
+        y: 20,
+        duration: 0.65,
         stagger: 0.08,
         ease: "power3.out",
         scrollTrigger: {
@@ -31,49 +42,46 @@ export function Section({ id, title, subtitle, children, className = "", darker 
           once: true,
         },
       });
-
-      gsap.fromTo(
-        heading,
-        { x: -18 },
-        {
-          immediateRender: false,
-          x: 18,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heading.closest("section") ?? heading,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
-        },
-      );
     }, heading);
 
     return () => context.revert();
   }, []);
 
   return (
-    <section 
-      id={id} 
-      className={`py-10 md:py-12 ${darker ? 'bg-slate-50/50 dark:bg-slate-950/50' : 'bg-white dark:bg-slate-950'} ${className}`}
+    <section
+      id={id}
+      className={`py-16 md:py-24 border-b border-border ${
+        darker ? "bg-secondary/40" : "bg-background"
+      } ${className}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {(title || subtitle) && (
-          <div
-            ref={headingRef}
-            className="mb-6 md:mb-8"
-          >
-            {subtitle && (
-              <span data-section-reveal className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block flex items-center gap-2">
-                <span className="w-10 h-0.5 bg-primary"></span>
-                {subtitle}
-              </span>
-            )}
-            {title && (
-              <h2 data-section-reveal className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100">
-                {title}
-              </h2>
-            )}
+          <div ref={headingRef} className="mb-12 md:mb-16 pb-6 border-b border-border">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2 font-mono text-xs text-muted-foreground uppercase tracking-widest" data-section-reveal>
+                  {chapterNumber && <span className="text-primary font-semibold">{chapterNumber}</span>}
+                  {chapterNumber && subtitle && <span className="text-border">/</span>}
+                  {subtitle && <span>{subtitle}</span>}
+                </div>
+                {title && (
+                  <h2
+                    className="text-4xl sm:text-5xl md:text-6xl font-serif text-foreground font-normal tracking-tight"
+                    data-section-reveal
+                  >
+                    {title}
+                  </h2>
+                )}
+              </div>
+              {description && (
+                <p
+                  className="text-sm font-sans text-muted-foreground max-w-md leading-relaxed"
+                  data-section-reveal
+                >
+                  {description}
+                </p>
+              )}
+            </div>
           </div>
         )}
         {children}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUp } from "lucide-react";
 import { useLenis } from "@/components/layout/SmoothScrollProvider";
 
 export function BackToTop() {
@@ -10,22 +9,25 @@ export function BackToTop() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if ((window.scrollY || document.documentElement.scrollTop) > 300) {
+      if ((window.scrollY || document.documentElement.scrollTop) > 360) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
 
-    window.addEventListener("scroll", toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
   const scrollToTop = () => {
     if (lenisRef?.current) {
-      lenisRef.current.scrollTo(0);
+      lenisRef.current.scrollTo(0, { duration: 0.8 });
     } else {
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({
+        top: 0,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
     }
   };
 
@@ -33,19 +35,19 @@ export function BackToTop() {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          initial={{ opacity: 0, scale: 0.9, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          className="fixed bottom-8 right-8 z-50"
+          exit={{ opacity: 0, scale: 0.9, y: 16 }}
+          transition={{ duration: 0.2 }}
+          className="fixed bottom-6 right-6 z-40"
         >
-          <Button
+          <button
             onClick={scrollToTop}
-            size="icon"
-            className="h-12 w-12 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-white border-none"
             aria-label="Back to top"
+            className="w-11 h-11 rounded-full bg-card hover:bg-secondary text-foreground border border-border shadow-md flex items-center justify-center transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <ChevronUp className="h-6 w-6" />
-          </Button>
+            <ArrowUp className="w-4 h-4 text-primary" />
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

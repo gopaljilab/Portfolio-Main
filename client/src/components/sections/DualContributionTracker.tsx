@@ -7,44 +7,27 @@ export function DualContributionTracker() {
 
   return (
     <div className="w-full space-y-8 my-8">
-      {/* Section Header Badge */}
-      <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 text-emerald-600 dark:text-emerald-400">
-          <Sparkles className="w-3.5 h-3.5 animate-pulse text-emerald-500" />
-          <span>CONTINUOUS PROD COMMITMENT &amp; PROBLEM SOLVING</span>
-        </span>
-        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
-          Engineering &amp; Problem Solving Trackers
-        </h3>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-xl mx-auto">
-          Dedicated activity tracking across open-source codebases and algorithmic problem-solving platforms.
-        </p>
-      </div>
-
       {/* ── 1. Full-Width GitHub Activity Card ── */}
-      <motion.div
-        whileHover={{ y: -2 }}
-        transition={{ duration: 0.2 }}
-        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl text-slate-900 dark:text-white relative overflow-hidden group transition-colors duration-200"
-      >
-        {/* Subtle backdrop glow */}
-        <div className="absolute -top-32 -left-32 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/15 transition-all duration-500" />
-
+      <div className="w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden transition-colors">
         {/* Card Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-border gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-inner">
-              <Github className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary shadow-xs">
+              <Github className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h4 className="font-semibold text-slate-900 dark:text-white text-lg md:text-xl">GitHub Activity &amp; Commit Graph</h4>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-ping" />
+                <h4 className="font-serif text-xl sm:text-2xl text-foreground font-normal">
+                  Open Source &amp; GitHub Activity
+                </h4>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                   Active Streak
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-mono mt-0.5">@gopaljilab • Public Repositories &amp; Open Source</p>
+              <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                @gopaljilab • Public Repositories &amp; Pull Requests
+              </p>
             </div>
           </div>
 
@@ -52,26 +35,26 @@ export function DualContributionTracker() {
             href="https://github.com/gopaljilab"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors self-start sm:self-auto shadow-sm"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors self-start sm:self-auto shadow-xs"
           >
             <span>View GitHub Profile</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3.5 h-3.5 text-primary" />
           </a>
         </div>
 
         {/* Full Yearly Heatmap Container */}
         <div className="mt-6">
-          <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 mb-3 font-mono">
-            <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
-              <GitCommit className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              Yearly Contribution Heatmap
+          <div className="flex items-center justify-between text-xs text-muted-foreground mb-3 font-mono">
+            <span className="flex items-center gap-1.5 text-foreground font-medium">
+              <GitCommit className="w-4 h-4 text-primary" />
+              Yearly Contribution Ledger
             </span>
-            <span className="text-[11px] text-slate-500 dark:text-slate-400">Live commits via GitHub SVG</span>
+            <span className="text-[11px]">Live commits via GitHub SVG</span>
           </div>
 
-          {/* Horizontally scrollable wrapper on narrow screens, perfectly centered on wide displays with zero clipping */}
-          <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
-            <div className="min-w-[720px] p-5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 flex items-center justify-center transition-colors">
+          {/* Horizontally scrollable wrapper with Nordic scrollbars */}
+          <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+            <div className="min-w-[720px] p-5 rounded-xl bg-secondary/50 dark:bg-secondary/20 border border-border flex items-center justify-center transition-colors">
               {!ghError ? (
                 <img
                   src="https://ghchart.rshah.org/gopaljilab"
@@ -93,63 +76,60 @@ export function DualContributionTracker() {
         </div>
 
         {/* GitHub Highlights Footer */}
-        <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center gap-3 transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+        <div className="mt-6 pt-5 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-mono">
+          <div className="p-3.5 rounded-xl bg-secondary/40 border border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <Zap className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-mono">Primary Stack</span>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm">Java Spring Boot &amp; React</span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider block">Primary Focus</span>
+              <span className="text-foreground font-sans font-semibold text-sm">Java Spring Boot &amp; React</span>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center gap-3 transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shrink-0">
+          <div className="p-3.5 rounded-xl bg-secondary/40 border border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <Target className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-mono">Engineering Focus</span>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm">REST APIs &amp; Microservices</span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider block">System Design</span>
+              <span className="text-foreground font-sans font-semibold text-sm">REST APIs &amp; Microservices</span>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center gap-3 transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+          <div className="p-3.5 rounded-xl bg-secondary/40 border border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-mono">Open Source</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm">Active Contributor</span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider block">Community</span>
+              <span className="text-primary font-sans font-semibold text-sm">Active Contributor</span>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ── 2. Full-Width LeetCode Metrics Card ── */}
-      <motion.div
-        whileHover={{ y: -2 }}
-        transition={{ duration: 0.2 }}
-        className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl text-slate-900 dark:text-white relative overflow-hidden group transition-colors duration-200"
-      >
-        {/* Subtle backdrop glow */}
-        <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/15 transition-all duration-500" />
-
+      <div className="w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden transition-colors">
         {/* Card Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-border gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-amber-600 dark:text-amber-400 shadow-inner">
-              <Code2 className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary shadow-xs">
+              <Code2 className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h4 className="font-semibold text-slate-900 dark:text-white text-lg md:text-xl">LeetCode Metrics &amp; DSA Problem Solving</h4>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                  <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                  Consistent Practice
+                <h4 className="font-serif text-xl sm:text-2xl text-foreground font-normal">
+                  Algorithms &amp; Problem Solving
+                </h4>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                  <Flame className="w-3.5 h-3.5 text-primary" />
+                  Daily Practice
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-mono mt-0.5">@gopaljilab • Data Structures &amp; Algorithms</p>
+              <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                @gopaljilab • Data Structures, Java &amp; SQL Challenges
+              </p>
             </div>
           </div>
 
@@ -157,80 +137,78 @@ export function DualContributionTracker() {
             href="https://leetcode.com/gopaljilab/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors self-start sm:self-auto shadow-sm"
+            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors self-start sm:self-auto shadow-xs"
           >
             <span>View LeetCode Profile</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3.5 h-3.5 text-primary" />
           </a>
         </div>
 
         {/* Multi-Column LeetCode Stats Breakdown */}
-        <div className="mt-6 bg-slate-50 dark:bg-slate-950/80 p-5 md:p-6 rounded-xl border border-slate-200 dark:border-slate-800 transition-colors">
+        <div className="mt-6 bg-secondary/50 dark:bg-secondary/20 p-5 md:p-6 rounded-xl border border-border">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             {/* Total Problems Banner (4 cols on md) */}
-            <div className="md:col-span-4 pb-4 md:pb-0 md:pr-6 md:border-r border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-between md:block">
-                <div>
-                  <span className="text-xs font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                    Total Solved
-                  </span>
-                  <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-4xl md:text-5xl font-extrabold font-mono text-slate-900 dark:text-slate-100 tracking-tight">204</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">/ 4,110 questions</span>
-                  </div>
+            <div className="md:col-span-4 pb-4 md:pb-0 md:pr-6 md:border-r border-border">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                  Total Solved (Verified)
+                </span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-4xl md:text-5xl font-serif text-foreground tracking-tight font-normal">204</span>
+                  <span className="text-xs text-muted-foreground font-mono">/ 4,110 questions</span>
                 </div>
+              </div>
 
-                <div className="mt-3">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Java &amp; SQL Preferred
-                  </span>
-                  <span className="text-xs text-slate-600 dark:text-slate-400 font-mono block mt-1.5">~80% First-Pass Acceptance</span>
-                </div>
+              <div className="mt-3">
+                <span className="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded bg-primary/10 text-primary border border-primary/20">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Java &amp; SQL
+                </span>
+                <span className="text-xs text-muted-foreground font-mono block mt-1.5">~80% First-Pass Acceptance</span>
               </div>
             </div>
 
             {/* Difficulty Trackers (8 cols on md) */}
             <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               {/* Easy */}
-              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm transition-colors">
+              <div className="p-4 rounded-xl bg-card border border-border flex flex-col justify-between shadow-xs">
                 <div>
-                  <div className="flex items-center justify-between text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-1.5">
-                    <span>Easy</span>
-                    <span className="font-mono text-slate-800 dark:text-slate-200 font-bold text-sm">175</span>
+                  <div className="flex items-center justify-between text-xs font-medium text-foreground mb-1.5">
+                    <span className="font-mono text-muted-foreground">Easy</span>
+                    <span className="font-serif text-lg text-foreground font-normal">175</span>
                   </div>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-3 font-sans">Fundamentals &amp; Logic</span>
+                  <span className="text-[11px] text-muted-foreground block mb-3 font-sans">Fundamentals &amp; Logic</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                  <div className="bg-emerald-500 dark:bg-emerald-400 h-2 rounded-full" style={{ width: "85%" }} />
+                <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-primary/80 h-1.5 rounded-full" style={{ width: "85%" }} />
                 </div>
               </div>
 
               {/* Medium */}
-              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm transition-colors">
+              <div className="p-4 rounded-xl bg-card border border-border flex flex-col justify-between shadow-xs">
                 <div>
-                  <div className="flex items-center justify-between text-xs font-medium text-amber-600 dark:text-amber-400 mb-1.5">
-                    <span>Medium</span>
-                    <span className="font-mono text-slate-800 dark:text-slate-200 font-bold text-sm">27</span>
+                  <div className="flex items-center justify-between text-xs font-medium text-foreground mb-1.5">
+                    <span className="font-mono text-muted-foreground">Medium</span>
+                    <span className="font-serif text-lg text-foreground font-normal">27</span>
                   </div>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-3 font-sans">Core DSA &amp; Patterns</span>
+                  <span className="text-[11px] text-muted-foreground block mb-3 font-sans">Core DSA &amp; Patterns</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                  <div className="bg-amber-500 dark:bg-amber-400 h-2 rounded-full" style={{ width: "35%" }} />
+                <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-primary h-1.5 rounded-full" style={{ width: "35%" }} />
                 </div>
               </div>
 
               {/* Hard */}
-              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm transition-colors">
+              <div className="p-4 rounded-xl bg-card border border-border flex flex-col justify-between shadow-xs">
                 <div>
-                  <div className="flex items-center justify-between text-xs font-medium text-rose-600 dark:text-rose-400 mb-1.5">
-                    <span>Hard</span>
-                    <span className="font-mono text-slate-800 dark:text-slate-200 font-bold text-sm">2</span>
+                  <div className="flex items-center justify-between text-xs font-medium text-foreground mb-1.5">
+                    <span className="font-mono text-muted-foreground">Hard</span>
+                    <span className="font-serif text-lg text-foreground font-normal">2</span>
                   </div>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block mb-3 font-sans">Advanced Optimization</span>
+                  <span className="text-[11px] text-muted-foreground block mb-3 font-sans">Complex Optimization</span>
                 </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                  <div className="bg-rose-500 dark:bg-rose-400 h-2 rounded-full" style={{ width: "10%" }} />
+                <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-foreground h-1.5 rounded-full" style={{ width: "10%" }} />
                 </div>
               </div>
             </div>
@@ -238,38 +216,38 @@ export function DualContributionTracker() {
         </div>
 
         {/* LeetCode Highlights Footer */}
-        <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center gap-3 transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+        <div className="mt-6 pt-5 border-t border-border grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-mono">
+          <div className="p-3.5 rounded-xl bg-secondary/40 border border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-mono">Core Topics</span>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm">Arrays, Strings, Trees &amp; DP</span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider block">Core Topics</span>
+              <span className="text-foreground font-sans font-semibold text-sm">Arrays, Strings, Trees &amp; DP</span>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center gap-3 transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+          <div className="p-3.5 rounded-xl bg-secondary/40 border border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-mono">Database &amp; SQL</span>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm">Queries, Joins &amp; Aggregates</span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider block">Database &amp; SQL</span>
+              <span className="text-foreground font-sans font-semibold text-sm">Queries, Joins &amp; Aggregates</span>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center gap-3 transition-colors">
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shrink-0">
+          <div className="p-3.5 rounded-xl bg-secondary/40 border border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
               <Flame className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] block font-mono">Routine</span>
-              <span className="text-amber-600 dark:text-amber-400 font-semibold text-sm">Daily Problem Solving</span>
+              <span className="text-muted-foreground text-[10px] uppercase tracking-wider block">Routine</span>
+              <span className="text-primary font-sans font-semibold text-sm">Daily Problem Solving</span>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

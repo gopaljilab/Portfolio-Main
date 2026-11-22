@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Code2 } from "lucide-react";
+import { Code2, ArrowRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
-import { TiltCard } from "@/components/ui/tilt-card";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
 
-// ── Devicon CDN SVG icons — consistent set, no emoji ──────────────────────
 const ICONS: Record<string, string> = {
   Java: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
   JavaScript: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
@@ -27,138 +24,176 @@ const ICONS: Record<string, string> = {
 
 interface Skill {
   name: string;
+  role: string;
   level?: "learning";
 }
 
-const skillGroups: { title: string; description: string; skills: Skill[] }[] = [
+const skillGroups: {
+  title: string;
+  categoryNumber: string;
+  description: string;
+  skills: Skill[];
+}[] = [
   {
-    title: "Daily Use",
-    description: "Stack I reach for on every project",
+    title: "Daily Production Stack",
+    categoryNumber: "01",
+    description: "Technologies I build with daily across full-stack production projects",
     skills: [
-      { name: "Java" },
-      { name: "Spring Boot" },
-      { name: "React" },
-      { name: "JavaScript" },
-      { name: "TypeScript" },
-      { name: "SQL" },
-      { name: "MySQL" },
-      { name: "Tailwind CSS" },
+      { name: "Java", role: "Backend Core & OOP" },
+      { name: "Spring Boot", role: "REST APIs & Services" },
+      { name: "React", role: "SPA & State Management" },
+      { name: "JavaScript", role: "Modern ES6+ Logic" },
+      { name: "TypeScript", role: "Type Safety & Interfaces" },
+      { name: "SQL", role: "Relational Queries" },
+      { name: "MySQL", role: "Database Architecture" },
+      { name: "Tailwind CSS", role: "Utility Design System" },
     ],
   },
   {
-    title: "Comfortable",
-    description: "Tools I use regularly and know well",
+    title: "Proficient Tools & Workflows",
+    categoryNumber: "02",
+    description: "Foundational standards, version control, and design tooling",
     skills: [
-      { name: "HTML5" },
-      { name: "CSS3" },
-      { name: "Git" },
-      { name: "GitHub" },
-      { name: "Figma" },
-      { name: "Postman" },
+      { name: "HTML5", role: "Semantic Structure" },
+      { name: "CSS3", role: "Layouts & Animations" },
+      { name: "Git", role: "Branching & Versioning" },
+      { name: "GitHub", role: "CI/CD & Open Source" },
+      { name: "Figma", role: "UI/UX & Prototyping" },
+      { name: "Postman", role: "API Testing & Docs" },
     ],
   },
   {
-    title: "Cloud, DevOps & Tools",
-    description: "Currently expanding into these",
+    title: "Cloud & Containerization",
+    categoryNumber: "03",
+    description: "Active technical expansion into cloud deployment and container orchestration",
     skills: [
-      { name: "AWS", level: "learning" },
-      { name: "Docker", level: "learning" },
+      { name: "AWS", role: "Cloud Services", level: "learning" },
+      { name: "Docker", role: "Containerization", level: "learning" },
     ],
   },
 ];
 
+const technicalRelationships = [
+  { from: "Java", to: "Spring Boot", label: "Framework Foundation" },
+  { from: "Spring Boot", to: "MySQL", label: "ORM / JDBC Persistence" },
+  { from: "TypeScript", to: "React", label: "Component Architecture" },
+  { from: "Git", to: "GitHub", label: "Distributed PR Workflows" },
+];
+
 function SkillIcon({ name }: { name: string }) {
+  const [failed, setFailed] = useState(false);
   const src = ICONS[name];
-  if (!src) {
+
+  if (!src || failed) {
     return (
-      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+      <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-primary font-mono text-xs font-semibold">
         {name.slice(0, 2).toUpperCase()}
       </div>
     );
   }
-  return <SkillImage name={name} src={src} />;
-}
 
-function SkillImage({ name, src }: { name: string; src: string }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
-    return <div role="img" aria-label={`${name} icon unavailable`} className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><Code2 className="w-6 h-6" aria-hidden="true" /></div>;
-  }
-  return <img src={src} alt={name} onError={() => setFailed(true)} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300" loading="lazy" />;
+  return (
+    <img
+      src={src}
+      alt={name}
+      onError={() => setFailed(true)}
+      className="w-8 h-8 object-contain transition-transform duration-200 group-hover:scale-105"
+      loading="lazy"
+    />
+  );
 }
 
 export function Skills() {
   return (
-    <Section id="skills" title="Tech Stack" subtitle="Technologies I work with">
-      <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mb-8 mt-2">
-        Engineering fundamentals: Data Structures, Algorithms & Full-Stack System Design
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-        {skillGroups.map((group, i) => (
-          <div key={i} className="flex flex-col h-full">
-            {/* Group header */}
-            <div className="flex items-center gap-3 mb-4 h-7">
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border shrink-0 ${
-                  group.title === "Daily Use"
-                    ? "bg-primary/10 text-primary border-primary/20"
-                    : group.title === "Comfortable"
-                    ? "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700"
-                    : "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800"
-                }`}
+    <Section
+      id="skills"
+      chapterNumber="02"
+      subtitle="Technical Index"
+      title="Tools of the trade."
+      description="Engineering fundamentals grounded in Object-Oriented Programming, Data Structures, Relational Database Management, and scalable Web Architecture."
+      darker
+    >
+      <div className="space-y-12">
+        {/* Architectural Relationships Field-Guide Strip */}
+        <div className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs">
+          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground block mb-3 font-semibold">
+            System Design Pipeline &amp; Architectural Connections
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {technicalRelationships.map((rel) => (
+              <div
+                key={rel.from + rel.to}
+                className="p-3 rounded-lg bg-secondary/50 border border-border/80 flex items-center justify-between text-xs"
               >
-                {group.title}
-              </span>
-              <span className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium truncate">
-                {group.description}
-              </span>
-            </div>
-
-            {/* Skill cards grid — strict auto-rows and equal heights */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 flex-1 auto-rows-[120px]">
-              {group.skills.map((skill, index) => (
-                <motion.div
-                  key={skill.name}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: index * 0.04 }}
-                  className="h-full w-full"
-                >
-                  <TiltCard
-                    maxTilt={5}
-                    scale={1.04}
-                    className="h-full w-full"
-                  >
-                    <SpotlightCard
-                      spotlightColor={skill.level === "learning" ? "rgba(245, 158, 11, 0.12)" : "rgba(6, 182, 212, 0.12)"}
-                      borderGlowColor={skill.level === "learning" ? "rgba(245, 158, 11, 0.45)" : "rgba(6, 182, 212, 0.45)"}
-                      className={`relative h-full w-full bg-white dark:bg-slate-900 rounded-2xl group border transition-all duration-300 text-center shadow-sm cursor-default ${
-                        skill.level === "learning"
-                          ? "border-amber-200 dark:border-amber-800/50 hover:border-amber-400"
-                          : "border-slate-100 dark:border-slate-800 hover:border-primary/40 hover:shadow-md"
-                      }`}
-                    >
-                      <div className="relative flex flex-col items-center justify-center h-full w-full p-3.5 gap-2">
-                        {skill.level === "learning" && (
-                          <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider leading-none shadow-2xs">
-                            Learning
-                          </span>
-                        )}
-                        <div className="h-10 w-10 flex items-center justify-center shrink-0">
-                          <SkillIcon name={skill.name} />
-                        </div>
-                        <h4 className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors text-xs leading-tight">
-                          {skill.name}
-                        </h4>
-                      </div>
-                    </SpotlightCard>
-                  </TiltCard>
-                </motion.div>
-              ))}
-            </div>
+                <div className="flex items-center gap-2 font-mono">
+                  <span className="font-semibold text-foreground">{rel.from}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-primary" />
+                  <span className="font-semibold text-foreground">{rel.to}</span>
+                </div>
+                <span className="text-[10px] text-muted-foreground font-sans">{rel.label}</span>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* 3 Grouped Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {skillGroups.map((group) => (
+            <div
+              key={group.title}
+              className="bg-card border border-border rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between h-full"
+            >
+              <div>
+                {/* Header */}
+                <div className="pb-4 mb-5 border-b border-border">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-widest">
+                      Section / {group.categoryNumber}
+                    </span>
+                    {group.title.includes("Cloud") && (
+                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-mono uppercase tracking-wider">
+                        In Progress
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-serif text-foreground font-normal">
+                    {group.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground font-sans mt-1">
+                    {group.description}
+                  </p>
+                </div>
+
+                {/* Skill Tiles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
+                  {group.skills.map((skill) => (
+                    <div
+                      key={skill.name}
+                      className="p-3 rounded-xl bg-secondary/30 hover:bg-secondary/70 border border-border/80 transition-colors flex items-center justify-between group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <SkillIcon name={skill.name} />
+                        <div>
+                          <div className="text-sm font-sans font-medium text-foreground flex items-center gap-2">
+                            <span>{skill.name}</span>
+                            {skill.level === "learning" && (
+                              <span className="text-[10px] font-mono text-primary font-normal bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
+                                Learning
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] font-mono text-muted-foreground block">
+                            {skill.role}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </Section>
   );

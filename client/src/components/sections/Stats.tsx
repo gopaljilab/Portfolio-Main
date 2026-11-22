@@ -1,18 +1,17 @@
 import { motion } from "framer-motion";
-import { TiltCard } from "@/components/ui/tilt-card";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { GitMerge, Layers3, Code2, BookOpen } from "lucide-react";
+import { DualContributionTracker } from "@/components/sections/DualContributionTracker";
 
 const stats = [
   {
     value: "5",
     label: "Full-Stack Projects",
-    sub: "Live & deployed",
+    sub: "Production & prototypes",
     icon: Layers3,
   },
   {
     value: "13",
-    label: "Pull Requests Merged",
+    label: "PRs Merged",
     sub: "Across open-source repos",
     icon: GitMerge,
   },
@@ -24,56 +23,70 @@ const stats = [
   },
   {
     value: "13",
-    label: "Certifications Earned",
-    sub: "Postman · Scaler · SIH 2025",
+    label: "Certifications",
+    sub: "Postman, Scaler, SIH 2025",
     icon: BookOpen,
   },
 ];
 
 export function Stats() {
   return (
-    <section className="py-8 border-y border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+    <section className="py-16 md:py-20 border-b border-border bg-card/60 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        
+        {/* Section Chapter Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 pb-5 border-b border-border gap-4">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground block mb-1">
+              Index / 00
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-foreground font-normal">
+              Snapshot &amp; Engineering Activity
+            </h2>
+          </div>
+          <p className="text-sm font-sans text-muted-foreground max-w-md">
+            Verifiable metrics spanning full-stack delivery, open-source governance, and algorithmic problem-solving.
+          </p>
+        </div>
+
+        {/* 4-Item Numerical Highlights Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
+                key={stat.label}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="h-full"
+                transition={{ duration: 0.45, delay: index * 0.08 }}
+                className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between hover:border-primary/50 transition-colors group"
               >
-                <TiltCard
-                  maxTilt={4}
-                  scale={1.02}
-                  className="h-full"
-                >
-                  <SpotlightCard
-                    spotlightColor="rgba(6, 182, 212, 0.14)"
-                    borderGlowColor="rgba(6, 182, 212, 0.45)"
-                    className="text-center p-5 md:p-6 rounded-2xl border border-slate-100 dark:border-slate-800/60 bg-slate-50/60 dark:bg-slate-800/30 hover:border-primary/40 transition-all shadow-sm flex flex-col items-center gap-2 h-full"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-1">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <h3 className="text-4xl md:text-5xl font-display font-bold text-primary">
-                      {stat.value}
-                    </h3>
-                    <p className="text-xs text-slate-700 dark:text-slate-200 uppercase tracking-widest font-bold leading-tight">
-                      {stat.label}
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-tight">
-                      {stat.sub}
-                    </p>
-                  </SpotlightCard>
-                </TiltCard>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className="font-mono text-[11px] text-muted-foreground">0{index + 1}</span>
+                </div>
+                <div>
+                  <div className="text-4xl sm:text-5xl font-serif text-foreground font-normal tracking-tight mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs font-mono uppercase tracking-wider text-foreground font-medium mb-1">
+                    {stat.label}
+                  </div>
+                  <div className="text-xs text-muted-foreground font-sans">
+                    {stat.sub}
+                  </div>
+                </div>
               </motion.div>
             );
           })}
         </div>
+
+        {/* Dedicated Full-Width GitHub & LeetCode Activity Ledger */}
+        <DualContributionTracker />
+
       </div>
     </section>
   );

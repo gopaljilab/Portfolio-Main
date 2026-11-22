@@ -123,14 +123,14 @@ export function Skills() {
             {technicalRelationships.map((rel) => (
               <div
                 key={rel.from + rel.to}
-                className="p-3 rounded-lg bg-secondary/50 border border-border/80 flex items-center justify-between text-xs"
+                className="p-3.5 rounded-lg bg-secondary/50 border border-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
               >
                 <div className="flex items-center gap-2 font-mono">
                   <span className="font-semibold text-foreground">{rel.from}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-primary" />
+                  <ArrowRight className="w-3.5 h-3.5 text-primary shrink-0" />
                   <span className="font-semibold text-foreground">{rel.to}</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground font-sans">{rel.label}</span>
+                <span className="text-[10px] text-muted-foreground font-sans leading-tight">{rel.label}</span>
               </div>
             ))}
           </div>

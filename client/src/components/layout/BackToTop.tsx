@@ -9,7 +9,14 @@ export function BackToTop() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if ((window.scrollY || document.documentElement.scrollTop) > 360) {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.documentElement.scrollHeight;
+      
+      // Visible after scrolling 400px, but hide when footer is in view (within 280px of bottom)
+      const isNearFooter = scrollY + windowHeight >= fullHeight - 260;
+      
+      if (scrollY > 400 && !isNearFooter) {
         setIsVisible(true);
       } else {
         setIsVisible(false);

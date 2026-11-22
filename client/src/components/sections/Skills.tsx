@@ -33,6 +33,8 @@ const skillGroups: {
   categoryNumber: string;
   description: string;
   skills: Skill[];
+  summaryNote?: string;
+  deploymentHighlights?: { title: string; desc: string }[];
 }[] = [
   {
     title: "Daily Production Stack",
@@ -68,16 +70,30 @@ const skillGroups: {
     description: "Multi-container orchestration, microservice isolation, and cloud deployment pipelines",
     skills: [
       { name: "Docker", role: "Multi-Stage Builds & Compose" },
-      { name: "AWS", role: "Cloud Services & Hosting", level: "learning" },
+      { name: "AWS", role: "Cloud Services & Hosting (Active Learning)" },
+    ],
+    deploymentHighlights: [
+      {
+        title: "Microservice Isolation",
+        desc: "Docker Compose multi-service networks linking FastAPI inference gateways with React SOC frontends and Nginx reverse proxies.",
+      },
+      {
+        title: "Reproducible Builds",
+        desc: "Alpine-based multi-stage container builds ensuring sub-100MB production runtimes with zero toolchain artifact bleed.",
+      },
+      {
+        title: "Continuous CI/CD Delivery",
+        desc: "GitHub Actions automated workflows running JUnit 5, PyTest, and Vite bundle validations on pull requests.",
+      },
     ],
   },
 ];
 
 const technicalRelationships = [
-  { from: "Java", to: "Spring Boot", label: "Framework Foundation" },
-  { from: "Spring Boot", to: "MySQL", label: "ORM / JDBC Persistence" },
-  { from: "TypeScript", to: "React", label: "Component Architecture" },
-  { from: "Git", to: "GitHub", label: "Distributed PR Workflows" },
+  { from: "Java", to: "Spring Boot", label: "Framework Foundation", projectAnchor: "#projects" },
+  { from: "Spring Boot", to: "MySQL", label: "ORM / JDBC Persistence", projectAnchor: "#projects" },
+  { from: "TypeScript", to: "React", label: "Component Architecture", projectAnchor: "#projects" },
+  { from: "Git", to: "GitHub", label: "Distributed PR Workflows", projectAnchor: "#experience" },
 ];
 
 function SkillIcon({ name }: { name: string }) {
@@ -114,24 +130,31 @@ export function Skills() {
       darker
     >
       <div className="space-y-12">
-        {/* Architectural Relationships Field-Guide Strip */}
+        {/* Architectural Relationships Field-Guide Strip (Interactive) */}
         <div className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs">
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground block mb-3 font-semibold">
-            System Design Pipeline &amp; Architectural Connections
-          </span>
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+              System Design Pipeline &amp; Architectural Connections
+            </span>
+            <span className="text-[11px] font-mono text-primary/80 hidden sm:inline-block">
+              Click to view referenced builds →
+            </span>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {technicalRelationships.map((rel) => (
-              <div
+              <a
                 key={rel.from + rel.to}
-                className="p-3.5 rounded-lg bg-secondary/50 border border-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                href={rel.projectAnchor}
+                className="p-3.5 rounded-lg bg-secondary/50 hover:bg-secondary border border-border/80 hover:border-primary/50 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs group cursor-pointer"
+                title={`Explore ${rel.from} → ${rel.to} implementation in portfolio`}
               >
                 <div className="flex items-center gap-2 font-mono">
-                  <span className="font-semibold text-foreground">{rel.from}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-primary shrink-0" />
-                  <span className="font-semibold text-foreground">{rel.to}</span>
+                  <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{rel.from}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-primary shrink-0 transition-transform group-hover:translate-x-0.5" />
+                  <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{rel.to}</span>
                 </div>
                 <span className="text-[10px] text-muted-foreground font-sans leading-tight">{rel.label}</span>
-              </div>
+              </a>
             ))}
           </div>
         </div>
@@ -176,11 +199,6 @@ export function Skills() {
                         <div>
                           <div className="text-sm font-sans font-medium text-foreground flex items-center gap-2">
                             <span>{skill.name}</span>
-                            {skill.level === "learning" && (
-                              <span className="text-[10px] font-mono text-primary font-normal bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
-                                Learning
-                              </span>
-                            )}
                           </div>
                           <span className="text-[11px] font-mono text-muted-foreground block">
                             {skill.role}
@@ -190,6 +208,27 @@ export function Skills() {
                     </div>
                   ))}
                 </div>
+
+                {/* Section 03 Deployment & Orchestration Highlights (Fills vertical balance) */}
+                {group.deploymentHighlights && (
+                  <div className="mt-5 pt-5 border-t border-border space-y-3">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-primary font-semibold block">
+                      Production Orchestration Principles
+                    </span>
+                    <div className="space-y-2.5">
+                      {group.deploymentHighlights.map((hl) => (
+                        <div key={hl.title} className="p-3 rounded-xl bg-secondary/40 border border-border/70 text-xs">
+                          <span className="font-mono font-semibold text-foreground text-[11px] block mb-0.5">
+                            {hl.title}
+                          </span>
+                          <p className="text-[11px] font-sans text-muted-foreground leading-relaxed">
+                            {hl.desc}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}

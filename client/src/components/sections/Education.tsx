@@ -5,10 +5,10 @@ const education = [
   {
     degree: "B.E. in Computer Science & Engineering",
     institution: "Bengaluru Technological Institute",
-    period: "2025 – Present",
+    period: "2025 – 2028 (Expected)",
     status: "Pursuing",
-    subtitle: "Lateral Entry",
-    description: "Admitted directly to the second year (third semester) through diploma lateral entry. Focusing on software engineering, databases, and full-stack development.",
+    subtitle: "Direct 2nd-Year Lateral Entry",
+    description: "Admitted directly into the 2nd year (3rd semester) following completion of 3-year Diploma in CSE. 3-year accredited Bachelor of Engineering focusing on Distributed Systems, DBMS, and Advanced Algorithms.",
   },
   {
     degree: "Diploma in Computer Science & Engineering",

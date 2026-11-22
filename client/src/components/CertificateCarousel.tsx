@@ -28,6 +28,16 @@ export interface CertificateData extends CarouselImageItem {
 
 export const certificatesList: CertificateData[] = [
   {
+    id: "woc-social-2025",
+    src: wocPng,
+    alt: "Winter of Code Social 2026 - Code Social",
+    title: "Winter of Code Social 2026",
+    issuer: "Code Social",
+    year: "2026",
+    category: "Open Source",
+    featured: true,
+  },
+  {
     id: "postman-api-expert",
     src: postmanJpg,
     alt: "Postman API Fundamentals Student Expert",
@@ -52,7 +62,7 @@ export const certificatesList: CertificateData[] = [
     src: rdInfroSqlPng,
     alt: "Virtual Internship in SQL - RD Infro Technology",
     title: "Virtual Internship in SQL",
-    issuer: "RD INFRO TECHNOLOGY",
+    issuer: "RD Infro Technology",
     year: "2025",
     category: "Database",
     featured: true,
@@ -68,14 +78,34 @@ export const certificatesList: CertificateData[] = [
     featured: true,
   },
   {
-    id: "woc-social-2025",
-    src: wocPng,
-    alt: "Winter of Code Social 2025",
-    title: "Winter of Code Social 2025",
-    issuer: "Code Social",
-    year: "2026",
+    id: "sih-2025",
+    src: smartIndiaPng,
+    alt: "Smart India Hackathon 2025 - Participation",
+    title: "Smart India Hackathon 2025",
+    issuer: "Ministry of Education & AICTE",
+    year: "2025",
     category: "Open Source",
-    featured: true,
+    featured: false,
+  },
+  {
+    id: "scaler-notification-services",
+    src: scalerMasterclassPng,
+    alt: "Designing Seamless Notification Services",
+    title: "Designing Seamless Notification Services",
+    issuer: "Scaler Masterclass",
+    year: "2025",
+    category: "Backend",
+    featured: false,
+  },
+  {
+    id: "masters-union-figma",
+    src: mastersUnionJpg,
+    alt: "Figma & Prototyping Workshop",
+    title: "Figma & Prototyping Workshop",
+    issuer: "Masters Union (DTU Groove 2025)",
+    year: "2025",
+    category: "Foundations",
+    featured: false,
   },
   {
     id: "scaler-fundamentals",
@@ -98,16 +128,6 @@ export const certificatesList: CertificateData[] = [
     featured: false,
   },
   {
-    id: "sih-2025",
-    src: smartIndiaPng,
-    alt: "Smart India Hackathon 2025 - Participation",
-    title: "Smart India Hackathon 2025",
-    issuer: "Ministry of Education & AICTE",
-    year: "2025",
-    category: "Open Source",
-    featured: false,
-  },
-  {
     id: "youtube-clone-api",
     src: letsUpgradePng,
     alt: "Building YouTube Clone API Bootcamp",
@@ -115,26 +135,6 @@ export const certificatesList: CertificateData[] = [
     issuer: "LetsUpgrade",
     year: "2024",
     category: "Backend",
-    featured: false,
-  },
-  {
-    id: "scaler-notification-services",
-    src: scalerMasterclassPng,
-    alt: "Designing Seamless Notification Services",
-    title: "Designing Seamless Notification Services",
-    issuer: "Scaler Masterclass",
-    year: "2025",
-    category: "Backend",
-    featured: false,
-  },
-  {
-    id: "masters-union-figma",
-    src: mastersUnionJpg,
-    alt: "Figma & Prototyping Workshop",
-    title: "Figma & Prototyping Workshop",
-    issuer: "Masters Union (DTU Groove 2025)",
-    year: "2025",
-    category: "Foundations",
     featured: false,
   },
   {
@@ -285,7 +285,7 @@ export default function CertificateCarousel() {
                 </div>
 
                 <div className="pt-3 mt-4 border-t border-border flex items-center justify-between text-xs font-mono text-muted-foreground">
-                  <span>Inspect Credential</span>
+                  <span className="group-hover:text-foreground transition-colors">Preview Document</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </article>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="paperBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBF9F4"/>
+      <stop offset="100%" stop-color="#F4ECE1"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#252A29" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Nordic Rounded Rect Background with tactile border -->
+  <rect x="4" y="4" width="120" height="120" rx="32" fill="url(#paperBg)" stroke="#E3DAC9" stroke-width="3" filter="url(#shadow)"/>
+
+  <!-- Subtle Terracotta Accent Dot (Engineering Precision) -->
+  <circle cx="94" cy="34" r="5" fill="#AD6D51" />
+
+  <!-- Monogram Editorial G in Charcoal Ink -->
+  <text x="60" y="88" 
+        font-family="Georgia, Cambria, serif" 
+        font-size="76" 
+        font-weight="600" 
+        font-style="italic" 
+        text-anchor="middle" 
+        fill="#252A29">G</text>
+</svg>

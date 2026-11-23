@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Award, ExternalLink, LayoutGrid, SlidersHorizontal, ArrowUpRight } from "lucide-react";
+import { Award, ExternalLink, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
-import { Carousel_003, CarouselImageItem } from "@/components/v1/skiper49";
+import type { CarouselImageItem } from "@/components/v1/skiper49";
 import {
   Dialog,
   DialogContent,
@@ -170,15 +170,20 @@ type CategoryFilter = "All" | "Backend" | "Database" | "Open Source" | "Foundati
 
 export default function CertificateCarousel() {
   const [selectedCert, setSelectedCert] = useState<CertificateData | null>(null);
-  const [activeCategory, setActiveCategory] = useState<CategoryFilter>("All");
-  const [viewMode, setViewMode] = useState<"grid" | "carousel">("carousel");
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  const categories: CategoryFilter[] = ["All", "Backend", "Database", "Open Source", "Foundations"];
+  const totalCerts = certificatesList.length;
 
-  const filteredCerts =
-    activeCategory === "All"
-      ? certificatesList
-      : certificatesList.filter((c) => c.category === activeCategory);
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev === 0 ? totalCerts - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev === totalCerts - 1 ? 0 : prev + 1));
+  };
+
+  const currentCert = certificatesList[activeIndex];
 
   return (
     <Section
@@ -193,118 +198,196 @@ export default function CertificateCarousel() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full"
       >
-        {/* Controls Bar: Category Filters + View Mode Toggle */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-border">
-          {/* Categories */}
-          <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Certificate category filters">
-            {categories.map((cat) => {
-              const isActive = activeCategory === cat;
-              const count = cat === "All" ? certificatesList.length : certificatesList.filter((c) => c.category === cat).length;
-              return (
-                <button
-                  key={cat}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-pressed={isActive}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
-                      : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
-                  }`}
-                >
-                  {cat}
-                  <span className={`ml-1 text-[10px] ${isActive ? "text-primary-foreground/90 font-bold" : "opacity-60"}`}>
-                    ({count})
-                  </span>
-                </button>
-              );
-            })}
+        {/* Main 3D Deck Outer Paper Stage */}
+        <div
+          className="relative w-full rounded-2xl sm:rounded-3xl border border-border bg-card/60 p-4 sm:p-6 md:p-8 shadow-xl overflow-hidden select-none"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Subtle Ambient Background Gradient Grid */}
+          <div className="absolute inset-0 bg-radial from-secondary/40 via-card/10 to-transparent pointer-events-none -z-10" />
+
+          {/* HUD Top Bar */}
+          <div className="flex items-center justify-between pb-6 mb-4 border-b border-border/80 font-mono text-xs text-muted-foreground">
+            {/* Top Left: Status Label */}
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              </span>
+              <span className="font-semibold uppercase tracking-wider text-foreground">
+                VERIFIED CREDENTIALS
+              </span>
+            </div>
+
+            {/* Top Middle: Active Credential Title Preview (Hidden on Small Screens) */}
+            <div className="hidden md:flex items-center gap-2 text-foreground font-sans text-xs">
+              <Award className="w-3.5 h-3.5 text-primary" />
+              <span className="truncate max-w-[320px] font-medium">{currentCert.title}</span>
+            </div>
+
+            {/* Top Right: Counter HUD */}
+            <div className="flex items-center gap-1.5 font-mono">
+              <span className="text-foreground font-bold text-sm">
+                {(activeIndex + 1).toString().padStart(2, "0")}
+              </span>
+              <span className="opacity-40">/</span>
+              <span>{totalCerts.toString().padStart(2, "0")}</span>
+            </div>
           </div>
 
-          {/* View Toggle */}
-          <div className="flex items-center gap-1.5 bg-secondary/80 p-1.5 rounded-xl border border-border self-start sm:self-auto font-mono text-xs">
+          {/* 3D Fanned Deck Stage */}
+          <div className="relative w-full h-[360px] sm:h-[440px] md:h-[500px] flex items-center justify-center perspective-[1800px] overflow-hidden my-4">
+            
+            {/* Circular Previous Button */}
             <button
-              onClick={() => setViewMode("grid")}
-              aria-pressed={viewMode === "grid"}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                viewMode === "grid"
-                  ? "bg-card text-foreground font-semibold shadow-xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              type="button"
+              onClick={handlePrev}
+              aria-label="Previous certificate"
+              className="absolute left-2 sm:left-6 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Grid ({filteredCerts.length})</span>
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors -translate-x-0.5" />
             </button>
+
+            {/* Circular Next Button */}
             <button
-              onClick={() => setViewMode("carousel")}
-              aria-pressed={viewMode === "carousel"}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                viewMode === "carousel"
-                  ? "bg-card text-foreground font-semibold shadow-xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              type="button"
+              onClick={handleNext}
+              aria-label="Next certificate"
+              className="absolute right-2 sm:right-6 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span>Carousel</span>
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors translate-x-0.5" />
             </button>
+
+            {/* Ambient Floor Shadow under the cards */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[70%] sm:w-[55%] h-8 bg-black/20 dark:bg-black/50 blur-xl rounded-full pointer-events-none" />
+
+            {/* Fanned Cards Stack */}
+            <div className="relative w-[82%] sm:w-[68%] md:w-[58%] lg:w-[50%] max-w-[580px] aspect-[16/11] flex items-center justify-center">
+              {certificatesList.map((cert, index) => {
+                // Calculate offset relative to active card
+                let diff = (index - activeIndex + totalCerts) % totalCerts;
+                // Normalize diff so cards wrap naturally: -3 to +9
+                if (diff > totalCerts / 2) {
+                  diff -= totalCerts;
+                }
+
+                const isActive = diff === 0;
+                // Only render cards close enough to the active one for performance and clarity
+                if (Math.abs(diff) > 5) return null;
+
+                // 3D positioning:
+                // Active card is centered, largest, highest z-index
+                // Cards fan out toward the right and slightly behind, or queue from left
+                const zIndex = 30 - Math.abs(diff) * 3;
+                const translateX = diff * 38; // px offset
+                const translateY = Math.abs(diff) * -6; // slight arc
+                const rotateZ = diff * 2.8; // degrees
+                const rotateY = diff > 0 ? -12 : diff < 0 ? 12 : 0;
+                const scale = isActive ? 1.0 : Math.max(0.78, 1 - Math.abs(diff) * 0.055);
+                const opacity = Math.abs(diff) > 4 ? 0 : Math.max(0.35, 1 - Math.abs(diff) * 0.16);
+
+                return (
+                  <motion.div
+                    key={cert.id}
+                    animate={{
+                      x: translateX,
+                      y: translateY,
+                      rotateZ: rotateZ,
+                      rotateY: rotateY,
+                      scale: scale,
+                      opacity: opacity,
+                    }}
+                    transition={{
+                      duration: 0.55,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{
+                      zIndex,
+                      transformStyle: "preserve-3d",
+                    }}
+                    className={`absolute inset-0 cursor-pointer ${
+                      isActive ? "pointer-events-auto" : "pointer-events-auto hover:opacity-100"
+                    }`}
+                    onClick={() => {
+                      if (isActive) {
+                        setSelectedCert(cert);
+                      } else {
+                        setActiveIndex(index);
+                      }
+                    }}
+                  >
+                    <div
+                      className={`w-full h-full rounded-2xl overflow-hidden border transition-all duration-300 bg-card ${
+                        isActive
+                          ? "border-primary/60 shadow-2xl ring-2 ring-primary/20 scale-[1.01]"
+                          : "border-border shadow-md hover:border-border/90"
+                      }`}
+                    >
+                      {/* Realistic Document Top Header Bar */}
+                      <div className="flex items-center justify-between px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary/80 border-b border-border text-[10px] sm:text-xs font-mono">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-red-400/80 inline-block" />
+                          <span className="w-2 h-2 rounded-full bg-yellow-400/80 inline-block" />
+                          <span className="w-2 h-2 rounded-full bg-green-400/80 inline-block" />
+                          <span className="ml-1 text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]">
+                            {cert.issuer}
+                          </span>
+                        </div>
+                        <span className="text-primary font-semibold">{cert.year}</span>
+                      </div>
+
+                      {/* Certificate Full Image */}
+                      <div className="relative w-full h-[calc(100%-26px)] sm:h-[calc(100%-32px)] bg-secondary/40 overflow-hidden">
+                        <img
+                          src={cert.src}
+                          alt={cert.alt}
+                          className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-[1.02]"
+                          loading="lazy"
+                        />
+                        {/* Overlay Vignette */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-card/30 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Active Card Bottom Details & Inspection Trigger */}
+          <div className="mt-4 pt-5 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-semibold px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20">
+                  {currentCert.category}
+                </span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  Verified in {currentCert.year}
+                </span>
+              </div>
+              <h4 className="font-serif text-xl sm:text-2xl text-foreground font-normal tracking-tight">
+                {currentCert.title}
+              </h4>
+              <p className="font-sans text-xs sm:text-sm text-muted-foreground">
+                Issued by {currentCert.issuer}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setSelectedCert(currentCert)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs cursor-pointer font-medium"
+              >
+                <span>Inspect Document</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* View Mode 1: Clean Editorial Grid */}
-        {viewMode === "grid" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCerts.map((cert) => (
-              <button
-                key={cert.id}
-                type="button"
-                aria-label={`View certificate: ${cert.title}`}
-                onClick={() => setSelectedCert(cert)}
-                className="bg-card border border-border rounded-2xl overflow-hidden p-4 sm:p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer flex flex-col justify-between group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full"
-              >
-                <div>
-                  <div className="relative aspect-[16/11] rounded-xl overflow-hidden bg-secondary border border-border/80 mb-4">
-                    <img
-                      src={cert.src}
-                      alt={cert.alt}
-                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-2.5 right-2.5 bg-card/90 backdrop-blur-xs border border-border px-2.5 py-0.5 rounded-full font-mono text-[10px] text-foreground">
-                      {cert.year}
-                    </div>
-                  </div>
-
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-medium block mb-1">
-                    {cert.category}
-                  </span>
-                  <h3 className="font-serif text-lg sm:text-xl text-foreground font-normal tracking-tight line-clamp-2 mb-1 group-hover:text-primary transition-colors">
-                    {cert.title}
-                  </h3>
-                  <p className="text-xs font-sans text-muted-foreground">
-                    {cert.issuer}
-                  </p>
-                </div>
-
-                <div className="pt-3 mt-4 border-t border-border flex items-center justify-between text-xs font-mono text-muted-foreground w-full">
-                  <span className="group-hover:text-foreground transition-colors">Preview Document</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* View Mode 2: Restrained Perspective Carousel */}
-        {viewMode === "carousel" && (
-          <div className="w-full max-w-full flex justify-center py-4 overflow-hidden">
-            <Carousel_003
-              images={filteredCerts}
-              onImageClick={(item) => setSelectedCert(item as CertificateData)}
-            />
-          </div>
-        )}
 
         {/* Accessible Radix Dialog Modal */}
         <Dialog open={!!selectedCert} onOpenChange={(open) => !open && setSelectedCert(null)}>

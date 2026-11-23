@@ -155,14 +155,69 @@ export function Projects() {
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  const [activeTabId, setActiveTabId] = useState<string>(projects[0].id);
+
+  // If activeFilter doesn't match activeTabId, auto-select first available project in filter
   const visibleProjects =
     activeFilter === "All"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
 
+  // Keep active project valid
+  const currentProject =
+    visibleProjects.find((p) => p.id === activeTabId) || visibleProjects[0] || projects[0];
+
   const toggleCaseStudy = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
   };
+
+  // Distinct but restrained accents for the 7 folder tabs (Nordic Paper palette)
+  const tabAccents: Record<string, { bg: string; text: string; border: string; badge: string }> = {
+    "gavs-munim": {
+      bg: "bg-[#EAE0D2] dark:bg-[#2A241E]",
+      text: "text-[#5C3D2E] dark:text-[#E8C4A2]",
+      border: "border-[#D6C4B0] dark:border-[#42372E]",
+      badge: "bg-[#5C3D2E] text-[#FDFBF7] dark:bg-[#E8C4A2] dark:text-[#1F1914]",
+    },
+    "clinical-insight-engine": {
+      bg: "bg-[#DFE7E2] dark:bg-[#1E2824]",
+      text: "text-[#2D5A4C] dark:text-[#9ECBB9]",
+      border: "border-[#C5D5CC] dark:border-[#2F423B]",
+      badge: "bg-[#2D5A4C] text-[#FDFBF7] dark:bg-[#9ECBB9] dark:text-[#12201B]",
+    },
+    "netshield": {
+      bg: "bg-[#E3E4EA] dark:bg-[#22242E]",
+      text: "text-[#3D4566] dark:text-[#A8B2DE]",
+      border: "border-[#CBD0DD] dark:border-[#35394B]",
+      badge: "bg-[#3D4566] text-[#FDFBF7] dark:bg-[#A8B2DE] dark:text-[#181924]",
+    },
+    "mealsync": {
+      bg: "bg-[#EFE8DC] dark:bg-[#29261E]",
+      text: "text-[#6B512E] dark:text-[#E2C798]",
+      border: "border-[#DDD2BF] dark:border-[#3F392B]",
+      badge: "bg-[#6B512E] text-[#FDFBF7] dark:bg-[#E2C798] dark:text-[#1C1810]",
+    },
+    "om-restaurant": {
+      bg: "bg-[#EFE3DB] dark:bg-[#2B211D]",
+      text: "text-[#7A3F2A] dark:text-[#E8A590]",
+      border: "border-[#DFC7BC] dark:border-[#43312A]",
+      badge: "bg-[#7A3F2A] text-[#FDFBF7] dark:bg-[#E8A590] dark:text-[#1F1410]",
+    },
+    "samarth-loan": {
+      bg: "bg-[#E6E8DE] dark:bg-[#23271F]",
+      text: "text-[#4B5A38] dark:text-[#B6CD9B]",
+      border: "border-[#CDD3C1] dark:border-[#363E2D]",
+      badge: "bg-[#4B5A38] text-[#FDFBF7] dark:bg-[#B6CD9B] dark:text-[#181E12]",
+    },
+    "ncvet-blockchain": {
+      bg: "bg-[#EBE2EA] dark:bg-[#282029]",
+      text: "text-[#623E63] dark:text-[#D5A7D8]",
+      border: "border-[#D7C6D6] dark:border-[#3E303F]",
+      badge: "bg-[#623E63] text-[#FDFBF7] dark:bg-[#D5A7D8] dark:text-[#1D141E]",
+    },
+  };
+
+  const isExpanded = expandedId === currentProject.id;
 
   return (
     <Section
@@ -172,126 +227,175 @@ export function Projects() {
       title="Architecture & Engineering"
       description="Production software, client solutions, and technical prototypes built with Java Spring Boot, React, and modern system architectures."
     >
-      <div>
+      <div className="w-full">
         {/* Editorial Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 mb-12 pb-4 border-b border-border/80" role="tablist" aria-label="Project category filters">
-          {FILTERS.map((cat) => {
-            const isActive = activeFilter === cat;
-            const count = cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length;
-            return (
-              <button
-                key={cat}
-                role="tab"
-                aria-selected={isActive}
-                aria-pressed={isActive}
-                onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
-                    : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
-                }`}
-              >
-                {cat}
-                <span className={`ml-1.5 text-[10px] ${isActive ? "text-primary-foreground/90 font-bold" : "opacity-60"}`}>
-                  ({count})
-                </span>
-              </button>
-            );
-          })}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-border/80">
+          <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Project category filters">
+            {FILTERS.map((cat) => {
+              const isActive = activeFilter === cat;
+              const count = cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length;
+              return (
+                <button
+                  key={cat}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-pressed={isActive}
+                  onClick={() => {
+                    setActiveFilter(cat);
+                    const matching = cat === "All" ? projects : projects.filter((p) => p.category === cat);
+                    if (matching.length > 0 && !matching.some((p) => p.id === activeTabId)) {
+                      setActiveTabId(matching[0].id);
+                    }
+                  }}
+                  className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
+                      : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
+                  }`}
+                >
+                  {cat}
+                  <span className={`ml-1.5 text-[10px] ${isActive ? "text-primary-foreground/90 font-bold" : "opacity-60"}`}>
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="font-mono text-xs text-muted-foreground tracking-wide">
+            FOLDER <span className="font-semibold text-foreground">{currentProject.number}</span> / {projects.length.toString().padStart(2, "0")}
+          </div>
         </div>
 
-        {/* Project Gallery - Editorial Layout */}
-        <div className="space-y-12 md:space-y-16">
-          {visibleProjects.map((project, index) => {
-            const isExpanded = expandedId === project.id;
-            const isFeatured = index === 0 && activeFilter === "All";
+        {/* Layered Folder Stack Container */}
+        <div className="relative pt-12 md:pt-14">
+          
+          {/* Top Folder Tabs Rail */}
+          <div
+            className="flex items-end gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-0 px-2 sm:px-4 -mb-[1px] relative z-20"
+            role="tablist"
+            aria-label="Layered project folder tabs"
+          >
+            {visibleProjects.map((project) => {
+              const isActive = project.id === currentProject.id;
+              const accent = tabAccents[project.id] || tabAccents["gavs-munim"];
 
-            return (
-              <motion.article
-                key={project.id}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.65, delay: (index % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-card border border-border rounded-2xl overflow-hidden p-6 sm:p-8 lg:p-10 shadow-sm transition-all hover:border-primary/40 group"
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                  
-                  {/* Left: Project Imagery with Architectural Framing (6 cols or 7 cols) */}
-                  <div className={`w-full ${isFeatured ? "lg:col-span-7" : "lg:col-span-6"} order-1`}>
-                    <div className="relative rounded-xl overflow-hidden border border-border bg-secondary aspect-[16/10] group-hover:border-primary/30 transition-colors">
-                      <img
-                        src={project.image}
-                        alt={`${project.title} screenshot`}
-                        className={`w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.02] ${
-                          project.id === "om-restaurant" ? "object-cover object-center" : "object-cover object-top"
-                        }`}
-                        loading="lazy"
-                      />
-                      <div className="absolute top-3 left-3 bg-card/90 backdrop-blur-xs border border-border px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest text-foreground">
-                        {project.number} / {project.category}
+              return (
+                <button
+                  key={project.id}
+                  role="tab"
+                  id={`tab-${project.id}`}
+                  aria-selected={isActive}
+                  aria-controls={`panel-${project.id}`}
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => setActiveTabId(project.id)}
+                  className={`group relative flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-t-xl sm:rounded-t-2xl font-mono text-xs tracking-wider transition-all duration-200 cursor-pointer select-none shrink-0 border-t border-x ${
+                    isActive
+                      ? `${accent.bg} ${accent.text} ${accent.border} shadow-sm -translate-y-1 font-semibold z-30 ring-1 ring-border/20`
+                      : "bg-card/70 hover:bg-card text-muted-foreground hover:text-foreground border-border/70 hover:border-border -translate-y-0 z-10"
+                  }`}
+                >
+                  <span
+                    className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      isActive ? accent.badge : "bg-secondary text-muted-foreground group-hover:text-foreground"
+                    }`}
+                  >
+                    {project.number}
+                  </span>
+                  <span className="truncate max-w-[110px] sm:max-w-[160px] md:max-w-none">
+                    {project.title.split("—")[0].trim()}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Foreground Project Sheet */}
+          <div className="relative z-10">
+            {/* Background Layering Shadow Effect (simulates underlying sheets) */}
+            <div className="absolute inset-0 translate-y-3 sm:translate-y-4 translate-x-1 sm:translate-x-2 bg-secondary/60 rounded-2xl sm:rounded-3xl border border-border/60 -z-10" />
+            <div className="absolute inset-0 translate-y-1.5 sm:translate-y-2 -translate-x-1 sm:-translate-x-1.5 bg-card/80 rounded-2xl sm:rounded-3xl border border-border/80 -z-10" />
+
+            {/* Foreground Paper Sheet Card */}
+            <div
+              id={`panel-${currentProject.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${currentProject.id}`}
+              className="bg-card border border-border rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 shadow-xl relative overflow-hidden transition-all"
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentProject.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+                >
+                  {/* LEFT COLUMN: Project Information & Actions */}
+                  <div className="w-full lg:col-span-6 flex flex-col justify-between order-2 lg:order-1">
+                    <div>
+                      {/* Status / Category Kicker */}
+                      <div className="flex items-center gap-2 mb-3 font-mono text-xs text-primary font-medium tracking-wide">
+                        <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        <span>{currentProject.tagline}</span>
+                      </div>
+
+                      {/* Large Project Title */}
+                      <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif text-foreground font-normal tracking-tight mb-4">
+                        {currentProject.title}
+                      </h3>
+
+                      {/* Project Description */}
+                      <p className="text-sm sm:text-base font-sans text-muted-foreground leading-relaxed mb-6">
+                        {currentProject.description}
+                      </p>
+
+                      {/* Technology Chips */}
+                      <div className="flex flex-wrap gap-2 mb-8" aria-label="Technologies used">
+                        {currentProject.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2.5 py-1 rounded-md bg-secondary text-foreground/80 border border-border/80 font-mono text-[11px]"
+                          >
+                            {tag}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                  </div>
 
-                  {/* Right: Project Storytelling & Action Links (6 cols or 5 cols) */}
-                  <div className={`w-full ${isFeatured ? "lg:col-span-5" : "lg:col-span-6"} order-2`}>
-                    <div className="flex items-center gap-2 mb-2 font-mono text-xs text-primary font-medium tracking-wide">
-                      <span>{project.tagline}</span>
-                    </div>
-
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif text-foreground font-normal tracking-tight mb-4 group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-
-                    <p className="text-sm sm:text-base font-sans text-muted-foreground leading-relaxed mb-6">
-                      {project.description}
-                    </p>
-
-                    {/* Technology Chips */}
-                    <div className="flex flex-wrap gap-2 mb-6" aria-label="Technologies used">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2.5 py-1 rounded-md bg-secondary text-foreground/80 border border-border/80 font-mono text-[11px]"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action Links & Expandable Case Study Button */}
-                    <div className="flex flex-wrap items-center gap-2.5 pt-4 border-t border-border">
-                      {project.link ? (
+                    {/* CTAs and Case Study Toggle */}
+                    <div className="pt-6 border-t border-border flex flex-wrap items-center gap-3">
+                      {currentProject.link ? (
                         <a
-                          href={project.link}
+                          href={currentProject.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs"
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs font-medium"
                         >
                           <span>Live Demo</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />
                         </a>
                       ) : null}
 
-                      {project.github ? (
+                      {currentProject.github ? (
                         <a
-                          href={project.github}
+                          href={currentProject.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border font-mono text-xs uppercase tracking-wider transition-colors"
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground border border-border font-mono text-xs uppercase tracking-wider transition-colors"
                         >
                           <Github className="w-3.5 h-3.5" />
                           <span>Codebase</span>
                         </a>
                       ) : null}
 
-                      {project.documentation ? (
+                      {currentProject.documentation ? (
                         <a
-                          href={project.documentation}
+                          href={currentProject.documentation}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border font-mono text-xs uppercase tracking-wider transition-colors"
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground border border-border font-mono text-xs uppercase tracking-wider transition-colors"
                         >
                           <FileText className="w-3.5 h-3.5 text-primary" />
                           <span>Docs</span>
@@ -299,16 +403,17 @@ export function Projects() {
                       ) : null}
 
                       <button
-                        onClick={() => toggleCaseStudy(project.id)}
+                        type="button"
+                        onClick={() => toggleCaseStudy(currentProject.id)}
                         aria-expanded={isExpanded}
-                        aria-controls={`case-study-${project.id}`}
-                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-mono text-xs uppercase tracking-wider transition-all border ${
+                        aria-controls={`case-study-${currentProject.id}`}
+                        className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-mono text-xs uppercase tracking-wider transition-all border ${
                           isExpanded
                             ? "bg-secondary text-foreground border-primary/50 shadow-xs"
                             : "bg-secondary/40 hover:bg-secondary text-muted-foreground hover:text-foreground border-border"
                         } sm:ml-auto cursor-pointer`}
                       >
-                        <span>{isExpanded ? "Hide Details" : "Read Breakdown"}</span>
+                        <span>{isExpanded ? "Hide Breakdown" : "Read Breakdown"}</span>
                         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? "rotate-180 text-primary" : ""}`} />
                       </button>
                     </div>
@@ -317,7 +422,7 @@ export function Projects() {
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
-                          id={`case-study-${project.id}`}
+                          id={`case-study-${currentProject.id}`}
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
@@ -330,7 +435,7 @@ export function Projects() {
                                 The Challenge
                               </span>
                               <p className="text-foreground leading-relaxed">
-                                {project.problem}
+                                {currentProject.problem}
                               </p>
                             </div>
                             <div className="p-4 rounded-xl bg-secondary/50 border border-border">
@@ -338,7 +443,7 @@ export function Projects() {
                                 Technical Outcome
                               </span>
                               <p className="text-foreground leading-relaxed">
-                                {project.outcome}
+                                {currentProject.outcome}
                               </p>
                             </div>
                           </div>
@@ -347,10 +452,26 @@ export function Projects() {
                     </AnimatePresence>
                   </div>
 
-                </div>
-              </motion.article>
-            );
-          })}
+                  {/* RIGHT COLUMN: Large Project Screenshot with Architectural Frame */}
+                  <div className="w-full lg:col-span-6 order-1 lg:order-2">
+                    <div className="relative rounded-2xl overflow-hidden border border-border bg-secondary aspect-[16/10] shadow-md group">
+                      <img
+                        src={currentProject.image}
+                        alt={`${currentProject.title} preview`}
+                        className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02] ${
+                          currentProject.id === "om-restaurant" ? "object-center" : "object-top"
+                        }`}
+                        loading="lazy"
+                      />
+                      <div className="absolute top-3 right-3 bg-card/90 backdrop-blur-xs border border-border px-3 py-1 rounded-full font-mono text-[10px] uppercase tracking-widest text-foreground shadow-xs">
+                        {currentProject.number} / {currentProject.category}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </Section>

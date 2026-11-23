@@ -16,8 +16,8 @@ export function Footer() {
   };
 
   return (
-    <footer className="py-12 border-t border-border bg-card/80 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="py-12 border-t border-border bg-card/80 transition-colors overflow-x-clip w-full max-w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-border/80">
           <div>
             <span className="font-serif text-2xl sm:text-3xl font-normal text-foreground tracking-tight block">

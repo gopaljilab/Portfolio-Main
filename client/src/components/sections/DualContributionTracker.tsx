@@ -59,7 +59,7 @@ export function DualContributionTracker() {
           </div>
 
           {/* Horizontally scrollable wrapper with Nordic scrollbars */}
-          <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <div className="w-full max-w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent touch-pan-x overscroll-x-contain">
             <div className="min-w-[720px] p-5 rounded-xl bg-secondary/50 dark:bg-secondary/20 border border-border flex items-center justify-center transition-colors">
               {!ghError ? (
                 <img

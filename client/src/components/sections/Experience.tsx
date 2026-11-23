@@ -102,7 +102,7 @@ export function Experience() {
       title="Experience & Open Source"
       description="Professional industry internships, distributed open-source governance, and enterprise Java development."
     >
-      <div className="relative border-l border-border pl-6 sm:pl-10 ml-2 sm:ml-4 space-y-12 md:space-y-16">
+      <div className="relative border-l border-border pl-5 sm:pl-8 ml-3 sm:ml-4 space-y-12 md:space-y-16">
         {experiences.map((exp, index) => (
           <motion.article
             key={exp.id}
@@ -110,7 +110,7 @@ export function Experience() {
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs hover:border-primary/50 transition-colors group"
+            className="relative bg-card border border-border rounded-2xl p-5 sm:p-8 shadow-xs hover:border-primary/50 transition-colors group"
           >
             {/* Timeline Dot Marker */}
             <motion.div
@@ -118,7 +118,7 @@ export function Experience() {
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 + 0.2, type: "spring" }}
-              className="absolute -left-[31px] sm:-left-[47px] top-8 w-3.5 h-3.5 rounded-full bg-card border-2 border-primary group-hover:bg-primary transition-colors"
+              className="absolute -left-[27px] sm:-left-[39px] top-8 w-3.5 h-3.5 rounded-full bg-card border-2 border-primary group-hover:bg-primary transition-colors"
             />
 
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 mb-4 border-b border-border">

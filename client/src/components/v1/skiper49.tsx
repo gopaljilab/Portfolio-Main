@@ -57,9 +57,9 @@ export const Carousel_003: React.FC<Carousel003Props> = ({
         duration: 0.5,
         ease: "easeOut",
       }}
-      className={cn("relative w-full max-w-6xl px-2 sm:px-4", className)}
+      className={cn("relative w-full max-w-6xl px-2 sm:px-4 overflow-hidden", className)}
     >
-      <div className="relative w-full overflow-visible py-4">
+      <div className="relative w-full overflow-hidden py-4">
         <Swiper
           spaceBetween={spaceBetween}
           autoplay={
@@ -97,13 +97,13 @@ export const Carousel_003: React.FC<Carousel003Props> = ({
                 }
               : false
           }
-          className="cert-inverted-carousel !overflow-visible !py-8"
+          className="cert-inverted-carousel !py-8 overflow-hidden"
           modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
         >
           {images.map((item, index) => (
             <SwiperSlide
               key={index}
-              className="!w-[280px] sm:!w-[380px] md:!w-[440px] group select-none"
+              className="!w-[250px] xs:!w-[270px] sm:!w-[340px] md:!w-[420px] max-w-[85vw] group select-none"
             >
               <div
                 onClick={() => onImageClick?.(item) || window.open(item.src, "_blank")}

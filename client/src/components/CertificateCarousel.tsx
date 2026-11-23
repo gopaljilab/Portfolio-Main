@@ -300,7 +300,7 @@ export default function CertificateCarousel() {
 
         {/* View Mode 2: Restrained Perspective Carousel */}
         {viewMode === "carousel" && (
-          <div className="w-full flex justify-center py-4">
+          <div className="w-full max-w-full flex justify-center py-4 overflow-hidden">
             <Carousel_003
               images={filteredCerts}
               onImageClick={(item) => setSelectedCert(item as CertificateData)}

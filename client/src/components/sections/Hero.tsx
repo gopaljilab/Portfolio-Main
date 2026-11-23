@@ -127,14 +127,14 @@ export function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative pt-32 pb-16 md:pt-44 md:pb-24 overflow-hidden border-b border-border bg-background"
+      className="relative pt-32 pb-16 md:pt-44 md:pb-24 overflow-x-clip border-b border-border bg-background w-full max-w-full"
     >
       {/* Subtle architectural grid lines */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" aria-hidden="true">
         <div className="w-full h-full bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           
           {/* Left: Editorial Hero Content (7 cols on lg) */}
@@ -225,10 +225,10 @@ export function Hero() {
           </div>
 
           {/* Right: Architectural Portrait Frame (5 cols on lg) */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2">
-            <div className="hero-portrait-frame relative w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[400px]">
+          <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 w-full">
+            <div className="hero-portrait-frame relative w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[400px] mx-auto lg:mr-0">
               {/* Asymmetrical Paper Framing Backing */}
-              <div className="absolute -inset-3 rounded-2xl border border-primary/25 bg-secondary/40 -rotate-1 pointer-events-none" />
+              <div className="absolute -inset-2 sm:-inset-3 rounded-2xl border border-primary/25 bg-secondary/40 -rotate-1 pointer-events-none" />
               <div className="absolute inset-0 rounded-2xl border border-border bg-card shadow-sm rotate-1 pointer-events-none" />
 
               {/* Main Photo / Interactive Video Container */}

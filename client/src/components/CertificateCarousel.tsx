@@ -164,7 +164,7 @@ type CategoryFilter = "All" | "Backend" | "Database" | "Open Source" | "Foundati
 export default function CertificateCarousel() {
   const [selectedCert, setSelectedCert] = useState<CertificateData | null>(null);
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("All");
-  const [viewMode, setViewMode] = useState<"grid" | "carousel">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "carousel">("carousel");
 
   const categories: CategoryFilter[] = ["All", "Backend", "Database", "Open Source", "Foundations"];
 

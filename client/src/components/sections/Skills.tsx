@@ -131,7 +131,13 @@ export function Skills() {
     >
       <div className="space-y-12">
         {/* Architectural Relationships Field-Guide Strip (Interactive) */}
-        <div className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs"
+        >
           <div className="flex items-center justify-between mb-3">
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               System Design Pipeline &amp; Architectural Connections
@@ -157,13 +163,17 @@ export function Skills() {
               </a>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* 3 Grouped Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {skillGroups.map((group) => (
-            <div
+          {skillGroups.map((group, index) => (
+            <motion.div
               key={group.title}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
               className="bg-card border border-border rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between h-full"
             >
               <div>
@@ -230,7 +240,7 @@ export function Skills() {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

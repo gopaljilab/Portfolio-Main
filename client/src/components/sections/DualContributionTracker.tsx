@@ -8,7 +8,13 @@ export function DualContributionTracker() {
   return (
     <div className="w-full space-y-8 my-8">
       {/* ── 1. Full-Width GitHub Activity Card ── */}
-      <div className="w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden transition-colors">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden transition-colors"
+      >
         {/* Card Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-border gap-4">
           <div className="flex items-center gap-3.5">
@@ -107,10 +113,16 @@ export function DualContributionTracker() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── 2. Full-Width LeetCode Metrics Card ── */}
-      <div className="w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden transition-colors">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden transition-colors"
+      >
         {/* Card Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-border gap-4">
           <div className="flex items-center gap-3.5">
@@ -247,7 +259,7 @@ export function DualContributionTracker() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

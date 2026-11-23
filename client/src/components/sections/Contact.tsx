@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { api, type ContactSubmitInput } from "@shared/routes";
+import { motion } from "framer-motion";
 
 const EMAIL = "gopaljilab@gmail.com";
 
@@ -80,7 +81,13 @@ export function Contact() {
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Left Column: Editorial Contact Information (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
+        <motion.div
+          initial={{ opacity: 0, x: -20, y: 20 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-5 space-y-6"
+        >
           <div>
             <span className="font-mono text-xs uppercase tracking-widest text-primary font-medium block mb-2">
               Start a Conversation
@@ -165,10 +172,16 @@ export function Contact() {
               </a>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column: Refined Paper Contact Form (7 cols) */}
-        <div className="lg:col-span-7 bg-card border border-border rounded-2xl p-6 sm:p-8 md:p-10 shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, x: 20, y: 20 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.65, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-7 bg-card border border-border rounded-2xl p-6 sm:p-8 md:p-10 shadow-sm"
+        >
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Name */}
@@ -272,7 +285,7 @@ export function Contact() {
               </span>
             </div>
           </form>
-        </div>
+        </motion.div>
       </div>
     </Section>
   );

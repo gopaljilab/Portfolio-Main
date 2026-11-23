@@ -211,8 +211,12 @@ export function Projects() {
             const isFeatured = index === 0 && activeFilter === "All";
 
             return (
-              <article
+              <motion.article
                 key={project.id}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.65, delay: (index % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="bg-card border border-border rounded-2xl overflow-hidden p-6 sm:p-8 lg:p-10 shadow-sm transition-all hover:border-primary/40 group"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -348,7 +352,7 @@ export function Projects() {
                   </div>
 
                 </div>
-              </article>
+              </motion.article>
             );
           })}
         </div>

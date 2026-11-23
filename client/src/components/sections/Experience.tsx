@@ -1,5 +1,6 @@
 import { Section } from "@/components/layout/Section";
 import { ExternalLink, Calendar, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ExperienceItem {
   id: string;
@@ -103,12 +104,22 @@ export function Experience() {
     >
       <div className="relative border-l border-border pl-6 sm:pl-10 ml-2 sm:ml-4 space-y-12 md:space-y-16">
         {experiences.map((exp, index) => (
-          <article
+          <motion.article
             key={exp.id}
+            initial={{ opacity: 0, x: -16, y: 24 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="relative bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-xs hover:border-primary/50 transition-colors group"
           >
             {/* Timeline Dot Marker */}
-            <div className="absolute -left-[31px] sm:-left-[47px] top-8 w-3.5 h-3.5 rounded-full bg-card border-2 border-primary group-hover:bg-primary transition-colors" />
+            <motion.div
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.1 + 0.2, type: "spring" }}
+              className="absolute -left-[31px] sm:-left-[47px] top-8 w-3.5 h-3.5 rounded-full bg-card border-2 border-primary group-hover:bg-primary transition-colors"
+            />
 
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 mb-4 border-b border-border">
               <div>
@@ -156,7 +167,7 @@ export function Experience() {
                 </span>
               ))}
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
     </Section>

@@ -1,5 +1,6 @@
 import { GraduationCap, Calendar, Award, ExternalLink, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
+import { motion } from "framer-motion";
 
 const education = [
   {
@@ -39,8 +40,12 @@ export function Education() {
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         {education.map((item, index) => (
-          <article
+          <motion.article
             key={item.degree}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
             className="bg-card border border-border rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between hover:border-primary/50 transition-colors group"
           >
             <div>
@@ -103,7 +108,7 @@ export function Education() {
                 </button>
               )}
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
     </Section>

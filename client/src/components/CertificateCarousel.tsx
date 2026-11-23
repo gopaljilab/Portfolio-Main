@@ -192,7 +192,12 @@ export default function CertificateCarousel() {
       title="Professional Credentials"
       description="Thirteen verified technical credentials across Java development, SQL optimization, Postman API architectures, and national hackathons."
     >
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         {/* Controls Bar: Category Filters + View Mode Toggle */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-border">
           {/* Categories */}
@@ -371,7 +376,7 @@ export default function CertificateCarousel() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </Section>
   );
 }

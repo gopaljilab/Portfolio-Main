@@ -202,3 +202,26 @@
     border: 1px solid hsl(var(--border));
   }
 }
+
+/* Custom Cursor Rules (Only when active and on fine pointer desktop) */
+@media (pointer: fine) and (hover: hover) {
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button {
+    cursor: none !important;
+  }
+
+  /* Preserve native I-beam cursor for editable text fields and text selection */
+  html.custom-cursor-active input,
+  html.custom-cursor-active textarea,
+  html.custom-cursor-active [contenteditable="true"] {
+    cursor: text !important;
+  }
+
+  /* Preserve disabled cursor */
+  html.custom-cursor-active :disabled,
+  html.custom-cursor-active .cursor-not-allowed {
+    cursor: not-allowed !important;
+  }
+}

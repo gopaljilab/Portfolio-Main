@@ -163,7 +163,7 @@ export function DualContributionTracker() {
             <div className="md:col-span-4 pb-4 md:pb-0 md:pr-6 md:border-r border-border">
               <div>
                 <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                  Total Solved (Verified)
+                  Total Solved Problems
                 </span>
                 <div className="flex items-baseline gap-2 mt-1">
                   <span className="text-4xl md:text-5xl font-serif text-foreground tracking-tight font-normal">204</span>

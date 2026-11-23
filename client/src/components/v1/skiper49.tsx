@@ -44,7 +44,7 @@ export const Carousel_003: React.FC<Carousel003Props> = ({
   showPagination = true,
   showNavigation = true,
   loop = true,
-  autoplay = { delay: 3000, disableOnInteraction: false },
+  autoplay = false,
   spaceBetween = 0,
   onImageClick,
 }) => {
@@ -66,7 +66,7 @@ export const Carousel_003: React.FC<Carousel003Props> = ({
             autoplay
               ? typeof autoplay === "object"
                 ? autoplay
-                : { delay: 3000, disableOnInteraction: false }
+                : { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }
               : false
           }
           effect="coverflow"
@@ -105,19 +105,27 @@ export const Carousel_003: React.FC<Carousel003Props> = ({
               key={index}
               className="!w-[250px] xs:!w-[270px] sm:!w-[340px] md:!w-[420px] max-w-[85vw] group select-none"
             >
-              <div
-                onClick={() => onImageClick?.(item) || window.open(item.src, "_blank")}
-                className="cursor-pointer relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-xl transition-all duration-300 group-hover:border-primary/50 group-hover:shadow-2xl group-hover:shadow-primary/10"
+              <button
+                type="button"
+                aria-label={`View ${item.title || item.alt || "certificate"}`}
+                onClick={() => {
+                  if (onImageClick) {
+                    onImageClick(item);
+                    return;
+                  }
+                  window.open(item.src, "_blank", "noopener,noreferrer");
+                }}
+                className="w-full text-left cursor-pointer relative overflow-hidden rounded-2xl border border-border bg-card shadow-xl transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block"
               >
                 {/* 16:9 Landscape Aspect Ratio Container */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-secondary">
                   <img
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     src={item.src}
                     alt={item.alt || item.title || "Certificate"}
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg backdrop-blur-sm transform translate-y-2 group-hover:translate-y-0 transition-transform">
                       View Certificate <ExternalLink className="w-3.5 h-3.5" />
                     </span>
@@ -126,17 +134,17 @@ export const Carousel_003: React.FC<Carousel003Props> = ({
 
                 {/* Caption Bar */}
                 {(item.title || item.issuer) && (
-                  <div className="p-4 bg-white/95 dark:bg-slate-900/95 border-t border-slate-100 dark:border-slate-800">
-                    <h3 className="font-sans font-bold text-sm text-slate-900 dark:text-slate-100 line-clamp-1 group-hover:text-primary transition-colors">
+                  <div className="p-4 bg-card border-t border-border">
+                    <h3 className="font-sans font-bold text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                       {item.title || item.alt}
                     </h3>
-                    <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
                       <span className="truncate">{item.issuer}</span>
                       {item.year && <span className="font-mono ml-2 shrink-0">{item.year}</span>}
                     </div>
                   </div>
                 )}
-              </div>
+              </button>
             </SwiperSlide>
           ))}
 

@@ -19,10 +19,10 @@
     --popover-foreground: 168 7% 15%;
     --popover-border: 38 24% 83%;
 
-    /* Primary Accent: Terracotta #AD6D51 -> 18 36% 50% */
-    --primary: 18 36% 50%;
+    /* Primary Accent: Terracotta #95573D -> 18 42% 41% (WCAG 2.2 AA compliant >5:1 on Warm Ivory & Nordic Cream) */
+    --primary: 18 42% 41%;
     --primary-foreground: 43 45% 98%;
-    --primary-border: 18 36% 42%;
+    --primary-border: 18 42% 35%;
 
     /* Secondary Surface: Parchment #EFE7DB -> 37 36% 90% */
     --secondary: 37 36% 90%;

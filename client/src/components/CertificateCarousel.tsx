@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Award, ExternalLink, LayoutGrid, SlidersHorizontal, X, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Award, ExternalLink, LayoutGrid, SlidersHorizontal, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { Carousel_003, CarouselImageItem } from "@/components/v1/skiper49";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 import smartIndiaPng from "@assets/Gopal_Gupta_certificate_1772355032528.png";
 import postmanJpg from "@assets/Print_Certificate_-_Canvas_Badges_page-0001_1772355032529.jpg";
@@ -30,10 +37,10 @@ export const certificatesList: CertificateData[] = [
   {
     id: "woc-social-2025",
     src: wocPng,
-    alt: "Winter of Code Social 2026 - Code Social",
-    title: "Winter of Code Social 2026",
+    alt: "Winter of Code Social 2025 Certificate of Participation",
+    title: "Winter of Code Social 2025",
     issuer: "Code Social",
-    year: "2026",
+    year: "2025",
     category: "Open Source",
     featured: true,
   },
@@ -173,17 +180,6 @@ export default function CertificateCarousel() {
       ? certificatesList
       : certificatesList.filter((c) => c.category === activeCategory);
 
-  // Accessible Modal Keyboard Trapping & Escape listener
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && selectedCert) {
-        setSelectedCert(null);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedCert]);
-
   return (
     <Section
       id="achievements"
@@ -260,10 +256,12 @@ export default function CertificateCarousel() {
         {viewMode === "grid" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCerts.map((cert) => (
-              <article
+              <button
                 key={cert.id}
+                type="button"
+                aria-label={`View certificate: ${cert.title}`}
                 onClick={() => setSelectedCert(cert)}
-                className="bg-card border border-border rounded-2xl overflow-hidden p-4 sm:p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer flex flex-col justify-between group"
+                className="bg-card border border-border rounded-2xl overflow-hidden p-4 sm:p-5 shadow-xs hover:border-primary/50 transition-all cursor-pointer flex flex-col justify-between group text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full"
               >
                 <div>
                   <div className="relative aspect-[16/11] rounded-xl overflow-hidden bg-secondary border border-border/80 mb-4">
@@ -289,11 +287,11 @@ export default function CertificateCarousel() {
                   </p>
                 </div>
 
-                <div className="pt-3 mt-4 border-t border-border flex items-center justify-between text-xs font-mono text-muted-foreground">
+                <div className="pt-3 mt-4 border-t border-border flex items-center justify-between text-xs font-mono text-muted-foreground w-full">
                   <span className="group-hover:text-foreground transition-colors">Preview Document</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
-              </article>
+              </button>
             ))}
           </div>
         )}
@@ -308,58 +306,31 @@ export default function CertificateCarousel() {
           </div>
         )}
 
-        {/* Accessible Lightbox Modal */}
-        <AnimatePresence>
-          {selectedCert && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedCert(null)}
-              className="fixed inset-0 z-50 bg-nordic-charcoal/80 dark:bg-black/85 backdrop-blur-sm p-4 sm:p-6 md:p-10 flex items-center justify-center"
-              role="dialog"
-              aria-modal="true"
-              aria-label={selectedCert.title}
-            >
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-card border border-border rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
-              >
-                {/* Modal Header */}
-                <div className="p-4 sm:p-5 border-b border-border flex items-center justify-between">
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-primary block">
-                      {selectedCert.category} · {selectedCert.year}
-                    </span>
-                    <h4 className="font-serif text-xl sm:text-2xl text-foreground font-normal">
-                      {selectedCert.title}
-                    </h4>
-                    <p className="text-xs text-muted-foreground font-sans">
-                      Issued by {selectedCert.issuer}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedCert(null)}
-                    aria-label="Close modal"
-                    className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
+        {/* Accessible Radix Dialog Modal */}
+        <Dialog open={!!selectedCert} onOpenChange={(open) => !open && setSelectedCert(null)}>
+          <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-hidden p-0 gap-0 border-border bg-card shadow-2xl flex flex-col">
+            {selectedCert && (
+              <>
+                <DialogHeader className="p-4 sm:p-5 border-b border-border text-left">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary block">
+                    {selectedCert.category} · {selectedCert.year}
+                  </span>
+                  <DialogTitle className="font-serif text-xl sm:text-2xl text-foreground font-normal tracking-tight">
+                    {selectedCert.title}
+                  </DialogTitle>
+                  <DialogDescription className="text-xs text-muted-foreground font-sans">
+                    Issued by {selectedCert.issuer}
+                  </DialogDescription>
+                </DialogHeader>
 
-                {/* Modal Image Display */}
                 <div className="p-4 sm:p-6 flex-1 overflow-auto flex items-center justify-center bg-secondary/30">
                   <img
                     src={selectedCert.src}
                     alt={selectedCert.alt}
-                    className="max-h-[60vh] w-auto object-contain rounded-lg shadow-sm border border-border"
+                    className="max-h-[60vh] w-auto max-w-full object-contain rounded-lg shadow-sm border border-border"
                   />
                 </div>
 
-                {/* Modal Footer */}
                 <div className="p-4 border-t border-border flex items-center justify-between bg-card text-xs font-mono">
                   <span className="text-muted-foreground">Original Verified Document</span>
                   <a
@@ -372,10 +343,10 @@ export default function CertificateCarousel() {
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </Section>
   );

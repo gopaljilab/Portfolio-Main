@@ -1,8 +1,7 @@
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Github, ChevronDown, FileText, ArrowUpRight } from "lucide-react";
+import { Github, ChevronDown, FileText, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
-import { gsap } from "@/lib/gsap";
 
 type FilterKey = "All" | "Full Stack" | "AI & ML" | "Security" | "Web3";
 
@@ -153,16 +152,13 @@ const projects: Project[] = [
 const FILTERS: FilterKey[] = ["All", "Full Stack", "AI & ML", "Security", "Web3"];
 
 export function Projects() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [showAll, setShowAll] = useState<boolean>(true); // Default to showcasing all 5 projects cleanly
 
-  const filtered =
+  const visibleProjects =
     activeFilter === "All"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
-  const visibleProjects = showAll ? filtered : filtered.slice(0, 3);
 
   const toggleCaseStudy = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -176,7 +172,7 @@ export function Projects() {
       title="Architecture & Engineering"
       description="Production software, client solutions, and technical prototypes built with Java Spring Boot, React, and modern system architectures."
     >
-      <div ref={containerRef}>
+      <div>
         {/* Editorial Filter Tabs */}
         <div className="flex flex-wrap items-center gap-2 mb-12 pb-4 border-b border-border/80" role="tablist" aria-label="Project category filters">
           {FILTERS.map((cat) => {

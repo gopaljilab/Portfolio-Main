@@ -132,20 +132,20 @@ const projects: Project[] = [
   {
     id: "ncvet-blockchain",
     number: "07",
-    title: "NCVET-BlockChain Certification System",
+    title: "NCVET Blockchain Certification System",
     category: "Web3",
-    tagline: "React · Web3.js · Chart.js",
+    tagline: "React · Web3.js · Sepolia Testnet · IPFS · Hardhat",
     description:
-      "A blockchain-enabled platform providing tamper-proof, instantly verifiable digital credentials for India's vocational education ecosystem.",
+      "A decentralized credentialing platform engineered to eliminate certificate forgery and manual verification delays in India's vocational education ecosystem with tamper-proof, instantly verifiable on-chain digital credentials.",
     problem:
-      "India's NCVET ecosystem faced certificate forgery, manual verification delays, and lack of interoperability between institutions.",
+      "India's vocational education ecosystem faces rampant certificate forgery, multi-day manual verification delays, and a critical lack of cross-institution interoperability between training providers and employers.",
     outcome:
-      "Built a React + Web3.js UI that reads/writes credentials on-chain. Includes a Chart.js analytics dashboard and live credential-lookup flow.",
+      "Engineered an immutable credentialing pipeline on the Sepolia Ethereum testnet with decentralized IPFS document storage, MetaMask wallet signing, instant QR-code verification, and multi-language support (English and Hindi).",
     image: "/NCVET.jpg",
-    tags: ["React", "Web3.js", "Chart.js", "Blockchain", "API"],
+    tags: ["React", "Web3.js", "Ethereum", "IPFS", "Hardhat", "Sepolia", "Smart Contracts"],
     link: "https://www.figma.com/make/AB1LEuPmvUhr1fMaDX3q3w/Blockchain-Certificate-Platform-Prototype?fullscreen=1&t=rLkYbttE95UaCYCf-1",
     github: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System",
-    documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System/blob/main/docs/architecture.md",
+    documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System#readme",
   },
 ];
 

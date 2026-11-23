@@ -91,11 +91,11 @@ const inventory = {
     {
       id: "ncvet-blockchain",
       number: "07",
-      title: "NCVET-BlockChain Certification System",
+      title: "NCVET Blockchain Certification System",
       category: "Web3",
-      tags: ["React", "Web3.js", "Chart.js", "Blockchain", "API"],
+      tags: ["React", "Web3.js", "Ethereum", "IPFS", "Hardhat", "Sepolia", "Smart Contracts"],
       github: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System",
-      documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System/blob/main/docs/architecture.md",
+      documentation: "https://github.com/gopaljilab/NVCET-Blockchain-Certification-System#readme",
       liveDemo: "https://www.figma.com/make/AB1LEuPmvUhr1fMaDX3q3w/Blockchain-Certificate-Platform-Prototype?fullscreen=1&t=rLkYbttE95UaCYCf-1"
     }
   ],

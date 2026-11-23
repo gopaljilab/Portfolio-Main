@@ -6,88 +6,6 @@ import { gsap } from "@/lib/gsap";
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Graceful subtle desktop-only interactive enhancement with strict bounds
-    let metadataReady = false;
-    let lastX: number | null = null;
-    let targetTime = 0;
-    let seekInProgress = false;
-    let pendingTarget: number | null = null;
-
-    const seekTo = (time: number) => {
-      const duration = video.duration;
-      if (!metadataReady || !Number.isFinite(duration) || duration <= 0) return;
-      const clampedTime = Math.max(0, Math.min(duration, time));
-      targetTime = clampedTime;
-      if (seekInProgress) {
-        pendingTarget = clampedTime;
-        return;
-      }
-      if (Math.abs(video.currentTime - clampedTime) < 0.01) return;
-
-      try {
-        seekInProgress = true;
-        video.currentTime = clampedTime;
-      } catch {
-        seekInProgress = false;
-      }
-    };
-
-    const handleMetadata = () => {
-      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-      metadataReady = true;
-      targetTime = video.currentTime;
-    };
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const previousX = lastX;
-      lastX = event.clientX;
-      if (
-        previousX === null ||
-        window.matchMedia("(max-width: 767px)").matches ||
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        !metadataReady ||
-        !Number.isFinite(video.duration) ||
-        video.duration <= 0
-      ) return;
-
-      const deltaX = event.clientX - previousX;
-      seekTo(targetTime + (deltaX / window.innerWidth) * 0.5 * video.duration);
-    };
-
-    const handleSeeked = () => {
-      seekInProgress = false;
-      const nextTarget = pendingTarget;
-      pendingTarget = null;
-      if (nextTarget !== null && Math.abs(nextTarget - video.currentTime) >= 0.01) {
-        seekTo(nextTarget);
-      }
-    };
-
-    const handleError = () => {
-      metadataReady = false;
-      seekInProgress = false;
-      pendingTarget = null;
-    };
-
-    video.addEventListener("loadedmetadata", handleMetadata);
-    video.addEventListener("seeked", handleSeeked);
-    video.addEventListener("error", handleError);
-    window.addEventListener("mousemove", handleMouseMove);
-    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) handleMetadata();
-
-    return () => {
-      video.removeEventListener("loadedmetadata", handleMetadata);
-      video.removeEventListener("seeked", handleSeeked);
-      video.removeEventListener("error", handleError);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -234,23 +152,10 @@ export function Hero() {
               {/* Main Photo / Interactive Video Container */}
               <div className="relative rounded-2xl border border-border bg-card overflow-hidden p-2.5 shadow-md">
                 <div className="aspect-[4/5] w-full rounded-xl overflow-hidden bg-secondary relative">
-                  <video
-                    ref={videoRef}
-                    src="/profile-animation.mp4"
-                    poster="/profile.jpg"
-                    aria-label="Portrait of Gopal Gupta, Java Full-Stack Developer"
-                    muted
-                    playsInline
-                    preload="metadata"
-                    controls={false}
-                    disablePictureInPicture
-                    className="w-full h-full object-cover object-center select-none"
-                  />
-                  {/* Stable fallback image is always present underneath if video fails */}
                   <img
                     src="/profile.jpg"
-                    alt="Gopal Gupta"
-                    className="absolute inset-0 w-full h-full object-cover object-center -z-10"
+                    alt="Gopal Gupta — Java Full-Stack Developer"
+                    className="w-full h-full object-cover object-top select-none transition-transform duration-700 ease-out hover:scale-105"
                     loading="eager"
                   />
                 </div>

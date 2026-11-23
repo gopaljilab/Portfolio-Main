@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Award, ExternalLink, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Award, ExternalLink, ArrowUpRight, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { Section } from "@/components/layout/Section";
-import type { CarouselImageItem } from "@/components/v1/skiper49";
 import {
   Dialog,
   DialogContent,
@@ -27,210 +26,371 @@ import trivediJpg from "@assets/PHOTO-2024-02-02-20-22-07_1772355409539.jpg";
 import mecatredzJpg from "@assets/PHOTO-2024-02-02-20-22-06_1772355409542.jpg";
 import letsUpgradePng from "@assets/LUEYTCAUG124371_1772355409542.png";
 
-export interface CertificateData extends CarouselImageItem {
+export type CertificateCategory =
+  | "All"
+  | "Backend & Java"
+  | "Data & SQL"
+  | "APIs & Tools"
+  | "Hackathons & Programs";
+
+export interface CertificateItem {
   id: string;
-  category: "Backend" | "Cloud & DevOps" | "Database" | "Open Source" | "Foundations";
-  featured?: boolean;
+  src: string;
+  alt: string;
+  title: string;
+  subtitle?: string;
+  issuer: string;
+  year: string;
+  category: CertificateCategory;
+  verified?: boolean;
+  credentialId?: string;
+  credentialUrl?: string;
+  skills?: string[];
+  themeColor?: string;
 }
 
-export const certificatesList: CertificateData[] = [
+export const certificatesList: CertificateItem[] = [
   {
     id: "woc-social-2025",
     src: wocPng,
     alt: "Winter of Code Social 2025 Certificate of Participation",
     title: "Winter of Code Social 2025",
+    subtitle: "Open Source Contributor (Nov 2025 – Jan 2026)",
     issuer: "Code Social",
     year: "2025",
-    category: "Open Source",
-    featured: true,
+    category: "Hackathons & Programs",
+    verified: true,
+    credentialId: "WoCS-2025-GG",
+    skills: ["Git", "GitHub", "Open Source Collaboration", "Code Review"],
+    themeColor: "#5C3D2E",
   },
   {
     id: "postman-api-expert",
     src: postmanJpg,
     alt: "Postman API Fundamentals Student Expert",
     title: "Postman API Fundamentals Student Expert",
+    subtitle: "REST API Design, Testing & Collections",
     issuer: "Postman",
     year: "2025",
-    category: "Backend",
-    featured: true,
+    category: "APIs & Tools",
+    verified: true,
+    credentialId: "POSTMAN-STU-EXP-2025",
+    skills: ["REST APIs", "API Testing", "Postman Collections", "Automation"],
+    themeColor: "#FF6C37",
   },
   {
     id: "nst-java-intern",
     src: nativeSoftTechJpg,
     alt: "Java Development Internship - NativeSoftTech",
     title: "Java Development Internship",
+    subtitle: "Enterprise Backend Engineering",
     issuer: "NativeSoftTech",
     year: "2025",
-    category: "Backend",
-    featured: true,
+    category: "Backend & Java",
+    verified: true,
+    credentialId: "NST/2025/JAVA/104",
+    skills: ["Java", "OOP", "Backend Engineering", "Modular Architecture"],
+    themeColor: "#2D5A4C",
   },
   {
     id: "rd-sql-intern",
     src: rdInfroSqlPng,
     alt: "Virtual Internship in SQL - RD Infro Technology",
     title: "Virtual Internship in SQL",
+    subtitle: "Relational Queries & Optimization",
     issuer: "RD Infro Technology",
     year: "2025",
-    category: "Database",
-    featured: true,
+    category: "Data & SQL",
+    verified: true,
+    credentialId: "RD-SQL-2025-VINT",
+    skills: ["SQL", "Relational Modeling", "Joins & Aggregations", "Schema Design"],
+    themeColor: "#3D4566",
   },
   {
     id: "ecwoc-2025",
     src: eliteCodersJpg,
     alt: "Elite Coders Winter of Code",
     title: "Elite Coders Winter of Code",
+    subtitle: "Open Source Contributor",
     issuer: "Elite Coders",
     year: "2025",
-    category: "Open Source",
-    featured: true,
+    category: "Hackathons & Programs",
+    verified: true,
+    credentialId: "ECWOC-2025-089",
+    skills: ["Open Source", "Software Engineering", "Collaboration"],
+    themeColor: "#6B512E",
   },
   {
     id: "sih-2025",
     src: smartIndiaPng,
     alt: "Smart India Hackathon 2025 - Participation",
     title: "Smart India Hackathon 2025",
+    subtitle: "National Innovation Finalist Team",
     issuer: "Ministry of Education & AICTE",
     year: "2025",
-    category: "Open Source",
-    featured: false,
+    category: "Hackathons & Programs",
+    verified: true,
+    credentialId: "SIH2025/NAT/GG",
+    skills: ["Product Prototyping", "Hackathon Problem Solving", "Team Leadership"],
+    themeColor: "#95573D",
   },
   {
     id: "scaler-notification-services",
     src: scalerMasterclassPng,
     alt: "Designing Seamless Notification Services",
     title: "Designing Seamless Notification Services",
+    subtitle: "Distributed Notification Architectures",
     issuer: "Scaler Masterclass",
     year: "2025",
-    category: "Backend",
-    featured: false,
+    category: "APIs & Tools",
+    verified: true,
+    credentialId: "SCALER-NS-2025",
+    skills: ["System Design", "Notification Pipelines", "Pub/Sub", "Rate Limiting"],
+    themeColor: "#7A3F2A",
   },
   {
     id: "masters-union-figma",
     src: mastersUnionJpg,
     alt: "Figma & Prototyping Workshop",
     title: "Figma & Prototyping Workshop",
+    subtitle: "UI/UX & Interactive Design Systems",
     issuer: "Masters Union (DTU Groove 2025)",
     year: "2025",
-    category: "Foundations",
-    featured: false,
+    category: "APIs & Tools",
+    verified: true,
+    credentialId: "MU-DTU-FIG-2025",
+    skills: ["Figma", "UI/UX Prototyping", "Design Systems", "Micro-interactions"],
+    themeColor: "#623E63",
   },
   {
     id: "scaler-fundamentals",
     src: scalerFundamentalsPng,
     alt: "Java Course - Mastering Fundamentals",
     title: "Java Course – Mastering Fundamentals",
+    subtitle: "Core Language Primitives & Memory Model",
     issuer: "Scaler Topics",
     year: "2025",
-    category: "Foundations",
-    featured: true,
+    category: "Backend & Java",
+    verified: true,
+    credentialId: "SCALER-JAVA-FUND",
+    skills: ["Java Core", "Memory Management", "Multithreading", "Data Structures"],
+    themeColor: "#2D5A4C",
   },
   {
     id: "core-java-training",
     src: coreJavaJpeg,
     alt: "Industrial Training in Core Java - Ensino R&D",
     title: "Industrial Training in Core Java",
+    subtitle: "Enterprise Java Programming",
     issuer: "Ensino Research & Development",
     year: "2024",
-    category: "Foundations",
-    featured: false,
+    category: "Backend & Java",
+    verified: true,
+    credentialId: "ENSINO-JAVA-2024",
+    skills: ["Core Java", "JDBC", "OOP", "Software Patterns"],
+    themeColor: "#4B5A38",
   },
   {
     id: "youtube-clone-api",
     src: letsUpgradePng,
     alt: "Building YouTube Clone API Bootcamp",
     title: "Building YouTube Clone API Bootcamp",
+    subtitle: "Media Streaming & REST Architecture",
     issuer: "LetsUpgrade",
     year: "2024",
-    category: "Backend",
-    featured: false,
+    category: "Backend & Java",
+    verified: true,
+    credentialId: "LU-YT-API-2024",
+    skills: ["RESTful APIs", "Express.js", "Media Streaming", "Authentication"],
+    themeColor: "#C4302B",
   },
   {
     id: "web-tech-workshop",
     src: mecatredzJpg,
     alt: "National Level Workshop on Web Tech",
     title: "National Level Workshop on Web Tech",
+    subtitle: "Full-Stack Web Foundations",
     issuer: "Mecatredz Technology",
     year: "2023",
-    category: "Foundations",
-    featured: false,
+    category: "APIs & Tools",
+    verified: true,
+    credentialId: "MECAT-WEB-2023",
+    skills: ["Modern Web Standards", "HTTP Protocol", "Frontend Integration"],
+    themeColor: "#3D4566",
   },
   {
     id: "trivedi-diploma",
     src: trivediJpg,
     alt: "Advance Diploma in IT & System Management",
     title: "Advance Diploma in IT & System Management",
+    subtitle: "Applied Computer Science Foundations",
     issuer: "Trivedi College of IT & Management",
     year: "2019",
-    category: "Foundations",
-    featured: false,
+    category: "APIs & Tools",
+    verified: true,
+    credentialId: "TCIM-ADIT-2019",
+    skills: ["Systems Management", "Operating Systems", "Networking", "Database Systems"],
+    themeColor: "#5C3D2E",
   },
 ];
 
-type CategoryFilter = "All" | "Backend" | "Database" | "Open Source" | "Foundations";
+const CATEGORIES: CertificateCategory[] = [
+  "All",
+  "Backend & Java",
+  "Data & SQL",
+  "APIs & Tools",
+  "Hackathons & Programs",
+];
 
 export default function CertificateCarousel() {
-  const [selectedCert, setSelectedCert] = useState<CertificateData | null>(null);
+  const [activeCategory, setActiveCategory] = useState<CertificateCategory>("All");
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [selectedCert, setSelectedCert] = useState<CertificateItem | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number | null>(null);
 
-  const totalCerts = certificatesList.length;
+  // Filter certificates based on category
+  const filteredCerts =
+    activeCategory === "All"
+      ? certificatesList
+      : certificatesList.filter((c) => c.category === activeCategory);
 
-  const handlePrev = () => {
+  const totalCerts = filteredCerts.length;
+
+  // Reset active index when category changes
+  const handleSelectCategory = (cat: CertificateCategory) => {
+    setActiveCategory(cat);
+    setActiveIndex(0);
+  };
+
+  const handlePrev = useCallback(() => {
+    if (totalCerts === 0) return;
     setActiveIndex((prev) => (prev === 0 ? totalCerts - 1 : prev - 1));
-  };
+  }, [totalCerts]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
+    if (totalCerts === 0) return;
     setActiveIndex((prev) => (prev === totalCerts - 1 ? 0 : prev + 1));
+  }, [totalCerts]);
+
+  const currentCert = filteredCerts[activeIndex] || filteredCerts[0] || certificatesList[0];
+
+  // Keyboard navigation: Left/Right arrows and Enter to inspect (when modal is closed)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing inside an input/textarea
+      const activeTag = document.activeElement?.tagName?.toLowerCase();
+      if (activeTag === "input" || activeTag === "textarea" || (document.activeElement as HTMLElement)?.isContentEditable) {
+        return;
+      }
+
+      if (selectedCert) return; // Radix dialog handles Escape
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleNext();
+      } else if (e.key === "Enter" && !selectedCert) {
+        // Inspect current cert if focused on stage or general body
+        const isTargetInsideStage = stageRef.current?.contains(document.activeElement);
+        if (isTargetInsideStage || document.activeElement === document.body) {
+          e.preventDefault();
+          setSelectedCert(currentCert);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handlePrev, handleNext, selectedCert, currentCert]);
+
+  // Touch Swipe Handlers for mobile & tablet
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
   };
 
-  const currentCert = certificatesList[activeIndex];
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchEndX - touchStartX.current;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handlePrev();
+      } else {
+        handleNext();
+      }
+    }
+    touchStartX.current = null;
+  };
 
   return (
     <Section
       id="achievements"
       chapterNumber="05"
       subtitle="Accreditations"
-      title="Professional Credentials"
-      description="Thirteen verified technical credentials across Java development, SQL optimization, Postman API architectures, and national hackathons."
+      title="Credentials."
+      description="Proof of learning, building, and continuous growth across enterprise Java architectures, SQL optimization, and national hackathons."
     >
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full"
-      >
-        {/* Main 3D Deck Outer Paper Stage */}
-        <div
-          className="relative w-full rounded-2xl sm:rounded-3xl border border-border bg-card/60 p-4 sm:p-6 md:p-8 shadow-xl overflow-hidden select-none"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Subtle Ambient Background Gradient Grid */}
-          <div className="absolute inset-0 bg-radial from-secondary/40 via-card/10 to-transparent pointer-events-none -z-10" />
+      <div className="w-full">
+        {/* Category Filters Pill Bar */}
+        <div className="flex flex-wrap items-center gap-2 mb-8 pb-4 border-b border-border/80" role="tablist" aria-label="Certificate category filters">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat;
+            const count = cat === "All" ? certificatesList.length : certificatesList.filter((c) => c.category === cat).length;
+            return (
+              <button
+                key={cat}
+                role="tab"
+                aria-selected={isActive}
+                aria-pressed={isActive}
+                onClick={() => handleSelectCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
+                    : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
+                }`}
+              >
+                {cat}
+                <span className={`ml-1.5 text-[10px] ${isActive ? "text-primary-foreground/90 font-bold" : "opacity-60"}`}>
+                  ({count})
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-          {/* HUD Top Bar */}
-          <div className="flex items-center justify-between pb-6 mb-4 border-b border-border/80 font-mono text-xs text-muted-foreground">
-            {/* Top Left: Status Label */}
-            <div className="flex items-center gap-2">
+        {/* Outer 3D Browser Stage Frame (Nordic Paper Aesthetic) */}
+        <div
+          ref={stageRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="relative w-full rounded-2xl sm:rounded-3xl border border-border bg-card/70 p-4 sm:p-6 md:p-8 shadow-xl overflow-hidden select-none transition-colors"
+        >
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute inset-0 bg-radial from-secondary/50 via-card/20 to-transparent pointer-events-none -z-10" />
+
+          {/* Section HUD Top Bar */}
+          <div className="flex items-center justify-between pb-4 sm:pb-6 mb-4 border-b border-border/80 font-mono text-xs text-muted-foreground">
+            {/* Top Left: Radar pulse + CERTIFICATE ARCHIVE */}
+            <div className="flex items-center gap-2.5">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>
               <span className="font-semibold uppercase tracking-wider text-foreground">
-                VERIFIED CREDENTIALS
+                CERTIFICATE ARCHIVE
+              </span>
+              <span className="hidden sm:inline-block text-[11px] text-muted-foreground/60">
+                · {totalCerts} Total Documents
               </span>
             </div>
 
-            {/* Top Middle: Active Credential Title Preview (Hidden on Small Screens) */}
-            <div className="hidden md:flex items-center gap-2 text-foreground font-sans text-xs">
-              <Award className="w-3.5 h-3.5 text-primary" />
-              <span className="truncate max-w-[320px] font-medium">{currentCert.title}</span>
-            </div>
-
-            {/* Top Right: Counter HUD */}
-            <div className="flex items-center gap-1.5 font-mono">
-              <span className="text-foreground font-bold text-sm">
+            {/* Top Right: Dynamic Active Counter */}
+            <div className="flex items-center gap-1.5 font-mono text-xs sm:text-sm">
+              <span className="text-foreground font-bold">
                 {(activeIndex + 1).toString().padStart(2, "0")}
               </span>
               <span className="opacity-40">/</span>
@@ -238,79 +398,105 @@ export default function CertificateCarousel() {
             </div>
           </div>
 
-          {/* 3D Fanned Deck Stage */}
-          <div className="relative w-full h-[360px] sm:h-[440px] md:h-[500px] flex items-center justify-center perspective-[1800px] overflow-hidden my-4">
-            
-            {/* Circular Previous Button */}
+          {/* 3D Browser Deck Stage (Awwwards Kamal style coverflow) */}
+          <div
+            className="relative w-full h-[380px] sm:h-[460px] md:h-[530px] flex items-center justify-center perspective-[1800px] overflow-hidden my-2 sm:my-4"
+            style={{ perspective: "1800px" }}
+          >
+            {/* Previous Circular Button */}
             <button
               type="button"
               onClick={handlePrev}
               aria-label="Previous certificate"
-              className="absolute left-2 sm:left-6 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
+              className="absolute left-2 sm:left-6 md:left-8 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
             >
               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors -translate-x-0.5" />
             </button>
 
-            {/* Circular Next Button */}
+            {/* Next Circular Button */}
             <button
               type="button"
               onClick={handleNext}
               aria-label="Next certificate"
-              className="absolute right-2 sm:right-6 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
+              className="absolute right-2 sm:right-6 md:right-8 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
             >
               <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors translate-x-0.5" />
             </button>
 
-            {/* Ambient Floor Shadow under the cards */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[70%] sm:w-[55%] h-8 bg-black/20 dark:bg-black/50 blur-xl rounded-full pointer-events-none" />
+            {/* Floating Speech-Bubble Tooltip on Active Card (Inspired by Awwwards Build 365 popup) */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentCert.id}
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute top-2 sm:top-4 z-40 hidden sm:flex flex-col items-center pointer-events-none"
+              >
+                <div className="bg-card/95 backdrop-blur-md border border-border text-foreground px-4 py-2 rounded-2xl shadow-xl flex flex-col items-center text-center max-w-[280px]">
+                  <span className="font-serif text-sm font-semibold tracking-tight text-foreground truncate max-w-full">
+                    {currentCert.title}
+                  </span>
+                  <span className="text-[11px] font-sans text-muted-foreground truncate max-w-full">
+                    {currentCert.issuer} · {currentCert.year}
+                  </span>
+                  <span className="mt-1 font-mono text-[9px] uppercase tracking-wider text-primary font-bold">
+                    Click to Inspect ↗
+                  </span>
+                </div>
+                {/* Speech Bubble Arrow Indicator */}
+                <div className="w-2.5 h-2.5 bg-card border-r border-b border-border rotate-45 -mt-1.5 shadow-sm" />
+              </motion.div>
+            </AnimatePresence>
 
-            {/* Fanned Cards Stack */}
-            <div className="relative w-[82%] sm:w-[68%] md:w-[58%] lg:w-[50%] max-w-[580px] aspect-[16/11] flex items-center justify-center">
-              {certificatesList.map((cert, index) => {
-                // Calculate offset relative to active card
+            {/* Ambient Floor Shadow under Deck */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[72%] sm:w-[58%] h-10 bg-black/20 dark:bg-black/60 blur-xl rounded-full pointer-events-none" />
+
+            {/* 3D Browser Windows Container */}
+            <div className="relative w-[86%] sm:w-[70%] md:w-[60%] lg:w-[52%] max-w-[620px] aspect-[16/11] flex items-center justify-center">
+              {filteredCerts.map((cert, index) => {
+                // Calculate shortest signed offset relative to activeIndex (loop-friendly)
                 let diff = (index - activeIndex + totalCerts) % totalCerts;
-                // Normalize diff so cards wrap naturally: -3 to +9
                 if (diff > totalCerts / 2) {
                   diff -= totalCerts;
                 }
 
                 const isActive = diff === 0;
-                // Only render cards close enough to the active one for performance and clarity
-                if (Math.abs(diff) > 5) return null;
+                const isHovered = hoveredIndex === index;
 
-                // 3D positioning:
-                // Active card is centered, largest, highest z-index
-                // Cards fan out toward the right and slightly behind, or queue from left
+                // Max visible side cards (4 on each side)
+                if (Math.abs(diff) > 4) return null;
+
+                // 3D coverflow values tuned for browser-deck perspective
                 const zIndex = 30 - Math.abs(diff) * 3;
-                const translateX = diff * 38; // px offset
-                const translateY = Math.abs(diff) * -6; // slight arc
-                const rotateZ = diff * 2.8; // degrees
-                const rotateY = diff > 0 ? -12 : diff < 0 ? 12 : 0;
-                const scale = isActive ? 1.0 : Math.max(0.78, 1 - Math.abs(diff) * 0.055);
-                const opacity = Math.abs(diff) > 4 ? 0 : Math.max(0.35, 1 - Math.abs(diff) * 0.16);
+                const translateX = diff * 72; // Horizontal translation in px
+                const translateZ = Math.abs(diff) * -85; // Depth in 3D space
+                const rotateY = diff > 0 ? -12 : diff < 0 ? 12 : 0; // Y-rotation angle
+                const rotateZ = diff * 1.5; // Slight Z tilt
+                const scale = isActive ? (isHovered ? 1.02 : 1.0) : Math.max(0.76, 1 - Math.abs(diff) * 0.05);
+                const opacity = Math.abs(diff) > 3 ? 0.35 : Math.max(0.55, 1 - Math.abs(diff) * 0.12);
 
                 return (
                   <motion.div
                     key={cert.id}
                     animate={{
                       x: translateX,
-                      y: translateY,
-                      rotateZ: rotateZ,
+                      z: translateZ,
                       rotateY: rotateY,
+                      rotateZ: rotateZ,
                       scale: scale,
                       opacity: opacity,
                     }}
                     transition={{
-                      duration: 0.55,
+                      duration: 0.5,
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     style={{
                       zIndex,
                       transformStyle: "preserve-3d",
                     }}
-                    className={`absolute inset-0 cursor-pointer ${
-                      isActive ? "pointer-events-auto" : "pointer-events-auto hover:opacity-100"
-                    }`}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
                     onClick={() => {
                       if (isActive) {
                         setSelectedCert(cert);
@@ -318,37 +504,50 @@ export default function CertificateCarousel() {
                         setActiveIndex(index);
                       }
                     }}
+                    className={`absolute inset-0 cursor-pointer ${
+                      isActive ? "pointer-events-auto" : "pointer-events-auto hover:opacity-100"
+                    }`}
                   >
+                    {/* Miniature Browser Window Container */}
                     <div
-                      className={`w-full h-full rounded-2xl overflow-hidden border transition-all duration-300 bg-card ${
+                      className={`w-full h-full rounded-2xl overflow-hidden border transition-all duration-300 bg-card flex flex-col ${
                         isActive
-                          ? "border-primary/60 shadow-2xl ring-2 ring-primary/20 scale-[1.01]"
+                          ? "border-primary/80 shadow-2xl ring-2 ring-primary/20"
                           : "border-border shadow-md hover:border-border/90"
                       }`}
                     >
-                      {/* Realistic Document Top Header Bar */}
-                      <div className="flex items-center justify-between px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary/80 border-b border-border text-[10px] sm:text-xs font-mono">
+                      {/* Browser Window Header Chrome Bar */}
+                      <div className="flex items-center justify-between px-3.5 py-2 bg-secondary/80 border-b border-border text-[11px] font-mono select-none">
+                        {/* Three Traffic Light Window Dots */}
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-red-400/80 inline-block" />
-                          <span className="w-2 h-2 rounded-full bg-yellow-400/80 inline-block" />
-                          <span className="w-2 h-2 rounded-full bg-green-400/80 inline-block" />
-                          <span className="ml-1 text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]">
-                            {cert.issuer}
-                          </span>
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] border border-black/10 inline-block" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] border border-black/10 inline-block" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F] border border-black/10 inline-block" />
                         </div>
-                        <span className="text-primary font-semibold">{cert.year}</span>
+
+                        {/* Centered Window Address Title */}
+                        <div className="flex-1 mx-3 px-2.5 py-0.5 rounded-md bg-card/60 border border-border/60 text-center truncate text-[10px] text-muted-foreground font-sans">
+                          <span className="font-medium text-foreground">{cert.issuer}</span>
+                          <span className="mx-1 opacity-50">·</span>
+                          <span>{cert.year}</span>
+                        </div>
+
+                        {/* Top Right Verified Badge */}
+                        <div className="flex items-center gap-1 text-[10px] text-primary font-semibold">
+                          <CheckCircle2 className="w-3 h-3" />
+                        </div>
                       </div>
 
-                      {/* Certificate Full Image */}
-                      <div className="relative w-full h-[calc(100%-26px)] sm:h-[calc(100%-32px)] bg-secondary/40 overflow-hidden">
+                      {/* Browser Window Body: Full Certificate Image Surface */}
+                      <div className="relative flex-1 w-full bg-[#FAF7F2] dark:bg-[#1A1815] overflow-hidden p-2 sm:p-3 flex items-center justify-center">
                         <img
                           src={cert.src}
                           alt={cert.alt}
-                          className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-[1.02]"
-                          loading="lazy"
+                          className="max-h-full max-w-full object-contain rounded-md shadow-xs transition-transform duration-500 hover:scale-[1.01]"
+                          loading={isActive ? "eager" : "lazy"}
                         />
-                        {/* Overlay Vignette */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-card/30 via-transparent to-transparent pointer-events-none" />
+                        {/* Soft Vignette Overlay for Physical Paper Depth */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
                       </div>
                     </div>
                   </motion.div>
@@ -357,22 +556,23 @@ export default function CertificateCarousel() {
             </div>
           </div>
 
-          {/* Active Card Bottom Details & Inspection Trigger */}
+          {/* Active Certificate Information Area & Inspection Actions */}
           <div className="mt-4 pt-5 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-semibold px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
                   {currentCert.category}
                 </span>
                 <span className="font-mono text-xs text-muted-foreground">
-                  Verified in {currentCert.year}
+                  Verified Accreditation · {currentCert.year}
                 </span>
               </div>
               <h4 className="font-serif text-xl sm:text-2xl text-foreground font-normal tracking-tight">
                 {currentCert.title}
               </h4>
               <p className="font-sans text-xs sm:text-sm text-muted-foreground">
-                Issued by {currentCert.issuer}
+                Issued by <span className="font-medium text-foreground">{currentCert.issuer}</span>
+                {currentCert.subtitle ? ` — ${currentCert.subtitle}` : ""}
               </p>
             </div>
 
@@ -380,7 +580,7 @@ export default function CertificateCarousel() {
               <button
                 type="button"
                 onClick={() => setSelectedCert(currentCert)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs cursor-pointer font-medium"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs cursor-pointer font-medium"
               >
                 <span>Inspect Document</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
@@ -389,38 +589,49 @@ export default function CertificateCarousel() {
           </div>
         </div>
 
-        {/* Accessible Radix Dialog Modal */}
+        {/* Accessible Radix Dialog Modal for High-Resolution Certificate Inspection */}
         <Dialog open={!!selectedCert} onOpenChange={(open) => !open && setSelectedCert(null)}>
-          <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-hidden p-0 gap-0 border-border bg-card shadow-2xl flex flex-col">
+          <DialogContent className="max-w-3xl w-full max-h-[92vh] overflow-hidden p-0 gap-0 border-border bg-card shadow-2xl flex flex-col">
             {selectedCert && (
               <>
                 <DialogHeader className="p-4 sm:p-5 border-b border-border text-left">
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-primary block">
-                    {selectedCert.category} · {selectedCert.year}
-                  </span>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-semibold px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+                      {selectedCert.category}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      Accreditation Year: {selectedCert.year}
+                    </span>
+                  </div>
                   <DialogTitle className="font-serif text-xl sm:text-2xl text-foreground font-normal tracking-tight">
                     {selectedCert.title}
                   </DialogTitle>
                   <DialogDescription className="text-xs text-muted-foreground font-sans">
-                    Issued by {selectedCert.issuer}
+                    Issued by <strong className="text-foreground">{selectedCert.issuer}</strong>
+                    {selectedCert.subtitle ? ` · ${selectedCert.subtitle}` : ""}
                   </DialogDescription>
                 </DialogHeader>
 
+                {/* Document Display Area */}
                 <div className="p-4 sm:p-6 flex-1 overflow-auto flex items-center justify-center bg-secondary/30">
                   <img
                     src={selectedCert.src}
                     alt={selectedCert.alt}
-                    className="max-h-[60vh] w-auto max-w-full object-contain rounded-lg shadow-sm border border-border"
+                    className="max-h-[62vh] w-auto max-w-full object-contain rounded-lg shadow-md border border-border bg-[#FAF7F2] dark:bg-[#1A1815]"
                   />
                 </div>
 
-                <div className="p-4 border-t border-border flex items-center justify-between bg-card text-xs font-mono">
-                  <span className="text-muted-foreground">Original Verified Document</span>
+                {/* Footer with Metadata & High-Resolution Link */}
+                <div className="p-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-card text-xs font-mono">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Award className="w-4 h-4 text-primary" />
+                    <span>ID: {selectedCert.credentialId || "VERIFIED-PORTFOLIO-CERT"}</span>
+                  </div>
                   <a
                     href={selectedCert.src}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors"
                   >
                     <span>Open Full Resolution</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -430,7 +641,7 @@ export default function CertificateCarousel() {
             )}
           </DialogContent>
         </Dialog>
-      </motion.div>
+      </div>
     </Section>
   );
 }

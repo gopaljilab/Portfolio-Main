@@ -408,7 +408,7 @@ export default function CertificateCarousel() {
               type="button"
               onClick={handlePrev}
               aria-label="Previous certificate"
-              className="absolute left-2 sm:left-6 md:left-8 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
+              className="absolute left-1 sm:left-4 md:left-6 lg:left-8 z-50 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-card/95 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group backdrop-blur-xs"
             >
               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors -translate-x-0.5" />
             </button>
@@ -418,7 +418,7 @@ export default function CertificateCarousel() {
               type="button"
               onClick={handleNext}
               aria-label="Next certificate"
-              className="absolute right-2 sm:right-6 md:right-8 z-40 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-card/90 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group"
+              className="absolute right-1 sm:right-4 md:right-6 lg:right-8 z-50 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-card/95 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group backdrop-blur-xs"
             >
               <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors translate-x-0.5" />
             </button>
@@ -453,27 +453,28 @@ export default function CertificateCarousel() {
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[72%] sm:w-[58%] h-10 bg-black/20 dark:bg-black/60 blur-xl rounded-full pointer-events-none" />
 
             {/* 3D Browser Windows Container */}
-            <div className="relative w-[86%] sm:w-[70%] md:w-[60%] lg:w-[52%] max-w-[620px] aspect-[16/11] flex items-center justify-center">
+            <div className="relative w-[72%] sm:w-[62%] md:w-[56%] lg:w-[48%] max-w-[560px] aspect-[16/11] flex items-center justify-center">
               {filteredCerts.map((cert, index) => {
-                // Calculate shortest signed offset relative to activeIndex (loop-friendly)
+                // Symmetrical shortest signed circular offset relative to activeIndex (-floor(N/2) to +floor(N/2))
                 let diff = (index - activeIndex + totalCerts) % totalCerts;
-                if (diff > totalCerts / 2) {
+                const half = Math.floor(totalCerts / 2);
+                if (diff > half) {
                   diff -= totalCerts;
                 }
 
                 const isActive = diff === 0;
                 const isHovered = hoveredIndex === index;
 
-                // Max visible side cards (4 on each side)
+                // Max visible side cards (4 on each side for desktop, clipped dynamically)
                 if (Math.abs(diff) > 4) return null;
 
-                // 3D coverflow values tuned for browser-deck perspective
+                // 3D coverflow values tuned for browser-deck perspective and responsive clearance
                 const zIndex = 30 - Math.abs(diff) * 3;
-                const translateX = diff * 72; // Horizontal translation in px
-                const translateZ = Math.abs(diff) * -85; // Depth in 3D space
-                const rotateY = diff > 0 ? -12 : diff < 0 ? 12 : 0; // Y-rotation angle
-                const rotateZ = diff * 1.5; // Slight Z tilt
-                const scale = isActive ? (isHovered ? 1.02 : 1.0) : Math.max(0.76, 1 - Math.abs(diff) * 0.05);
+                const translateX = diff * 58; // Symmetrical horizontal translation in px (clears arrows)
+                const translateZ = Math.abs(diff) * -80; // Depth in 3D space
+                const rotateY = diff > 0 ? -12 : diff < 0 ? 12 : 0; // Symmetrical Y-rotation angle
+                const rotateZ = diff * 1.5; // Slight natural Z tilt
+                const scale = isActive ? (isHovered ? 1.02 : 1.0) : Math.max(0.76, 1 - Math.abs(diff) * 0.055);
                 const opacity = Math.abs(diff) > 3 ? 0.35 : Math.max(0.55, 1 - Math.abs(diff) * 0.12);
 
                 return (
@@ -532,9 +533,9 @@ export default function CertificateCarousel() {
                           <span>{cert.year}</span>
                         </div>
 
-                        {/* Top Right Verified Badge */}
-                        <div className="flex items-center gap-1 text-[10px] text-primary font-semibold">
-                          <CheckCircle2 className="w-3 h-3" />
+                        {/* Top Right Neutral Document Badge */}
+                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-semibold">
+                          <span className="text-[9px] uppercase tracking-wider opacity-70">DOC</span>
                         </div>
                       </div>
 

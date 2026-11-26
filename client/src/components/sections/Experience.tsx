@@ -1,6 +1,7 @@
 import { Section } from "@/components/layout/Section";
-import { ExternalLink, Calendar, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { Calendar, ArrowUpRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 interface ExperienceItem {
   id: string;
@@ -56,18 +57,6 @@ const experiences: ExperienceItem[] = [
     link: "https://github.com/gopaljilab",
   },
   {
-    id: "rd-infro-2025",
-    role: "SQL Intern",
-    company: "RD Infro Technology",
-    date: "Mar 2025 – Apr 2025",
-    type: "Internship",
-    summary: "Optimized 500k-row queries: reduced average response from 2.1s to 340ms.",
-    description:
-      "Optimized slow-running queries on a 500k-row production table — reduced average query time from 2.1s to 340ms via indexing and query rewriting. Documented 12 stored procedures and assisted in migrating 3 legacy views to parameterized queries.",
-    skills: ["SQL", "MySQL", "Query Optimization", "Indexing", "Stored Procedures"],
-    logo: "/experience/rd-infro.png",
-  },
-  {
     id: "nativesofttech-2024",
     role: "Java Intern",
     company: "NativeSoftTech",
@@ -94,81 +83,150 @@ const experiences: ExperienceItem[] = [
 ];
 
 export function Experience() {
+  const reducedMotion = useReducedMotion();
+  const timelineRef = useRef<HTMLOListElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const currentExperience = experiences[activeIndex];
+  const year = currentExperience.date.match(/\d{4}/)?.[0];
+
+  useEffect(() => {
+    const timeline = timelineRef.current;
+    if (!timeline) return;
+
+    const entries = Array.from(timeline.children);
+    let frame: number | null = null;
+    const updateActiveEntry = () => {
+      frame = null;
+      const readingLine = window.innerHeight * 0.44;
+      const currentIndex = entries.findIndex((entry) => entry.getBoundingClientRect().bottom > readingLine);
+      setActiveIndex(currentIndex === -1 ? entries.length - 1 : currentIndex);
+    };
+
+    const scheduleUpdate = () => {
+      if (frame === null) frame = requestAnimationFrame(updateActiveEntry);
+    };
+
+    const observer = new ResizeObserver(scheduleUpdate);
+    observer.observe(timeline);
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    scheduleUpdate();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
+  }, []);
   return (
     <Section
       id="experience"
       chapterNumber="03"
       subtitle="Career Ledger"
       title="Experience & Open Source"
-      description="Professional industry internships, distributed open-source governance, and enterprise Java development."
+      description="Java development, open-source contributions, and project mentorship."
     >
-      <div className="relative border-l border-border pl-5 sm:pl-8 ml-3 sm:ml-4 space-y-12 md:space-y-16">
-        {experiences.map((exp, index) => (
-          <motion.article
-            key={exp.id}
-            initial={{ opacity: 0, x: -16, y: 24 }}
-            whileInView={{ opacity: 1, x: 0, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative bg-card border border-border rounded-2xl p-5 sm:p-8 shadow-xs hover:border-primary/50 transition-colors group"
-          >
-            {/* Timeline Dot Marker */}
-            <motion.div
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 + 0.2, type: "spring" }}
-              className="absolute -left-[27px] sm:-left-[39px] top-8 w-3.5 h-3.5 rounded-full bg-card border-2 border-primary group-hover:bg-primary transition-colors"
-            />
-
-            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 mb-4 border-b border-border">
-              <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-primary font-medium block mb-1">
-                  {exp.type}
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-serif text-foreground font-normal tracking-tight">
-                  {exp.role}
-                </h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-sm font-sans font-semibold text-foreground/90">
-                    {exp.company}
-                  </span>
-                  {exp.link && (
-                    <a
-                      href={exp.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                      aria-label={`${exp.company} link`}
-                    >
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </a>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground shrink-0 bg-secondary px-3 py-1 rounded-full border border-border">
-                <Calendar className="w-3 h-3 text-primary" />
-                <span>{exp.date}</span>
-              </div>
-            </div>
-
-            <p className="text-sm sm:text-base font-sans text-muted-foreground leading-relaxed mb-6">
-              {exp.description}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-2 pt-2" aria-label="Skills applied">
-              {exp.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="px-2.5 py-1 rounded-md bg-secondary text-foreground/80 border border-border font-mono text-[11px]"
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-10 lg:gap-16">
+        <div className="sticky top-20 z-20 self-start rounded-xl border border-border bg-card px-4 py-3 shadow-xs md:top-[30vh] md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+          <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 md:block">
+            <div className="relative h-[1.05em] min-w-[2.5em] overflow-hidden font-serif text-4xl leading-none tabular-nums text-primary sm:text-5xl md:text-[clamp(4rem,8vw,7rem)]">
+              <span className="sr-only">{year}</span>
+              <AnimatePresence initial={false}>
+                <motion.span
+                  key={year}
+                  aria-hidden="true"
+                  initial={reducedMotion ? false : { y: "85%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={reducedMotion ? { opacity: 0 } : { y: "-85%", opacity: 0 }}
+                  transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
+                  className="absolute inset-x-0 top-0"
                 >
-                  {skill}
-                </span>
-              ))}
+                  {year}
+                </motion.span>
+              </AnimatePresence>
             </div>
-          </motion.article>
-        ))}
+            <div className="min-w-0 md:mt-3">
+              <p className="text-sm font-semibold text-foreground md:text-base">{currentExperience.company}</p>
+              <p className="mt-1 font-mono text-[11px] text-muted-foreground md:text-xs">{currentExperience.date}</p>
+            </div>
+          </div>
+          <div className="mt-3 flex items-center gap-3 md:max-w-52" aria-hidden="true">
+            <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{String(activeIndex + 1).padStart(2, "0")} / {String(experiences.length).padStart(2, "0")}</span>
+            <span className="h-px flex-1 bg-border">
+              <span className="block h-full origin-left bg-primary motion-safe:transition-transform" style={{ transform: `scaleX(${(activeIndex + 1) / experiences.length})` }} />
+            </span>
+          </div>
+        </div>
+
+        <ol ref={timelineRef} className="ml-2 [--entry-gap:2rem] md:[--entry-gap:3rem]">
+          {experiences.map((exp, index) => {
+            const isActive = index === activeIndex;
+            return (
+              <li
+                key={exp.id}
+                aria-current={isActive ? "step" : undefined}
+                className="relative pb-[var(--entry-gap)] pl-7 last:pb-0 sm:pl-10"
+              >
+                {index < experiences.length - 1 && (
+                  <span aria-hidden="true" className={`absolute left-0 top-8 h-full w-px ${index < activeIndex ? "bg-primary/60" : "bg-border"}`} />
+                )}
+                <span
+                  aria-hidden="true"
+                  className={`absolute -left-1.5 top-[25px] z-10 size-3.5 rounded-full border-2 border-primary motion-safe:transition-colors ${isActive ? "bg-primary ring-4 ring-primary/15" : "bg-card"}`}
+                />
+                <article className={`rounded-2xl border bg-card p-5 shadow-xs motion-safe:transition-colors sm:p-8 ${isActive ? "border-primary/60" : "border-border"}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 mb-4 border-b border-border">
+                    <div>
+                      <span className="font-mono text-xs uppercase tracking-widest text-primary font-medium block mb-1">
+                        {exp.type}
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-serif text-foreground font-normal tracking-tight">
+                        {exp.role}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-sm font-sans font-semibold text-foreground/90">
+                          {exp.company}
+                        </span>
+                        {exp.link && (
+                          <a
+                            href={exp.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            aria-label={`${exp.company} link`}
+                          >
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground shrink-0 bg-secondary px-3 py-1 rounded-full border border-border">
+                      <Calendar className="w-3 h-3 text-primary" />
+                      <span>{exp.date}</span>
+                    </div>
+                  </div>
+
+                  <p className="text-sm sm:text-base font-sans text-muted-foreground leading-relaxed mb-6">
+                    {exp.description}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2 pt-2" aria-label="Skills applied">
+                    {exp.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-2.5 py-1 rounded-md bg-secondary text-foreground/80 border border-border font-mono text-[11px]"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </Section>
   );

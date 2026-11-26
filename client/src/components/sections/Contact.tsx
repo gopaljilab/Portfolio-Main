@@ -1,31 +1,37 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, MapPin, Send, Loader2, Github, Linkedin, Copy, CheckCheck, ArrowUpRight } from "lucide-react";
-import emailjs from "@emailjs/browser";
-
-import { Section } from "@/components/layout/Section";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { api, type ContactSubmitInput } from "@shared/routes";
-import { motion } from "framer-motion";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import { Github, Copy, CheckCheck, ArrowUpRight } from "lucide-react";
+import { gsap } from "@/lib/gsap";
+import { CreationOfAdamIllustration } from "./CreationOfAdamIllustration";
 
 const EMAIL = "gopaljilab@gmail.com";
 
 export function Contact() {
-  const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const illustrationRef = useRef<HTMLDivElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactSubmitInput>({
-    resolver: zodResolver(api.contact.submit.input),
-  });
+  useLayoutEffect(() => {
+    const illustration = illustrationRef.current;
+    if (!illustration) return;
+
+    const motion = gsap.matchMedia();
+    motion.add("(prefers-reduced-motion: no-preference)", () => {
+      const left = illustration.querySelectorAll(".adh-l, .adk-l");
+      const right = illustration.querySelectorAll(".adh-r, .adk-r");
+      const spark = illustration.querySelector(".cxi-spark");
+
+      const timeline = gsap.timeline({
+        defaults: { duration: 1.3, ease: "power3.out" },
+        scrollTrigger: { trigger: illustration, start: "top 82%", once: true },
+      });
+
+      timeline
+        .from(left, { xPercent: -24, autoAlpha: 0 }, 0)
+        .from(right, { xPercent: 24, autoAlpha: 0 }, 0)
+        .from(spark, { autoAlpha: 0, duration: 0.32, ease: "sine.out" }, 0.98);
+    });
+
+    return () => motion.revert();
+  }, []);
 
   const copyEmail = async () => {
     try {
@@ -37,256 +43,89 @@ export function Contact() {
     }
   };
 
-  const onSubmit = async (data: ContactSubmitInput) => {
-    try {
-      const result = await emailjs.send(
-        "service_wo6s3k6",
-        "template_r652hq8",
-        {
-          name: data.name,
-          from_name: data.name,
-          from_email: data.email,
-          phone: data.phone ?? "",
-          message: data.message,
-          reply_to: data.email,
-        },
-        "P6dp6JGpHK-ZGqUVS",
-      );
-
-      console.log("EmailJS result:", result);
-
-      toast({
-        title: "Message delivered ✓",
-        description: "Thank you for reaching out. I'll get back to you promptly.",
-      });
-
-      reset();
-    } catch (error) {
-      console.error("EmailJS error:", error);
-      toast({
-        variant: "destructive",
-        title: "Couldn't send message",
-        description: `Please email me directly at ${EMAIL}`,
-      });
-    }
-  };
-
   return (
-    <Section
+    <section
       id="contact"
-      chapterNumber="06"
-      subtitle="Collaboration"
-      title="Have something in mind?"
-      description="Available for full-time Java Full-Stack roles, Spring Boot architecture, React frontend engineering, and open-source projects."
+      className="contact-section relative isolate overflow-hidden border-t border-border px-4 pb-20 pt-6 sm:pb-24 md:pt-10 lg:pb-28"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        {/* Left Column: Editorial Contact Information (5 cols) */}
-        <motion.div
-          initial={{ opacity: 0, x: -20, y: 20 }}
-          whileInView={{ opacity: 1, x: 0, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:col-span-5 space-y-6"
-        >
-          <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-primary font-medium block mb-2">
-              Start a Conversation
-            </span>
-            <h3 className="text-3xl sm:text-4xl font-serif text-foreground font-normal tracking-tight leading-tight mb-4">
-              Let's make it <span className="italic text-primary font-normal">real</span>.
-            </h3>
-            <p className="text-sm sm:text-base font-sans text-muted-foreground leading-relaxed">
-              Whether you are scouting for a Java &amp; Spring Boot engineer for your software team or looking to collaborate on high-impact web services, my inbox is always open.
-            </p>
-          </div>
-
-          <div className="space-y-3 pt-2">
-            {/* Email Card with Quick Copy */}
-            <div className="p-4 rounded-xl bg-card border border-border shadow-xs flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-primary">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground block">
-                    Direct Email
-                  </span>
-                  <a
-                    href={`mailto:${EMAIL}`}
-                    className="text-sm font-sans font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    {EMAIL}
-                  </a>
-                </div>
-              </div>
-              <button
-                onClick={copyEmail}
-                aria-label="Copy email address"
-                className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-primary transition-colors"
-              >
-                {copied ? <CheckCheck className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-              </button>
-            </div>
-
-            {/* Location Card */}
-            <div className="p-4 rounded-xl bg-card border border-border shadow-xs flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-primary">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground block">
-                  Location
-                </span>
-                <span className="text-sm font-sans font-medium text-foreground">
-                  Bengaluru, Karnataka, India
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Profiles */}
-          <div className="pt-4 border-t border-border">
-            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground block mb-3">
-              Profiles &amp; Codebases
-            </span>
-            <div className="flex items-center gap-3 font-mono text-xs">
-              <a
-                href="https://github.com/gopaljilab"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors"
-              >
-                <Github className="w-3.5 h-3.5" />
-                <span>GitHub</span>
-                <ArrowUpRight className="w-3 h-3 text-muted-foreground" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/guptagopal001/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors"
-              >
-                <Linkedin className="w-3.5 h-3.5" />
-                <span>LinkedIn</span>
-                <ArrowUpRight className="w-3 h-3 text-muted-foreground" />
-              </a>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Right Column: Refined Paper Contact Form (7 cols) */}
-        <motion.div
-          initial={{ opacity: 0, x: 20, y: 20 }}
-          whileInView={{ opacity: 1, x: 0, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.65, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:col-span-7 bg-card border border-border rounded-2xl p-6 sm:p-8 md:p-10 shadow-sm"
-        >
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Name */}
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                  Full Name <span className="text-primary">*</span>
-                </label>
-                <Input
-                  id="name"
-                  placeholder="e.g. Alex Henderson"
-                  autoComplete="name"
-                  {...register("name")}
-                  className={`bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 h-11 text-sm rounded-lg ${
-                    errors.name ? "border-destructive focus:border-destructive" : ""
-                  }`}
-                />
-                {errors.name && (
-                  <p className="text-xs font-sans text-destructive" role="alert">{errors.name.message}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                  Email Address <span className="text-primary">*</span>
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="e.g. alex@company.com"
-                  autoComplete="email"
-                  {...register("email")}
-                  className={`bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 h-11 text-sm rounded-lg ${
-                    errors.email ? "border-destructive focus:border-destructive" : ""
-                  }`}
-                />
-                {errors.email && (
-                  <p className="text-xs font-sans text-destructive" role="alert">{errors.email.message}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Phone (Optional) */}
-            <div className="space-y-2">
-              <label htmlFor="phone" className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                Phone Number (Optional)
-              </label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="e.g. +91 98765 43210"
-                autoComplete="tel"
-                {...register("phone")}
-                className="bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 h-11 text-sm rounded-lg"
-              />
-            </div>
-
-            {/* Message */}
-            <div className="space-y-2">
-              <label htmlFor="message" className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                Message <span className="text-primary">*</span>
-              </label>
-              <Textarea
-                id="message"
-                rows={5}
-                placeholder="Share your project goals, technical role requirements, timeline, or collaboration scope..."
-                {...register("message")}
-                className={`bg-secondary/40 border-border focus:border-primary placeholder:text-muted-foreground/60 text-sm rounded-lg resize-y ${
-                  errors.message ? "border-destructive focus:border-destructive" : ""
-                }`}
-              />
-              {errors.message && (
-                <p className="text-xs font-sans text-destructive" role="alert">{errors.message.message}</p>
-              )}
-            </div>
-
-            {/* Submit Button & Direct Email Fallback */}
-            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="rounded-full px-8 h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-mono text-xs uppercase tracking-wider transition-all disabled:opacity-60 shadow-xs cursor-pointer"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Sending Message...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span>Send Message</span>
-                    <Send className="w-3.5 h-3.5" />
-                  </div>
-                )}
-              </Button>
-              <span className="text-[11px] font-mono text-muted-foreground">
-                Or email directly:{" "}
-                <a href={`mailto:${EMAIL}`} className="text-primary hover:underline">
-                  {EMAIL}
-                </a>
-              </span>
-            </div>
-          </form>
-        </motion.div>
+      <div className="cxi-grain -z-10" aria-hidden="true" />
+      <div
+        ref={illustrationRef}
+        aria-hidden="true"
+        className="contact-illustration pointer-events-none relative left-1/2 w-[min(112%,88rem)] -translate-x-1/2 sm:w-full sm:max-w-[88rem]"
+      >
+        <CreationOfAdamIllustration />
       </div>
-    </Section>
+
+      <div className="relative mx-auto -mt-2 flex max-w-4xl flex-col items-center text-center sm:-mt-8 lg:-mt-16">
+        {/* Availability Pill */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 dark:bg-[#25221E]/80 backdrop-blur-md border border-border/80 shadow-xs text-xs font-mono text-[#0A1A5E] dark:text-[#C8D5FF] tracking-wide mb-6 sm:mb-8 z-10">
+          <span className="w-2 h-2 rounded-full bg-[#10B981] motion-safe:animate-pulse" />
+          <span>Open to new work · Bengaluru or remote</span>
+        </div>
+
+        {/* Contact headline */}
+        <h2 className="flex flex-col items-center gap-2 sm:gap-3 text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-sans font-bold tracking-tight text-white mb-8 sm:mb-10 z-10">
+          {/* Top Line: Let's build */}
+          <span className="cxi-hl-block px-7 sm:px-11 py-1.5 sm:py-2.5">
+            Let&apos;s build{" "}
+          </span>
+
+          {/* Bottom Line: what's next. */}
+          <span className="cxi-hl-block px-8 sm:px-14 py-1.5 sm:py-2.5">
+            what&apos;s <em className="font-serif italic font-normal ml-2 sm:ml-3">next.</em>
+          </span>
+        </h2>
+
+        {/* Contact actions */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 z-10">
+          {/* Primary Email Mailto Action with Dark Pill */}
+          <a
+            href={`mailto:${EMAIL}`}
+            className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 rounded-full bg-[#0A1A5E] hover:bg-[#071345] text-[#FFFFFF] font-sans text-sm sm:text-base font-bold shadow-[0_18px_40px_-18px_rgba(10,26,94,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+          >
+            <span>{EMAIL}</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+
+          {/* Copy Button */}
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-xs cursor-pointer hover:-translate-y-0.5"
+          >
+            {copied ? (
+              <>
+                <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="text-emerald-600 font-bold">COPIED</span>
+              </>
+            ) : (
+              <span>COPY</span>
+            )}
+          </button>
+
+          {/* LinkedIn Profile */}
+          <a
+            href="https://www.linkedin.com/in/guptagopal001/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-xs hover:-translate-y-0.5"
+          >
+            <span>LinkedIn ↗</span>
+          </a>
+
+          {/* GitHub Profile */}
+          <a
+            href="https://github.com/gopaljilab"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-xs hover:-translate-y-0.5"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span>GitHub</span>
+          </a>
+        </div>
+    </div>
+    </section>
   );
 }

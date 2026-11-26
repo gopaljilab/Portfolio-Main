@@ -124,7 +124,7 @@
   html {
     scroll-behavior: auto;
     scroll-padding-top: 6rem;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     max-width: 100vw;
   }
@@ -134,14 +134,14 @@
     font-family: var(--font-sans);
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     max-width: 100vw;
     position: relative;
   }
 
   #root {
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     max-width: 100vw;
   }
@@ -223,5 +223,349 @@
   html.custom-cursor-active :disabled,
   html.custom-cursor-active .cursor-not-allowed {
     cursor: not-allowed !important;
+  }
+}
+
+/* ── Creation of Adam & Closing Atmospheric Hero Styles ── */
+.cxi-sky {
+  position: absolute;
+  inset: -12%;
+  filter: blur(50px);
+  animation: 10s ease-in-out infinite alternate cxi-breathe;
+  pointer-events: none;
+}
+.cxi-sky i {
+  position: absolute;
+  border-radius: 50%;
+}
+.cxi-sky i:nth-child(1) {
+  left: -18%;
+  top: -30%;
+  width: 70%;
+  height: 95%;
+  background: radial-gradient(closest-side, rgb(29, 79, 230), rgba(29, 79, 230, 0));
+  rotate: -30deg;
+}
+.cxi-sky i:nth-child(2) {
+  right: -20%;
+  bottom: -34%;
+  width: 72%;
+  height: 100%;
+  background: radial-gradient(closest-side, rgb(11, 43, 176), rgba(11, 43, 176, 0));
+  rotate: -30deg;
+}
+.cxi-sky i:nth-child(3) {
+  left: -10%;
+  top: 40%;
+  width: 44%;
+  height: 60%;
+  background: radial-gradient(closest-side, rgb(79, 134, 255), rgba(79, 134, 255, 0));
+}
+.cxi-sky i:nth-child(4) {
+  right: -8%;
+  top: -18%;
+  width: 46%;
+  height: 62%;
+  background: radial-gradient(closest-side, rgb(142, 166, 234), rgba(142, 166, 234, 0));
+}
+.cxi-sky i:nth-child(5) {
+  left: 28%;
+  top: 18%;
+  width: 46%;
+  height: 64%;
+  background: radial-gradient(closest-side, rgb(243, 244, 250), rgba(243, 244, 250, 0));
+}
+
+@keyframes cxi-breathe {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.04) translate(1%, -1%); }
+  100% { transform: scale(0.98) translate(-1%, 1%); }
+}
+
+.cxi-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.adam {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.adam .adk {
+  stroke: #0a1a5e;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.dark .adam .adk {
+  stroke: #c8d5ff;
+}
+.adam .adh-l {
+  fill: #0a1a5e;
+}
+.dark .adam .adh-l {
+  fill: #c8d5ff;
+}
+.adam .adh-r {
+  fill: #0a1a5e;
+}
+.dark .adam .adh-r {
+  fill: #c8d5ff;
+}
+.adam .cxi-star {
+  fill: rgb(77, 132, 255);
+  transform-box: fill-box;
+  transform-origin: center center;
+  filter: drop-shadow(0 0 8px rgba(77, 132, 255, 0.8));
+}
+.adam .cxi-ring {
+  fill: none;
+  stroke: rgb(77, 132, 255);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: cxi-pulse-ring 2.4s ease-out infinite;
+}
+.adam .cxi-ring2 {
+  animation-delay: 1.2s;
+}
+
+@keyframes cxi-pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* Floating Blue Highlight Badges */
+.cxi-hl-block {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.22em 0.5em 0.22em 0.45em;
+  background: linear-gradient(100deg, rgba(36, 86, 240, 0.94), rgba(77, 132, 255, 0.92) 60%, rgba(36, 86, 240, 0.88));
+  box-shadow: 0 14px 34px -16px rgba(8, 28, 140, 0.65);
+  color: #FFFFFF;
+}
+
+.contact-section {
+  background:
+    radial-gradient(ellipse at 48% 28%, #f8faff 0%, transparent 56%),
+    radial-gradient(ellipse at 0% 8%, #7093e6 0%, transparent 49%),
+    radial-gradient(ellipse at 100% 92%, #637cd0 0%, transparent 51%),
+    #cdd9f4;
+}
+
+.dark .contact-section {
+  background:
+    radial-gradient(ellipse at 48% 28%, #293b69 0%, transparent 58%),
+    radial-gradient(ellipse at 0% 4%, #294b94 0%, transparent 48%),
+    radial-gradient(ellipse at 100% 96%, #253e80 0%, transparent 56%),
+    #141c36;
+}
+
+.contact-illustration .adam .cxi-ring {
+  animation: none;
+  opacity: 0.38;
+}
+
+.contact-illustration .adam .cxi-ring2 {
+  opacity: 0;
+}
+
+/* Chapter surfaces share the paper system with a distinct tint for each group. */
+#projects {
+  background-color: #f3e7da;
+}
+
+#open-source {
+  background-color: #e8eee9;
+}
+
+#skills {
+  background-color: #e9edf1;
+}
+
+#experience {
+  background-color: #f3ece2;
+}
+
+#education,
+#achievements {
+  background-color: #eee8f1;
+}
+
+#trophy-cabinet {
+  background-color: #f1e5d7;
+  background-image: radial-gradient(hsl(var(--foreground) / 0.09) 0.6px, transparent 0.6px);
+  background-size: 20px 20px;
+}
+
+.dark #projects {
+  background-color: #2a221e;
+}
+
+.dark #open-source {
+  background-color: #1d2b28;
+}
+
+.dark #skills {
+  background-color: #222a33;
+}
+
+.dark #experience {
+  background-color: #2b2620;
+}
+
+.dark #education,
+.dark #achievements {
+  background-color: #292432;
+}
+
+.dark #trophy-cabinet {
+  background-color: #2f251d;
+}
+
+.dark .contact-illustration .adam :is(.adh-l, .adh-r) {
+  fill: #102654;
+}
+
+.dark .contact-illustration .adam .adk {
+  stroke: #102654;
+}
+
+.dark .contact-illustration .adam :is(.adh-l, .adh-r, .adk) {
+  filter: drop-shadow(0 0 2px #ccdaff);
+}
+
+.sanskrit-plaque {
+  color: #412c22;
+  border-color: #ae8d73;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgb(97 55 31 / 0.045) 3px 4px),
+    repeating-linear-gradient(90deg, transparent 0 5px, rgb(255 248 218 / 0.16) 5px 6px),
+    linear-gradient(135deg, #e7ce9f, #cda674);
+  box-shadow: inset 0 0 0 4px rgb(255 247 226 / 0.31), 0 8px 0 -4px #ac866b, 0 18px 32px -18px rgb(69 42 29 / 0.48);
+}
+
+.dark .sanskrit-plaque {
+  color: #fff1db;
+  border-color: #9e7757;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgb(12 7 4 / 0.1) 3px 4px),
+    repeating-linear-gradient(90deg, transparent 0 5px, rgb(255 244 219 / 0.045) 5px 6px),
+    linear-gradient(135deg, #6a4a35, #4a3228);
+  box-shadow: inset 0 0 0 4px rgb(255 236 199 / 0.09), 0 8px 0 -4px #2f201a, 0 18px 32px -18px #1b120d;
+}
+
+.sanskrit-script {
+  font-family: "Tiro Devanagari Hindi", "Noto Sans Devanagari", serif;
+}
+
+.sanskrit-phrase[data-active="true"] {
+  background-color: rgb(255 246 218 / 0.43);
+}
+
+.dark .sanskrit-phrase[data-active="true"] {
+  background-color: rgb(255 233 195 / 0.14);
+}
+
+.sanskrit-ink-line {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .sanskrit-ink-line > span {
+    display: block;
+  }
+
+  @supports (background-clip: text) {
+    .sanskrit-ink-line > span {
+      background-image: linear-gradient(to right, currentColor var(--ink-progress, 100%), color-mix(in srgb, currentColor 35%, transparent) var(--ink-progress, 100%));
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .sanskrit-ink-line::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    left: var(--ink-progress, 0%);
+    top: 59%;
+    width: 1.8rem;
+    height: 0.28rem;
+    opacity: var(--pen-opacity, 0);
+    transform-origin: left center;
+    transform: rotate(-29deg);
+    clip-path: polygon(0 50%, 22% 0, 100% 0, 100% 100%, 22% 100%);
+    background: linear-gradient(90deg, #291b14 10%, #ddba7d 11% 22%, #734530 23% 88%, #b98655 89%);
+  }
+}
+
+.sanskrit-plaque {
+  --plaque-hole-size: 0.9rem;
+  --plaque-hole-inset: 0.85rem;
+  --plaque-hole-top: 1.125rem;
+  border-radius: 1.25rem;
+}
+
+.sanskrit-plaque-hole,
+.sanskrit-plaque-cord {
+  position: absolute;
+  pointer-events: none;
+}
+
+.sanskrit-plaque-hole {
+  top: var(--plaque-hole-top);
+  width: var(--plaque-hole-size);
+  height: var(--plaque-hole-size);
+  border: 1px solid #99775c;
+  border-radius: 50%;
+  background: hsl(var(--card));
+  box-shadow: inset 1px 2px 3px rgb(45 27 18 / 0.62), 0 0 0 1px rgb(125 83 53 / 0.25);
+}
+
+.sanskrit-plaque-hole-left {
+  left: var(--plaque-hole-inset);
+}
+
+.sanskrit-plaque-hole-right {
+  right: var(--plaque-hole-inset);
+}
+
+.sanskrit-plaque-cord {
+  top: calc(var(--plaque-hole-top) + var(--plaque-hole-size) / 2 - 2px);
+  right: calc(100% - var(--plaque-hole-inset) - var(--plaque-hole-size) / 2);
+  width: 2.25rem;
+  height: auto;
+  overflow: visible;
+  color: #a04836;
+  filter: drop-shadow(0 1px 1px rgb(55 26 18 / 0.38));
+}
+
+.dark .sanskrit-plaque-cord {
+  color: #e7a082;
+}
+
+@media (min-width: 640px) {
+  .sanskrit-plaque {
+    --plaque-hole-size: clamp(1rem, 1.5vw, 1.25rem);
+    --plaque-hole-inset: clamp(1rem, 2.4vw, 2rem);
+    --plaque-hole-top: calc(50% - var(--plaque-hole-size) / 2);
+    border-radius: 5% / 28%;
+  }
+
+  .sanskrit-plaque-cord {
+    top: calc(50% - 0.25rem);
+    width: clamp(3.25rem, 8vw, 6rem);
   }
 }

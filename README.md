@@ -7,22 +7,21 @@ A bespoke, production-ready personal engineering portfolio built with a tactile 
 ## Technical Stack
 
 - **Frontend Core**: React 18, TypeScript, Vite
-- **Styling & Design System**: Tailwind CSS, PostCSS, Custom Nordic Paper Color Tokens (WCAG 2.2 AA compliant)
+- **Styling & Design System**: Tailwind CSS, PostCSS, Custom Nordic Paper Color Tokens
 - **Animation & Micro-interactions**: Framer Motion, GSAP 3, ScrollTrigger
 - **Smooth Navigation**: Lenis Smooth Scroll
 - **Accessible Primitives**: Radix UI (Accessible Dialog, Tooltips, Accordions)
-- **Interactive Coverflow**: Swiper 11 (Keyboard-friendly, zero-autoplay default)
-- **Form Handling & Validation**: React Hook Form, Zod
-- **Message Dispatch**: EmailJS (`@emailjs/browser`)
+- **Credentials**: Interactive certificate carousel with category filters and image inspection
+- **Contact**: Direct email link and copy-to-clipboard action
 - **Backend & Types**: Express.js, TypeScript Contracts (`@shared/routes`)
 
 ---
 
 ## Architectural Highlights
 
-- **Nordic Paper Aesthetic**: Warm Ivory (`#FBF9F4`) and Nordic Cream (`#F7F2E9`) surfaces paired with Charcoal Ink (`#252A29`) typography and WCAG 2.2 AA-compliant Terracotta accents (`#95573D`).
+- **Nordic Paper Aesthetic**: Warm Ivory (`#FBF9F4`) and Nordic Cream (`#F7F2E9`) surfaces paired with Charcoal Ink (`#252A29`) typography and Terracotta accents (`#95573D`).
 - **Dark Mode (Nordic Night)**: High-contrast Dark Slate Linen (`#292C28`) and Nordic Night (`#1D211F`) palette with Muted Terracotta accents (`#DCA48B`).
-- **Zero Horizontal Overflow**: Complete `overflow-x: clip` boundary enforcement across all mobile and desktop viewports.
+- **Responsive Layout**: Mobile and desktop layouts with horizontal overflow clipped at page boundaries.
 - **Accessible Credentials Modal**: Built on Radix UI Dialog with native focus trapping, keyboard Escape dismissal, and automatic focus restoration.
 - **Hardware-Accelerated Motion**: Viewport-triggered scroll reveals with graceful fallback for `prefers-reduced-motion: reduce`.
 
@@ -78,7 +77,6 @@ The following five projects highlight full-stack architectures, cybersecurity de
 - **GirlScript Summer of Code (GSSoC 2026)**: Project Admin & Contributor — Repository governance, code reviews, and Java mentorship.
 - **Elite Coders (ECWoC'26)**: Contributor — Spring Boot request mapping resolution and DAO test refactoring.
 - **Social Winter of Code 2025 (SWoC 2025)**: Open Source Contributor — React admin dashboard bug fixes and OpenAPI REST documentation.
-- **RD Infro Technology**: SQL Intern — Query indexing, execution plan optimization, and stored procedures on 500k-row schemas.
 - **NativeSoftTech**: Java Intern — Microservice development in Spring Boot 3, JWT security filters, and Hibernate persistence.
 - **Arcane Programming Infotech**: Java with JSP Training — Top cohort performer; CRUD student portal using Servlets and JDBC.
 
@@ -89,21 +87,20 @@ The following five projects highlight full-stack architectures, cybersecurity de
 
 ---
 
-## Professional Certifications (13 Total)
+## Professional Certifications (12 Total)
 
 1. **Winter of Code Social 2025** — Code Social (November 2025 – January 2026)
 2. **Postman API Fundamentals Student Expert** — Postman (2025)
 3. **Java Development Internship** — NativeSoftTech (2025)
-4. **Virtual Internship in SQL** — RD Infro Technology (2025)
-5. **Elite Coders Winter of Code** — Elite Coders (2025)
-6. **Smart India Hackathon 2025** — Ministry of Education & AICTE (2025)
-7. **Designing Seamless Notification Services** — Scaler Masterclass (2025)
-8. **Figma & Prototyping Workshop** — Masters Union / DTU Groove (2025)
-9. **Java Course – Mastering Fundamentals** — Scaler Topics (2025)
-10. **Industrial Training in Core Java** — Ensino Research & Development (2024)
-11. **Building YouTube Clone API Bootcamp** — LetsUpgrade (2024)
-12. **National Level Workshop on Web Tech** — Mecatredz Technology (2023)
-13. **Advance Diploma in IT & System Management** — Trivedi College of IT & Management (2019)
+4. **Elite Coders Winter of Code** — Elite Coders (2025)
+5. **Smart India Hackathon 2025** — Ministry of Education & AICTE (2025)
+6. **Designing Seamless Notification Services** — Scaler Masterclass (2025)
+7. **Figma & Prototyping Workshop** — Masters Union / DTU Groove (2025)
+8. **Java Course – Mastering Fundamentals** — Scaler Topics (2025)
+9. **Industrial Training in Core Java** — Ensino Research & Development (2024)
+10. **Building YouTube Clone API Bootcamp** — LetsUpgrade (2024)
+11. **National Level Workshop on Web Tech** — Mecatredz Technology (2023)
+12. **Advance Diploma in IT & System Management** — Trivedi College of IT & Management (2019)
 
 ---
 
@@ -114,14 +111,14 @@ The following five projects highlight full-stack architectures, cybersecurity de
 - **GitHub**: [https://github.com/gopaljilab](https://github.com/gopaljilab)
 - **Location**: Bengaluru, Karnataka, India
 
-*Note on Contact Form: Inquiries submitted via the portfolio contact form are validated on the client side with Zod and dispatched directly to Gopal Gupta's inbox using `@emailjs/browser` with immediate confirmation toasts.*
+Use the email link to open your mail app or the copy button to copy the address.
 
 ---
 
 ## Installation & Local Development
 
 ### Prerequisites
-- Node.js (v18.x or v20.x recommended)
+- Node.js 20.19+ in the 20.x line, or 22.12+
 - npm (v9.x or later)
 
 ### Steps
@@ -173,12 +170,12 @@ The application is optimized for deployment on Vercel:
 │   ├── public/                    # Production static assets (images, favicon, resume)
 │   └── src/
 │       ├── components/
-│       │   ├── CertificateCarousel.tsx  # 13 verified credentials with Radix Dialog
+│       │   ├── CertificateCarousel.tsx  # 12 verified credentials with Radix Dialog
 │       │   ├── ThemeToggle.tsx          # Light/Dark mode switcher
 │       │   ├── layout/                  # Navbar, Footer, Section, SmoothScroll
 │       │   ├── sections/                # Hero, Stats, Projects, Skills, Experience, Education, Contact
 │       │   ├── ui/                      # Radix UI primitives & design tokens
-│       │   └── v1/                      # Swiper coverflow interactive component
+│       │   └── v1/                      # Legacy Swiper coverflow component
 │       ├── hooks/                       # Toast & responsive hooks
 │       ├── lib/                         # GSAP, queryClient, Tailwind utils
 │       ├── pages/                       # Home and NotFound views

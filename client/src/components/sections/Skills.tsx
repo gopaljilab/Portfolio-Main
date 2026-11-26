@@ -127,9 +127,8 @@ export function Skills() {
       subtitle="Technical Index"
       title="Tools of the trade."
       description="Engineering fundamentals grounded in Object-Oriented Programming, Data Structures, Relational Database Management, and scalable Web Architecture."
-      darker
     >
-      <div className="space-y-12">
+      <div className="space-y-7">
         {/* Architectural Relationships Field-Guide Strip (Interactive) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -166,7 +165,7 @@ export function Skills() {
         </motion.div>
 
         {/* 3 Grouped Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
           {skillGroups.map((group, index) => (
             <motion.div
               key={group.title}
@@ -174,7 +173,7 @@ export function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-card border border-border rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between h-full"
+              className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between h-full"
             >
               <div>
                 {/* Header */}

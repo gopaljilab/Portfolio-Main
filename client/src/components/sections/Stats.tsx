@@ -1,6 +1,7 @@
+import { OPEN_SOURCE_STATS } from "@/data/openSourceContributions";
 import { motion } from "framer-motion";
 import { GitMerge, Layers3, Code2, BookOpen } from "lucide-react";
-import { DualContributionTracker } from "@/components/sections/DualContributionTracker";
+import { LeetCodeActivity } from "@/components/sections/DualContributionTracker";
 
 const stats = [
   {
@@ -10,19 +11,19 @@ const stats = [
     icon: Layers3,
   },
   {
-    value: "13",
-    label: "PRs Merged",
+    value: String(OPEN_SOURCE_STATS.mergedPRs),
+    label: "Merged PRs Featured",
     sub: "Across open-source repos",
     icon: GitMerge,
   },
   {
-    value: "2",
-    label: "Industry Internships",
-    sub: "NativeSoftTech & RD Infro",
+    value: "1",
+    label: "Industry Internship",
+    sub: "NativeSoftTech",
     icon: Code2,
   },
   {
-    value: "13",
+    value: "12",
     label: "Certifications",
     sub: "Postman, Scaler, SIH 2025",
     icon: BookOpen,
@@ -84,9 +85,7 @@ export function Stats() {
           })}
         </div>
 
-        {/* Dedicated Full-Width GitHub & LeetCode Activity Ledger */}
-        <DualContributionTracker />
-
+        <LeetCodeActivity />
       </div>
     </section>
   );

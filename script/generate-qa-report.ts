@@ -24,7 +24,7 @@ const inventory = {
     { id: "skills", number: "02", title: "Tools of the trade", description: "3 categorized skill columns, interactive system design pipeline strip, and deployment principles" },
     { id: "experience", number: "03", title: "Experience & Open Source", description: "Career ledger spanning 6 open-source leadership, contributor, internship, and training milestones" },
     { id: "education", number: "04", title: "Education & Foundations", description: "3 formal academic qualifications including B.E. in CSE, Diploma, and Advance Diploma" },
-    { id: "achievements", number: "05", title: "Professional Credentials", description: "13 verified credentials available via default coverflow carousel or editorial grid with Radix Dialog modal" },
+    { id: "achievements", number: "05", title: "Professional Credentials", description: "12 verified credentials available via default coverflow carousel or editorial grid with Radix Dialog modal" },
     { id: "contact", number: "06", title: "Collaboration & Contact", description: "Direct email card, copy-to-clipboard, social profiles, and validated EmailJS message dispatch" }
   ],
   projects: [
@@ -99,12 +99,11 @@ const inventory = {
       liveDemo: "https://www.figma.com/make/AB1LEuPmvUhr1fMaDX3q3w/Blockchain-Certificate-Platform-Prototype?fullscreen=1&t=rLkYbttE95UaCYCf-1"
     }
   ],
-  certificatesCount: 13,
+  certificatesCount: 12,
   certificates: [
     { id: "woc-social-2025", title: "Winter of Code Social 2025", issuer: "Code Social", year: "2025", category: "Open Source" },
     { id: "postman-api-expert", title: "Postman API Fundamentals Student Expert", issuer: "Postman", year: "2025", category: "Backend" },
     { id: "nst-java-intern", title: "Java Development Internship", issuer: "NativeSoftTech", year: "2025", category: "Backend" },
-    { id: "rd-sql-intern", title: "Virtual Internship in SQL", issuer: "RD Infro Technology", year: "2025", category: "Database" },
     { id: "ecwoc-2025", title: "Elite Coders Winter of Code", issuer: "Elite Coders", year: "2025", category: "Open Source" },
     { id: "sih-2025", title: "Smart India Hackathon 2025", issuer: "Ministry of Education & AICTE", year: "2025", category: "Open Source" },
     { id: "scaler-notification-services", title: "Designing Seamless Notification Services", issuer: "Scaler Masterclass", year: "2025", category: "Backend" },
@@ -120,7 +119,6 @@ const inventory = {
     { role: "Project Admin & Contributor", company: "GirlScript Summer of Code", date: "May 2026 – Aug 2026", type: "Open Source Leadership" },
     { role: "ECWoC'26 Contributor", company: "Elite Coders", date: "Jan 2026 – Feb 2026", type: "Contributor" },
     { role: "Open Source Contributor", company: "Social Winter of Code 2025", date: "Nov 2025 – Jan 2026", type: "Contributor" },
-    { role: "SQL Intern", company: "RD Infro Technology", date: "Mar 2025 – Apr 2025", type: "Internship" },
     { role: "Java Intern", company: "NativeSoftTech", date: "Dec 2024 – Feb 2025", type: "Internship" },
     { role: "Java with JSP Training", company: "Arcane Programming Infotech", date: "Jul 2023 – Sep 2023", type: "Training" }
   ],

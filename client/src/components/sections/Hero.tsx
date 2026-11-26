@@ -45,7 +45,7 @@ export function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative pt-32 pb-16 md:pt-44 md:pb-24 overflow-x-clip border-b border-border bg-background w-full max-w-full"
+      className="relative pt-24 pb-16 md:pt-44 md:pb-24 overflow-x-clip border-b border-border bg-background w-full max-w-full"
     >
       {/* Subtle architectural grid lines */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" aria-hidden="true">
@@ -56,28 +56,28 @@ export function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           
           {/* Left: Editorial Hero Content (7 cols on lg) */}
-          <div className="lg:col-span-7 text-left order-2 lg:order-1">
+          <div className="lg:col-span-7 text-left">
             
             {/* Eyebrow Label */}
-            <div className="hero-label-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-foreground/80 border border-border mb-6 text-xs font-mono tracking-wider uppercase">
+            <div className="hero-label-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-foreground/80 border border-border mb-4 sm:mb-6 text-xs font-mono tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span>Java Full-Stack Developer · UI-Focused Engineer</span>
             </div>
 
             {/* Editorial Serif Headline */}
-            <h1 className="hero-title-reveal text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-foreground tracking-tight leading-[0.98] mb-6">
+            <h1 id="portfolio-heading" tabIndex={-1} className="hero-title-reveal text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-foreground tracking-tight leading-[0.98] mb-6">
               Crafting <span className="italic font-normal text-primary">thoughtful</span> digital experiences.
             </h1>
 
             {/* Supporting Copy */}
-            <p className="hero-sub-reveal text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8 font-sans">
+            <p className="hero-sub-reveal text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mb-5 sm:mb-8 font-sans">
               I specialize in architecting resilient backend services and REST APIs with{" "}
               <strong className="text-foreground font-semibold">Java &amp; Spring Boot</strong>, paired with intuitive, high-performance interfaces built in{" "}
               <strong className="text-foreground font-semibold">React &amp; TypeScript</strong>. Driven by clean architecture, system design, and open-source craftsmanship.
             </p>
 
             {/* Metadata Chips: Location & Availability */}
-            <div className="hero-sub-reveal flex flex-wrap items-center gap-4 text-xs font-mono text-muted-foreground mb-9 pb-6 border-b border-border/80">
+            <div className="hero-sub-reveal flex flex-wrap items-center gap-4 text-xs font-mono text-muted-foreground mb-5 pb-4 sm:mb-9 sm:pb-6 border-b border-border/80">
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-primary" />
                 <span>Bengaluru, Karnataka, India</span>
@@ -85,7 +85,7 @@ export function Hero() {
               <span className="text-border">/</span>
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                  <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
                 </span>
                 <span className="text-foreground font-medium">Available for full-time roles &amp; open source</span>
@@ -143,7 +143,7 @@ export function Hero() {
           </div>
 
           {/* Right: Architectural Portrait Frame (5 cols on lg) */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 w-full">
+          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
             <div className="hero-portrait-frame relative w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[400px] mx-auto lg:mr-0">
               {/* Asymmetrical Paper Framing Backing */}
               <div className="absolute -inset-2 sm:-inset-3 rounded-2xl border border-primary/25 bg-secondary/40 -rotate-1 pointer-events-none" />

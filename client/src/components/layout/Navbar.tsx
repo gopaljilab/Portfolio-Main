@@ -8,10 +8,13 @@ import { useLenis } from "@/components/layout/SmoothScrollProvider";
 
 const navLinks = [
   { name: "Work", href: "#projects", id: "projects", number: "01" },
+  { name: "Open Source", href: "#open-source", id: "open-source", number: "01.1" },
   { name: "Skills", href: "#skills", id: "skills", number: "02" },
   { name: "Experience", href: "#experience", id: "experience", number: "03" },
   { name: "Education", href: "#education", id: "education", number: "04" },
   { name: "Credentials", href: "#achievements", id: "achievements", number: "05" },
+  { name: "Rooms", href: "#out-in-the-world", id: "out-in-the-world", number: "05.1" },
+  { name: "Trophies", href: "#trophy-cabinet", id: "trophy-cabinet", number: "05.2" },
   { name: "Contact", href: "#contact", id: "contact", number: "06" },
 ];
 
@@ -103,35 +106,35 @@ export function Navbar() {
           {/* Brand Wordmark */}
           <a
             href="#home"
-            className="group flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+            className="group flex items-center gap-2.5 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
           >
             <span className="font-serif text-2xl sm:text-[1.75rem] text-foreground tracking-tight group-hover:text-primary transition-colors">
               Gopal Gupta
             </span>
-            <span className="hidden sm:inline-block text-[11px] font-mono tracking-widest text-muted-foreground uppercase border-l border-border pl-2.5">
+            <span className="hidden 2xl:inline-block text-[11px] font-mono tracking-widest text-muted-foreground uppercase border-l border-border pl-2.5">
               Portfolio
             </span>
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
-            <ul className="flex items-center gap-6">
+          {/* Desktop Navigation (xl+ screens) */}
+          <nav className="hidden xl:flex items-center gap-6 2xl:gap-8" aria-label="Main Navigation">
+            <ul className="flex items-center gap-3.5 2xl:gap-5">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.id;
                 return (
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className={`text-[13px] font-medium tracking-wide transition-colors relative py-1 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
+                      className={`text-[12px] 2xl:text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors relative py-1 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
                         isActive
                           ? "text-primary font-semibold"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
-                      <span className="font-mono text-[10px] text-muted-foreground/60">
+                      <span className="font-mono text-[10px] text-muted-foreground/60 shrink-0">
                         {link.number}
                       </span>
-                      <span>{link.name}</span>
+                      <span className="whitespace-nowrap">{link.name}</span>
                       <span
                         className={`absolute -bottom-0.5 left-0 h-[1.5px] bg-primary transition-all duration-300 ${
                           isActive ? "w-full" : "w-0 hover:w-full"
@@ -143,12 +146,12 @@ export function Navbar() {
               })}
             </ul>
 
-            <div className="flex items-center gap-3 pl-2 border-l border-border">
+            <div className="flex items-center gap-3 pl-2 border-l border-border shrink-0">
               <Button
                 asChild
                 variant="outline"
                 size="sm"
-                className="rounded-full px-4 h-9 text-xs font-mono uppercase tracking-wider border-border hover:border-primary/60 hover:text-primary transition-all"
+                className="rounded-full px-4 h-9 text-xs font-mono uppercase tracking-wider border-border hover:border-primary/60 hover:text-primary transition-all whitespace-nowrap"
               >
                 <a href="#contact" className="flex items-center gap-1">
                   <span>Get in Touch</span>
@@ -159,8 +162,8 @@ export function Navbar() {
             </div>
           </nav>
 
-          {/* Mobile Actions */}
-          <div className="md:hidden flex items-center gap-2">
+          {/* Mobile / Tablet Actions (< xl screens) */}
+          <div className="xl:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -182,7 +185,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.24, ease: "easeInOut" }}
-            className="md:hidden bg-card border-b border-border overflow-hidden px-4 py-5 shadow-lg"
+            className="xl:hidden bg-card border-b border-border overflow-hidden px-4 py-5 shadow-lg"
           >
             <ul className="flex flex-col space-y-3">
               {navLinks.map((link) => {

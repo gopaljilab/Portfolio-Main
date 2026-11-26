@@ -1,0 +1,142 @@
+{
+  "sections": [
+    {
+      "id": "home",
+      "h2": "Crafting thoughtful digital experiences.",
+      "visible": true
+    },
+    {
+      "id": "",
+      "h2": "Snapshot & Engineering Activity",
+      "visible": true
+    },
+    {
+      "id": "projects",
+      "h2": "Architecture & Engineering",
+      "visible": true
+    },
+    {
+      "id": "skills",
+      "h2": "Tools of the trade.",
+      "visible": true
+    },
+    {
+      "id": "experience",
+      "h2": "Experience & Open Source",
+      "visible": true
+    },
+    {
+      "id": "education",
+      "h2": "Education & Foundations",
+      "visible": true
+    },
+    {
+      "id": "achievements",
+      "h2": "Credentials.",
+      "visible": true
+    },
+    {
+      "id": "contact",
+      "h2": "Have something in mind?",
+      "visible": true
+    }
+  ],
+  "totalLinks": 29,
+  "externalLinks": [
+    {
+      "text": "GitHub",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "LinkedIn",
+      "href": "https://www.linkedin.com/in/guptagopal001/",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "VIEW GITHUB PROFILE",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "VIEW LEETCODE PROFILE",
+      "href": "https://leetcode.com/gopaljilab/",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "CODEBASE",
+      "href": "https://github.com/gopaljilab/GAVS-MUNIM",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "DOCS",
+      "href": "https://github.com/gopaljilab/GAVS-MUNIM#readme",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "GitHub",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "LinkedIn",
+      "href": "https://www.linkedin.com/in/guptagopal001/",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "GitHub",
+      "href": "https://github.com/gopaljilab",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    },
+    {
+      "text": "LinkedIn",
+      "href": "https://www.linkedin.com/in/guptagopal001/",
+      "target": "_blank",
+      "rel": "noopener noreferrer"
+    }
+  ],
+  "projectTabs": [
+    "ALL(7)",
+    "FULL STACK(4)",
+    "AI & ML(1)",
+    "SECURITY(1)",
+    "WEB3(1)",
+    "01\nGAVS-MUNIM",
+    "02\nClinical Insight Engine",
+    "03\nNetShield",
+    "04\nMealSync",
+    "05\nOm Restaurant Management System",
+    "06\nSamarthLoan",
+    "07\nNCVET Blockchain Certification System"
+  ],
+  "cursorClass": "custom-cursor-active lenis",
+  "bodyScrollWidth": 756,
+  "windowInnerWidth": 756
+}

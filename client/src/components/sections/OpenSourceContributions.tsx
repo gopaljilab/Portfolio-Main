@@ -614,8 +614,8 @@ export function OpenSourceContributions() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span 
-                          className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold"
-                          style={{ backgroundColor: repo.colorBg, color: repo.lineColor }}
+                          className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-foreground"
+                          style={{ backgroundColor: repo.colorBg }}
                         >
                           {repo.code}
                         </span>
@@ -699,7 +699,7 @@ export function OpenSourceContributions() {
                   <div className="flex items-center gap-2">
                     <span 
                       className="px-2 py-0.5 rounded font-mono text-xs font-bold"
-                      style={{ backgroundColor: selectedRepo.colorBg, color: selectedRepo.lineColor }}
+                      style={{ backgroundColor: selectedRepo.colorBg }}
                     >
                       {selectedRepo.code} • {selectedRepo.lineName}
                     </span>

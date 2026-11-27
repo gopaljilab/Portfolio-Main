@@ -1,3 +1,4 @@
+import { PROJECTS } from "@/data/projects";
 import { OPEN_SOURCE_STATS } from "@/data/openSourceContributions";
 import { motion } from "framer-motion";
 import { GitMerge, Layers3, Code2, BookOpen } from "lucide-react";
@@ -5,7 +6,7 @@ import { LeetCodeActivity } from "@/components/sections/DualContributionTracker"
 
 const stats = [
   {
-    value: "7",
+    value: String(PROJECTS.length),
     label: "Featured Builds",
     sub: "Full-Stack, AI & Systems",
     icon: Layers3,

@@ -1,3 +1,4 @@
+import { LEETCODE, LEETCODE_SOLVED } from "@/data/leetCodeActivity";
 import { motion } from "framer-motion";
 import { Code2, ExternalLink, Flame, Trophy, Sparkles, CheckCircle2 } from "lucide-react";
 
@@ -33,7 +34,7 @@ export function LeetCodeActivity() {
         </div>
 
         <a
-          href="https://leetcode.com/gopaljilab/"
+          href={LEETCODE.profile}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors self-start sm:self-auto shadow-xs"
@@ -53,8 +54,8 @@ export function LeetCodeActivity() {
                 Total Solved Problems
               </span>
               <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-4xl md:text-5xl font-serif text-foreground tracking-tight font-normal">204</span>
-                <span className="text-xs text-muted-foreground font-mono">/ 4,110 questions</span>
+                <span className="text-4xl md:text-5xl font-serif text-foreground tracking-tight font-normal">{LEETCODE_SOLVED}</span>
+
               </div>
             </div>
 
@@ -63,53 +64,23 @@ export function LeetCodeActivity() {
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 Java &amp; SQL
               </span>
-              <span className="text-xs text-muted-foreground font-mono block mt-1.5">~80% First-Pass Acceptance</span>
+              <span className="text-xs text-muted-foreground font-mono block mt-1.5">Snapshot · {LEETCODE.snapshotLabel}</span>
             </div>
           </div>
 
           {/* Difficulty Trackers (8 cols on md) */}
           <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-            {/* Easy */}
-            <div className="p-4 rounded-xl bg-card border border-border flex flex-col justify-between shadow-xs">
-              <div>
-                <div className="flex items-center justify-between text-xs font-medium text-foreground mb-1.5">
-                  <span className="font-mono text-muted-foreground">Easy</span>
-                  <span className="font-serif text-lg text-foreground font-normal">175</span>
+            {LEETCODE.difficulties.map(({ label, solved, color }) => (
+              <div key={label} className="rounded-xl border border-border bg-card p-4 shadow-xs">
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">{label}</span>
+                  <span className="font-serif text-lg text-foreground">{solved}</span>
                 </div>
-                <span className="text-[11px] text-muted-foreground block mb-3 font-sans">Fundamentals &amp; Logic</span>
-              </div>
-              <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
-                <div className="bg-primary/80 h-1.5 rounded-full" style={{ width: "85%" }} />
-              </div>
-            </div>
-
-            {/* Medium */}
-            <div className="p-4 rounded-xl bg-card border border-border flex flex-col justify-between shadow-xs">
-              <div>
-                <div className="flex items-center justify-between text-xs font-medium text-foreground mb-1.5">
-                  <span className="font-mono text-muted-foreground">Medium</span>
-                  <span className="font-serif text-lg text-foreground font-normal">27</span>
+                <div className="h-1.5 overflow-hidden rounded-full bg-secondary" aria-hidden="true">
+                  <div className={`h-full rounded-full ${color}`} style={{ width: `${solved / LEETCODE_SOLVED * 100}%` }} />
                 </div>
-                <span className="text-[11px] text-muted-foreground block mb-3 font-sans">Core DSA &amp; Patterns</span>
               </div>
-              <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
-                <div className="bg-primary h-1.5 rounded-full" style={{ width: "35%" }} />
-              </div>
-            </div>
-
-            {/* Hard */}
-            <div className="p-4 rounded-xl bg-card border border-border flex flex-col justify-between shadow-xs">
-              <div>
-                <div className="flex items-center justify-between text-xs font-medium text-foreground mb-1.5">
-                  <span className="font-mono text-muted-foreground">Hard</span>
-                  <span className="font-serif text-lg text-foreground font-normal">2</span>
-                </div>
-                <span className="text-[11px] text-muted-foreground block mb-3 font-sans">Complex Optimization</span>
-              </div>
-              <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
-                <div className="bg-foreground h-1.5 rounded-full" style={{ width: "10%" }} />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

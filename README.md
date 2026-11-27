@@ -155,10 +155,15 @@ Use the email link to open your mail app or the copy button to copy the address.
 
 ## Deployment Architecture
 
-The application is optimized for deployment on Vercel:
+Vercel serves the static Vite build. The Contact section opens an email draft or copies the address directly on the client.
+The local Express workflow remains available via `npm run dev`. Use `npm run build` followed by `npm start` to run the bundled Express server and built client together. The optional Express contact API requires a configured PostgreSQL database.
+
+Static deployment:
 - **Build Command**: `vite build`
 - **Output Directory**: `dist/public`
 - **SPA Rewrites**: Handled via `vercel.json` rewrites to `/index.html`.
+
+Run `npx playwright install chromium` once, then `npm run test:e2e` to build and test the static deployment locally.
 
 ---
 

@@ -82,7 +82,7 @@ export function Contact() {
           {/* Primary Email Mailto Action with Dark Pill */}
           <a
             href={`mailto:${EMAIL}`}
-            className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 rounded-full bg-[#0A1A5E] hover:bg-[#071345] text-[#FFFFFF] font-sans text-sm sm:text-base font-bold shadow-[0_18px_40px_-18px_rgba(10,26,94,0.8)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+            className="relative isolate inline-flex items-center gap-2 px-6 sm:px-7 py-3 rounded-full border border-[#0A1A5E]/25 bg-[#F6F3FF] text-[#0A1A5E] hover:bg-white dark:bg-[#0A1A5E] dark:text-white dark:hover:bg-[#071345] font-sans text-sm sm:text-base font-bold shadow-[0_18px_40px_-18px_rgba(10,26,94,0.8)] motion-safe:hover:-translate-y-0.5 active:translate-y-0 transition-transform duration-200 cursor-pointer"
           >
             <span>{EMAIL}</span>
             <ArrowUpRight className="w-4 h-4" />

@@ -1,3 +1,4 @@
+import { LEETCODE, LEETCODE_SOLVED } from "@/data/leetCodeActivity";
 import eliteCodersCredential from "@assets/8fcc4eb8-0637-413a-984d-012525c12ed0_page-0001_1772355072284.jpg";
 import postmanCredential from "@assets/Print_Certificate_-_Canvas_Badges_page-0001_1772355032529.jpg";
 import winterOfCodeCredential from "@assets/WoCS2025_contributor_Gopal_Gupta_1772355110359.png";
@@ -55,12 +56,12 @@ const TROPHIES: TrophyItem[] = [
     id: "leetcode-problems",
     category: "Coding Milestones",
     year: "2025–26",
-    headline: "270+ ALGORITHMS SOLVED",
+    headline: `${LEETCODE_SOLVED} PROBLEMS SOLVED`,
     title: "LeetCode Algorithmic Mastery",
     organization: "LeetCode Global",
     description: "Consistent problem solving across Arrays, Trees, Dynamic Programming, and Graph algorithms with Java. Cultivated deterministic complexity analysis and rigorous edge-case testing.",
-    metricBadge: "270+ SOLVED",
-    evidenceLink: "https://leetcode.com/u/gopalgupta6393/",
+    metricBadge: `${LEETCODE_SOLVED} SOLVED`,
+    evidenceLink: LEETCODE.profile,
     evidenceLabel: "LeetCode Profile",
     accentColor: "#E89B38",
     iconType: "code",
@@ -352,14 +353,14 @@ export function TrophyCabinet() {
                           }`}
                         >
                           <div className="flex items-center gap-3">
-                            <span className="font-mono text-xs font-bold text-muted-foreground/80">
+                            <span className="font-mono text-xs font-bold text-foreground/80">
                               {(idx + 1).toString().padStart(2, "0")}
                             </span>
                             <div>
                               <span className="font-serif text-base font-semibold text-foreground block truncate max-w-[200px] sm:max-w-[280px]">
                                 {item.title}
                               </span>
-                              <span className="font-mono text-[11px] text-muted-foreground">
+                              <span className="font-mono text-[11px] text-foreground/80">
                                 {item.category} · {item.year}
                               </span>
                             </div>

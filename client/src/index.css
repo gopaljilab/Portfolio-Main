@@ -569,3 +569,31 @@
     width: clamp(3.25rem, 8vw, 6rem);
   }
 }
+
+#projects[data-stacked="true"] .project-folder {
+  position: sticky;
+  top: var(--project-top);
+  z-index: var(--project-layer);
+  transform-origin: center top;
+  transform: perspective(1100px) rotateX(calc(var(--project-covered, 0) * -5deg))
+    scale(calc(1 - var(--project-covered, 0) * 0.105));
+}
+
+#projects[data-stacked="true"] .project-folder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: #211913;
+  opacity: calc(var(--project-covered, 0) * 0.2);
+}
+
+#projects[data-stacked="true"] .project-folder:has(:focus-visible) {
+  z-index: 20;
+  transform: none;
+}
+
+#projects[data-stacked="true"] .project-folder:has(:focus-visible)::after {
+  opacity: 0;
+}

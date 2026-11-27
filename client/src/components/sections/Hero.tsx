@@ -153,7 +153,12 @@ export function Hero() {
               <div className="relative rounded-2xl border border-border bg-card overflow-hidden p-2.5 shadow-md">
                 <div className="aspect-[4/5] w-full rounded-xl overflow-hidden bg-secondary relative">
                   <img
-                    src="/profile.jpg"
+                    src="/profile.webp"
+                    srcSet="/profile-small.webp 420w, /profile.webp 760w"
+                    sizes="(min-width: 1024px) 400px, (min-width: 640px) 360px, 300px"
+                    width={760}
+                    height={760}
+                    fetchPriority="high"
                     alt="Gopal Gupta — Java Full-Stack Developer"
                     className="w-full h-full object-cover object-top select-none transition-transform duration-700 ease-out hover:scale-105"
                     loading="eager"

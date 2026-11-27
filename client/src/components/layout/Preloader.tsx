@@ -14,7 +14,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
   // Welcome scene, entry gate, then portfolio.
   const [stage, setStage] = useState<1 | 2 | 3>(() => {
     if (window.location.pathname !== "/") return 3;
-    return isReducedMotion ? 2 : 1;
+    return isReducedMotion ? 3 : 1;
   });
 
   const containerRef = useRef<HTMLDialogElement>(null);
@@ -107,9 +107,10 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
   // Transition from Stage 1 (Welcome Connection) -> Stage 2 (Binary Screen)
   const transitionToBinary = useCallback(() => {
+    if (finishing.current) return;
     const welcomeScene = welcomeSceneRef.current;
     if (!welcomeScene) {
-      setStage(2);
+      setStage((current) => current === 1 ? 2 : current);
       return;
     }
 
@@ -120,7 +121,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
       duration: 0.7,
       ease: "power2.inOut",
       onComplete: () => {
-        setStage(2);
+        setStage((current) => current === 1 ? 2 : current);
       },
     });
   }, []);
@@ -130,7 +131,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     if (stage !== 1) return;
 
     if (isReducedMotion) {
-      setStage(2);
+      handleFinish();
       return;
     }
 
@@ -189,7 +190,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     return () => {
       ctx.revert();
     };
-  }, [stage, isReducedMotion, transitionToBinary]);
+  }, [stage, isReducedMotion, transitionToBinary, handleFinish]);
 
   // Stage 2 (and pre-rendered under Stage 1): Canvas Binary Cyber-Gate Background & Throttled Shimmer Loop
   useEffect(() => {
@@ -321,7 +322,17 @@ export function Preloader({ onComplete }: PreloaderProps) {
     };
   }, [stage, isReducedMotion]);
 
-  const handleEnterClick = () => {
+  useEffect(() => {
+    if (!isOpen) return;
+    if (isReducedMotion) {
+      handleFinish();
+      return;
+    }
+    const timeout = window.setTimeout(handleFinish, 7300);
+    return () => window.clearTimeout(timeout);
+  }, [isOpen, isReducedMotion, handleFinish]);
+
+  const handleEnterClick = useCallback(() => {
     const scene = binarySceneRef.current;
     const dialog = containerRef.current;
     if (stage !== 2 || revealTween.current || !scene || !dialog) return;
@@ -343,7 +354,13 @@ export function Preloader({ onComplete }: PreloaderProps) {
       },
       onComplete: handleFinish,
     });
-  };
+  }, [stage, isReducedMotion, handleFinish]);
+
+  useEffect(() => {
+    if (stage !== 2) return;
+    const timeout = window.setTimeout(handleEnterClick, 1250);
+    return () => window.clearTimeout(timeout);
+  }, [stage, handleEnterClick]);
 
   // If intro has completed, unmount from DOM completely
   if (stage === 3) return null;

@@ -283,7 +283,7 @@ export function OutInTheWorld() {
                       <p className="font-serif text-[15px] text-[#252A29] dark:text-[#E8E2D8] font-normal leading-snug tracking-tight mb-1">
                         {item.caption}
                       </p>
-                      <span className="font-mono text-[10px] text-[#7A7873] dark:text-[#9E9A92] uppercase tracking-wider block">
+                      <span className="font-mono text-[10px] text-[#6D6962] dark:text-[#9E9A92] uppercase tracking-wider block">
                         {item.dateLocation}
                       </span>
                     </div>
@@ -332,7 +332,7 @@ export function OutInTheWorld() {
                     <p className="font-serif text-base text-[#252A29] dark:text-[#E8E2D8] font-normal leading-snug mb-1">
                       {item.caption}
                     </p>
-                    <span className="font-mono text-xs text-[#7A7873] dark:text-[#9E9A92] uppercase tracking-wider block">
+                    <span className="font-mono text-xs text-[#6D6962] dark:text-[#9E9A92] uppercase tracking-wider block">
                       {item.dateLocation}
                     </span>
                   </div>

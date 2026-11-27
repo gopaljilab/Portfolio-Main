@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { MouseEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
@@ -24,6 +24,7 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState<string>("home");
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const lenisRef = useLenis();
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   const handleMobileNavigation = (
     event: MouseEvent<HTMLAnchorElement>,
@@ -32,22 +33,18 @@ export function Navbar() {
     event.preventDefault();
     setIsMobileMenuOpen(false);
 
-    window.setTimeout(() => {
-      const section = document.getElementById(targetId);
-      if (!section) return;
+    const section = document.getElementById(targetId);
+    if (!section) return;
 
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      const headerOffset = 80;
-      window.history.pushState(null, "", `#${targetId}`);
-      if (lenisRef?.current) {
-        lenisRef.current.scrollTo(section, { offset: -headerOffset, duration: 0.8 });
-      } else {
-        window.scrollTo({
-          top: Math.max(0, sectionTop - headerOffset),
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        });
-      }
-    }, 280);
+    const heading = section.querySelector<HTMLElement>("h1, h2") ?? section;
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    window.history.pushState(null, "", `#${targetId}`);
+    if (lenisRef?.current) {
+      lenisRef.current.scrollTo(section, { offset: -80, duration: 0.8 });
+    } else {
+      section.scrollIntoView({ behavior: "instant" });
+    }
   };
 
   const handleScroll = useCallback(() => {
@@ -80,6 +77,7 @@ export function Navbar() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMobileMenuOpen) {
         setIsMobileMenuOpen(false);
+        menuButton.current?.focus();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -125,6 +123,7 @@ export function Navbar() {
                   <li key={link.name}>
                     <a
                       href={link.href}
+                      aria-current={isActive ? "location" : undefined}
                       className={`text-[12px] 2xl:text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors relative py-1 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
                         isActive
                           ? "text-primary font-semibold"
@@ -166,10 +165,13 @@ export function Navbar() {
           <div className="xl:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
+              ref={menuButton}
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2.5 text-foreground hover:text-primary rounded-lg border border-border bg-card/60 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMobileMenuOpen}
+              aria-controls={isMobileMenuOpen ? "mobile-navigation" : undefined}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -185,7 +187,8 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.24, ease: "easeInOut" }}
-            className="xl:hidden bg-card border-b border-border overflow-hidden px-4 py-5 shadow-lg"
+            id="mobile-navigation"
+            className="xl:hidden max-h-[calc(100dvh-6rem)] overflow-y-auto bg-card border-b border-border px-4 py-5 shadow-lg"
           >
             <ul className="flex flex-col space-y-3">
               {navLinks.map((link) => {
@@ -194,6 +197,7 @@ export function Navbar() {
                   <li key={link.name}>
                     <a
                       href={link.href}
+                      aria-current={isActive ? "location" : undefined}
                       onClick={(e) => handleMobileNavigation(e, link.id)}
                       className={`flex items-center justify-between py-2.5 px-3 rounded-lg text-sm transition-colors ${
                         isActive

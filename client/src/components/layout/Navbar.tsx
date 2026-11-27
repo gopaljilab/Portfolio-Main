@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { MouseEvent } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -22,9 +22,15 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("home");
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
   const lenisRef = useLenis();
   const menuButton = useRef<HTMLButtonElement>(null);
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 240,
+    damping: 32,
+    restDelta: 0.001,
+  });
 
   const handleMobileNavigation = (
     event: MouseEvent<HTMLAnchorElement>,
@@ -50,9 +56,6 @@ export function Navbar() {
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
     setIsScrolled(scrollY > 24);
-
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    setScrollProgress(docHeight > 0 ? Math.min(100, (scrollY / docHeight) * 100) : 0);
 
     const sectionIds = ["home", ...navLinks.map((l) => l.id)];
     let current = "home";
@@ -92,10 +95,10 @@ export function Navbar() {
           : "bg-transparent py-5 sm:py-6"
       }`}
     >
-      {/* Editorial Scroll Progress Bar */}
-      <div
-        className="absolute bottom-0 left-0 h-[2px] bg-primary transition-[width] duration-100 ease-linear"
-        style={{ width: `${scrollProgress}%` }}
+      {/* Editorial Scroll Progress Bar powered by motion.dev useScroll */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary origin-left"
+        style={{ scaleX }}
         aria-hidden="true"
       />
 

@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Server, Database, Globe, Play, CheckCircle2, Zap, Copy, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface RequestScenario {
   id: string;

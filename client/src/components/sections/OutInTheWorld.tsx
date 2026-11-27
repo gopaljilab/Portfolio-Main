@@ -148,8 +148,8 @@ export function OutInTheWorld() {
     const active = drag.current;
     if (active.pointerId !== pointerId || !card.hasPointerCapture(pointerId)) return;
 
-    active.x = Math.max(-18, Math.min(18, active.initialX + e.clientX - active.startX));
-    active.y = Math.max(-10, Math.min(10, active.initialY + e.clientY - active.startY));
+    active.x = Math.max(-48, Math.min(48, active.initialX + e.clientX - active.startX));
+    active.y = Math.max(-24, Math.min(24, active.initialY + e.clientY - active.startY));
 
     if (dragFrame.current !== null) return;
     dragFrame.current = requestAnimationFrame(() => {
@@ -247,7 +247,7 @@ export function OutInTheWorld() {
                 >
                   {/* Masking Tape Strip at Top Edge */}
                   <div
-                    className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-24 h-7 z-20 transform -rotate-1 rounded-xs pointer-events-none ${tapeClass}`}
+                    className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-24 h-7 z-20 transform -rotate-1 rounded-sm pointer-events-none ${tapeClass}`}
                     aria-hidden="true"
                   />
 
@@ -255,7 +255,7 @@ export function OutInTheWorld() {
                   <div className="bg-[#FFFFFF] dark:bg-[#25221E] border border-[#E5E0D8] dark:border-[#3D3730] p-3.5 pb-5 rounded-sm shadow-[0_10px_25px_rgba(0,0,0,0.08),0_2px_6px_rgba(0,0,0,0.04)] group-hover:shadow-[0_18px_36px_rgba(0,0,0,0.14)] group-data-[dragging=true]:shadow-[0_24px_48px_rgba(0,0,0,0.20)] motion-safe:group-data-[dragging=true]:scale-[1.035] motion-safe:transition-[transform,box-shadow] duration-200">
                     
                     {/* Photograph Container */}
-                    <div className={`relative w-full ${item.aspectRatio} motion-safe:max-h-[clamp(8rem,calc((100svh-380px)/2),28svh)] bg-[#EFECE6] dark:bg-[#1E1B18] overflow-hidden rounded-xs border border-black/5 mb-3`}>
+                    <div className={`relative w-full ${item.aspectRatio} motion-safe:max-h-[clamp(8rem,calc((100svh-380px)/2),28svh)] bg-[#EFECE6] dark:bg-[#1E1B18] overflow-hidden rounded-sm border border-black/5 mb-3`}>
                       <img
                         src={item.image}
                         alt={item.caption}
@@ -272,7 +272,7 @@ export function OutInTheWorld() {
                           setSelectedPhoto(item);
                         }}
                         aria-label={`Inspect photo: ${item.caption}`}
-                        className="absolute bottom-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer focus-visible:opacity-100"
+                        className="absolute bottom-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm cursor-pointer focus-visible:opacity-100"
                       >
                         <ZoomIn className="w-3.5 h-3.5" />
                       </button>
@@ -306,11 +306,11 @@ export function OutInTheWorld() {
                 >
                   {/* Masking Tape */}
                   <div
-                    className={`absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 z-20 rounded-xs pointer-events-none ${tapeClass}`}
+                    className={`absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 z-20 rounded-sm pointer-events-none ${tapeClass}`}
                     aria-hidden="true"
                   />
 
-                  <div className={`relative ${item.aspectRatio} bg-[#EFECE6] dark:bg-[#1E1B18] overflow-hidden rounded-xs border border-black/5 mb-3 group`}>
+                  <div className={`relative ${item.aspectRatio} bg-[#EFECE6] dark:bg-[#1E1B18] overflow-hidden rounded-sm border border-black/5 mb-3 group`}>
                     <img
                       src={item.image}
                       alt={item.caption}

@@ -1,5 +1,5 @@
 import { Switch, Route } from "wouter";
-import { MotionConfig } from "framer-motion";
+import { MotionConfig } from "motion/react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BackToTop } from "@/components/layout/BackToTop";

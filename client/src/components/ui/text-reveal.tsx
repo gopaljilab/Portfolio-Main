@@ -1,5 +1,5 @@
 import * as React from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
 
 export interface TextRevealProps {
@@ -53,7 +53,7 @@ export function TextReveal({
       filter: "blur(0px)",
       transition: {
         duration,
-        ease: [0.2, 0.65, 0.3, 0.9],
+        ease: [0.2, 0.65, 0.3, 0.9] as const,
       },
     },
   };

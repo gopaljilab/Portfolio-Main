@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Award, ExternalLink, ArrowUpRight, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Award, ExternalLink, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -309,7 +309,7 @@ export default function CertificateCarousel() {
               onClick={() => handleSelectCategory(cat)}
               className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
+                  ? "bg-primary text-primary-foreground font-semibold shadow-sm ring-2 ring-primary/20 scale-[1.02]"
                   : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
               }`}
             >
@@ -334,7 +334,13 @@ export default function CertificateCarousel() {
         className="relative w-full rounded-2xl sm:rounded-3xl border border-border bg-card/70 p-4 sm:p-6 md:p-8 shadow-xl overflow-hidden select-none transition-colors"
       >
         {/* Subtle Ambient Radial Glow */}
-        <div className="absolute inset-0 bg-radial from-secondary/50 via-card/20 to-transparent pointer-events-none -z-10" />
+        <div
+          className="absolute inset-0 pointer-events-none -z-10"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at center, hsl(var(--secondary) / 0.5) 0%, hsl(var(--card) / 0.2) 50%, transparent 100%)",
+          }}
+        />
 
         {/* Section HUD Top Bar */}
         <div className="flex items-center justify-between pb-4 sm:pb-6 mb-4 border-b border-border/80 font-mono text-xs text-muted-foreground">
@@ -372,7 +378,7 @@ export default function CertificateCarousel() {
             type="button"
             onClick={handlePrev}
             aria-label="Previous certificate"
-            className="absolute left-1 sm:left-4 md:left-6 lg:left-8 z-50 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-card/95 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group backdrop-blur-xs"
+            className="absolute left-1 sm:left-4 md:left-6 lg:left-8 z-50 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-card/95 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group backdrop-blur-sm"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors -translate-x-0.5" />
           </button>
@@ -382,7 +388,7 @@ export default function CertificateCarousel() {
             type="button"
             onClick={handleNext}
             aria-label="Next certificate"
-            className="absolute right-1 sm:right-4 md:right-6 lg:right-8 z-50 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-card/95 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group backdrop-blur-xs"
+            className="absolute right-1 sm:right-4 md:right-6 lg:right-8 z-50 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-card/95 hover:bg-card border border-border/90 hover:border-primary text-foreground shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer group backdrop-blur-sm"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground group-hover:text-primary transition-colors translate-x-0.5" />
           </button>
@@ -509,7 +515,7 @@ export default function CertificateCarousel() {
                       <img
                         src={cert.src}
                         alt={cert.alt}
-                        className="max-h-full max-w-full object-contain rounded-md shadow-xs transition-transform duration-500 hover:scale-[1.01]"
+                        className="max-h-full max-w-full object-contain rounded-md shadow-sm transition-transform duration-500 hover:scale-[1.01]"
                         loading={isActive ? "eager" : "lazy"}
                       />
                       {/* Soft Vignette Overlay for Physical Paper Depth */}
@@ -549,7 +555,7 @@ export default function CertificateCarousel() {
                 certificateTrigger.current = event.currentTarget;
                 setSelectedCert(currentCert);
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-xs cursor-pointer font-medium"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-mono text-xs uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-sm cursor-pointer font-medium"
             >
               <span>Inspect Document</span>
               <ArrowUpRight className="w-3.5 h-3.5" />

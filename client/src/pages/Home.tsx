@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
+import { ScrollBasedVelocity } from "@/components/ui/scroll-based-velocity";
 import { Stats } from "@/components/sections/Stats";
 import { Experience } from "@/components/sections/Experience";
 import { Projects } from "@/components/sections/Projects";
@@ -39,6 +40,16 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <div
+          aria-hidden="true"
+          className="border-b border-border bg-secondary/45 py-3.5 overflow-x-clip select-none"
+        >
+          <ScrollBasedVelocity
+            text="SYSTEMS ARCHITECTURE · OPEN SOURCE · FULL-STACK TYPESCRIPT · GSAP & LENIS · DISTRIBUTED CLOUD ·"
+            defaultVelocity={1.8}
+            className="font-mono text-xs sm:text-sm uppercase tracking-[0.22em] text-muted-foreground/85"
+          />
+        </div>
         <Stats />
         <Projects />
         <OpenSourceContributions />

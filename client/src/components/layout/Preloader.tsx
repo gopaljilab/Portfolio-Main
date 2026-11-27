@@ -27,6 +27,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const skipButtonRef = useRef<HTMLButtonElement>(null);
   const finishing = useRef(false);
+  const transitionTween = useRef<gsap.core.Tween | null>(null);
   const revealTween = useRef<gsap.core.Tween | null>(null);
   const ctaButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -39,8 +40,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
     dialog.showModal();
     skipButtonRef.current?.focus();
     return () => {
+      transitionTween.current?.kill();
       revealTween.current?.kill();
-      dialog.close();
+      if (dialog.open) dialog.close();
     };
   }, [isOpen]);
 
@@ -49,6 +51,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
       ctaButtonRef.current?.focus();
     }
     if (stage === 3 && finishing.current) {
+      window.dispatchEvent(new CustomEvent("portfolio:preloader-complete"));
       const sectionId = window.location.hash.slice(1);
       const section = sectionId ? document.getElementById(sectionId) : null;
       const heading = section?.querySelector<HTMLElement>("h1, h2")
@@ -100,6 +103,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
   const handleFinish = useCallback(() => {
     if (finishing.current) return;
     finishing.current = true;
+    transitionTween.current?.kill();
     revealTween.current?.kill();
     setStage(3);
     onComplete?.();
@@ -115,7 +119,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
     }
 
     // Cross-fade Scene 1 cleanly into Scene 2 which is sitting directly underneath
-    gsap.to(welcomeScene, {
+    transitionTween.current?.kill();
+    transitionTween.current = gsap.to(welcomeScene, {
       opacity: 0,
       scale: 0.98,
       duration: 0.7,
@@ -350,7 +355,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
       ease: "power1.inOut",
       onUpdate: () => {
         const feather = Math.min(72, reveal.radius);
-        scene.style.maskImage = `radial-gradient(circle at center, transparent ${reveal.radius - feather}px, black ${reveal.radius}px)`;
+        const mask = `radial-gradient(circle at center, transparent ${reveal.radius - feather}px, black ${reveal.radius}px)`;
+        scene.style.maskImage = mask;
+        scene.style.webkitMaskImage = mask;
       },
       onComplete: handleFinish,
     });

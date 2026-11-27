@@ -1,6 +1,6 @@
 import { PROJECTS } from "@/data/projects";
 import { OPEN_SOURCE_STATS } from "@/data/openSourceContributions";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { GitMerge, Layers3, Code2, BookOpen } from "lucide-react";
 import { LeetCodeActivity } from "@/components/sections/DualContributionTracker";
 
@@ -62,7 +62,7 @@ export function Stats() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
-                className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between hover:border-primary/50 transition-colors group"
+                className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">

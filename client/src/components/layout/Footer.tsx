@@ -59,12 +59,12 @@ function SanskritPlaque() {
 
       lines.forEach((line) => {
         reveal
-          .to(line, { "--pen-opacity": 1, duration: 0.15 })
-          .to(line, { "--ink-progress": "100%", duration: 0.82, ease: "power1.inOut" }, "<")
-          .to(line, { "--pen-opacity": 0, duration: 0.15 }, "-=0.08");
+          .to(line, { "--pen-opacity": 1, duration: 0.2, ease: "sine.out" })
+          .to(line, { "--ink-progress": "100%", duration: 1.55, ease: "sine.inOut" })
+          .to(line, { "--pen-opacity": 0, duration: 0.22, ease: "sine.in" }, "-=0.06");
       });
 
-      reveal.to(translation, { opacity: 1, y: 0, duration: 0.42, ease: "power2.out" });
+      reveal.to(translation, { opacity: 1, y: 0, duration: 0.55, ease: "sine.out" });
     });
 
     return () => media.revert();
@@ -107,15 +107,23 @@ function SanskritPlaque() {
             </button>
           ))}
         </div>
-        <p className="mx-auto mt-3 min-h-5 font-mono text-xs" aria-live="polite">
-          {meaning ?? "Select a phrase to see its meaning."}
-        </p>
+        <div className="mx-auto mt-3 grid max-w-3xl items-center font-mono text-xs">
+          {studentTraits.map((trait) => (
+            <span key={trait.sanskrit} aria-hidden="true" className="invisible col-start-1 row-start-1">
+              {trait.meaning}
+            </span>
+          ))}
+          <p className="col-start-1 row-start-1" aria-live="polite">
+            {meaning ?? "Select a phrase to see its meaning."}
+          </p>
+        </div>
       </div>
       <figcaption className="mx-auto mt-6 max-w-3xl space-y-2 px-2 sm:mt-8">
         <p className="font-serif text-xl italic leading-snug text-foreground sm:text-3xl">
           The five marks of a true student: effort like a crow, focus like a heron, light sleep like a dog, eating in moderation, and stepping away from comfort and distractions.
         </p>
         <p className="font-mono text-xs text-muted-foreground">Sanskrit Subhashita · Five Marks of a Learner</p>
+        <p className="font-mono text-xs text-muted-foreground">Shared with me by my father</p>
       </figcaption>
     </figure>
   );

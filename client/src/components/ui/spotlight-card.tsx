@@ -1,5 +1,5 @@
 import * as React from "react";
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
 
 export interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {

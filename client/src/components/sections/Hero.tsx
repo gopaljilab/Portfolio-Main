@@ -1,6 +1,5 @@
 import { useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import { MapPin, Download, ArrowRight, Github, Linkedin, Sparkles } from "lucide-react";
+import { MapPin, Download, ArrowRight, Github, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { gsap } from "@/lib/gsap";
 
@@ -120,7 +119,7 @@ export function Hero() {
                   href="https://github.com/gopaljilab"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all focus:outline-hidden focus:ring-2 focus:ring-primary/40"
+                  className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   aria-label="Visit Gopal Gupta's GitHub profile (@gopaljilab)"
                   title="GitHub Profile"
                 >
@@ -131,7 +130,7 @@ export function Hero() {
                   href="https://www.linkedin.com/in/guptagopal001/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all focus:outline-hidden focus:ring-2 focus:ring-primary/40"
+                  className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   aria-label="Visit Gopal Gupta's LinkedIn profile (guptagopal001)"
                   title="LinkedIn Profile"
                 >
@@ -143,7 +142,11 @@ export function Hero() {
           </div>
 
           {/* Right: Architectural Portrait Frame (5 cols on lg) */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
+          <div
+            className="lg:col-span-5 flex justify-center lg:justify-end w-full"
+            data-scroll
+            data-scroll-speed="-0.12"
+          >
             <div className="hero-portrait-frame relative w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[400px] mx-auto lg:mr-0">
               {/* Asymmetrical Paper Framing Backing */}
               <div className="absolute -inset-2 sm:-inset-3 rounded-2xl border border-primary/25 bg-secondary/40 -rotate-1 pointer-events-none" />
@@ -158,7 +161,7 @@ export function Hero() {
                     sizes="(min-width: 1024px) 400px, (min-width: 640px) 360px, 300px"
                     width={760}
                     height={760}
-                    fetchPriority="high"
+                    fetchpriority="high"
                     alt="Gopal Gupta — Java Full-Stack Developer"
                     className="w-full h-full object-cover object-top select-none transition-transform duration-700 ease-out hover:scale-105"
                     loading="eager"

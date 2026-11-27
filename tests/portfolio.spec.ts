@@ -28,6 +28,24 @@ test("a deep link opens at its section with reduced motion", async ({ page, requ
   expect(anchorIds).toEqual([]);
 });
 
+test("scrolling moves the portrait and live reduced motion clears parallax", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+
+  const portrait = page.locator("[data-scroll]").filter({ has: page.locator(".hero-portrait-frame") });
+  const offset = () => portrait.evaluate((element) =>
+    new DOMMatrixReadOnly(getComputedStyle(element).transform).m42
+  );
+  await expect.poll(offset).toBeCloseTo(0);
+  await page.mouse.wheel(0, 350);
+  await expect.poll(offset).toBeGreaterThan(20);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(portrait).toHaveCSS("transform", "none");
+});
+
 test("desktop project depth reverses and covered links can receive visible focus", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/#projects");
@@ -37,6 +55,13 @@ test("desktop project depth reverses and covered links can receive visible focus
   await expect(section).toHaveAttribute("data-stacked", "true");
   const cards = section.locator("article");
   await expect(cards).toHaveCount(7);
+  const preview = cards.first().locator("[data-scroll]");
+  const previewTransform = () => preview.evaluate((element) => element.style.transform);
+  await expect.poll(previewTransform).toContain("translate3d");
+  const initialTransform = await previewTransform();
+  await page.mouse.wheel(0, 250);
+  await expect.poll(previewTransform).not.toBe(initialTransform);
+
   await cards.nth(2).scrollIntoViewIfNeeded();
   await expect.poll(() => cards.first().evaluate((card) => Number(card.style.getPropertyValue("--project-covered")))).toBeGreaterThan(0.5);
 

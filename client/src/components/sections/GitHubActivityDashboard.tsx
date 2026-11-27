@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Github, RotateCcw } from "lucide-react";
 import calendar from "@/data/githubActivity.json";
 import { OPEN_SOURCE_STATS } from "@/data/openSourceContributions";

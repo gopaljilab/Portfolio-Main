@@ -1,6 +1,6 @@
-import { GraduationCap, Calendar, Award, ExternalLink, ArrowUpRight } from "lucide-react";
+import { GraduationCap, Calendar, Award, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const education = [
   {
@@ -46,7 +46,7 @@ export function Education() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-card border border-border rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between hover:border-primary/50 transition-colors group"
+            className="bg-card border border-border rounded-2xl p-6 sm:p-7 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors group"
           >
             <div>
               <div className="flex items-center justify-between mb-4">

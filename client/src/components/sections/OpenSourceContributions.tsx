@@ -1,6 +1,6 @@
 import { GitHubActivityDashboard } from "@/components/sections/GitHubActivityDashboard";
 import { useState, useId, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   GitPullRequest, 
   GitMerge, 
@@ -157,10 +157,14 @@ export function OpenSourceContributions() {
       />
 
       {/* Subtle Ambient Radial Glow */}
-      <div 
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-primary/5 rounded-full blur-[140px] pointer-events-none"
+      <div
+        className="absolute top-1/4 inset-x-0 h-[400px] pointer-events-none"
+        data-scroll
+        data-scroll-speed="-0.16"
         aria-hidden="true"
-      />
+      >
+        <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-primary/5 rounded-full blur-[140px]" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -390,9 +394,8 @@ export function OpenSourceContributions() {
                     width="140"
                     height="38"
                     rx="8"
-                    fill="currentColor"
-                    className="text-card/90"
-                    stroke="currentColor"
+                    fill="hsl(var(--card) / 0.92)"
+                    stroke="hsl(var(--border))"
                     strokeWidth="1"
                   />
                   <text
@@ -490,14 +493,10 @@ export function OpenSourceContributions() {
                         width="290"
                         height="48"
                         rx="10"
-                        fill="currentColor"
-                        stroke={isHovered ? repo.lineColor : "currentColor"}
+                        fill={isHovered ? "hsl(var(--card))" : "hsl(var(--card) / 0.88)"}
+                        stroke={isHovered ? repo.lineColor : "hsl(var(--border))"}
                         strokeWidth={isHovered ? "1.5" : "1"}
-                        className={`transition-all duration-200 ${
-                          isHovered 
-                            ? "text-card shadow-lg" 
-                            : "text-card/80 text-border"
-                        }`}
+                        className="transition-all duration-200"
                       />
 
                       {/* Line Accent Bar */}

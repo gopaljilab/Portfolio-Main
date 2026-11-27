@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useRef, type ReactNode, type RefObject } from "react";
-import Lenis from "lenis";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import type Lenis from "lenis";
+import LocomotiveScroll from "locomotive-scroll";
+import { ScrollTrigger } from "@/lib/gsap";
 
 const LenisContext = createContext<RefObject<Lenis | null> | null>(null);
 
@@ -13,53 +14,54 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let lenis: Lenis | null = null;
-    let tickerCallback: ((time: number) => void) | null = null;
-    let unsubscribeScroll: (() => void) | null = null;
+    let locomotive: LocomotiveScroll | null = null;
+    let startFrame = 0;
     let refreshFrame = 0;
     let initialHashFrame = 0;
     let disposed = false;
 
-    const refreshScrollTriggers = () => ScrollTrigger.refresh();
+    const refreshScrollTriggers = () => {
+      locomotive?.resize();
+      ScrollTrigger.refresh();
+    };
 
-    const destroyLenis = () => {
-      if (tickerCallback) gsap.ticker.remove(tickerCallback);
-      unsubscribeScroll?.();
-      lenis?.destroy();
-      tickerCallback = null;
-      unsubscribeScroll = null;
-      lenis = null;
+    const destroyScroll = () => {
+      cancelAnimationFrame(startFrame);
+      locomotive?.destroy();
+      locomotive = null;
       lenisRef.current = null;
     };
 
-    const setupLenis = () => {
-      destroyLenis();
+    const setupScroll = () => {
+      destroyScroll();
       if (reducedMotion.matches) {
         ScrollTrigger.refresh();
         return;
       }
 
-      lenis = new Lenis({
-        autoRaf: false,
-        smoothWheel: true,
-        syncTouch: false,
-        duration: 0.9,
-        easing: (time) => Math.min(1, 1.001 - Math.pow(2, -10 * time)),
-        anchors: { offset: -80, duration: 0.9 },
+      locomotive = new LocomotiveScroll({
+        autoStart: false,
+        lenisOptions: {
+          autoRaf: false,
+          smoothWheel: true,
+          syncTouch: false,
+          duration: 0.9,
+          easing: (time) => Math.min(1, 1.001 - Math.pow(2, -10 * time)),
+          anchors: { offset: -80, duration: 0.9 },
+        },
+        scrollCallback: () => ScrollTrigger.update(),
       });
-      lenisRef.current = lenis;
-
-      unsubscribeScroll = lenis.on("scroll", () => ScrollTrigger.update());
-      tickerCallback = (time) => lenis?.raf(time * 1000);
-      gsap.ticker.add(tickerCallback);
+      lenisRef.current = locomotive.lenisInstance;
+      // The library registers its scroll elements on the next frame.
+      startFrame = requestAnimationFrame(() => locomotive?.start());
 
       ScrollTrigger.refresh();
     };
 
-    setupLenis();
+    setupScroll();
     // React mounts the page after the browser's initial fragment lookup.
     initialHashFrame = requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
+      refreshScrollTriggers();
       const hash = window.location.hash.slice(1);
       if (!hash) return;
 
@@ -71,15 +73,16 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       }
       if (!target) return;
 
-      if (lenis) {
-        lenis.scrollTo(target, { immediate: true, offset: -80 });
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(target, { immediate: true, offset: -80 });
       } else {
         const top = target.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
       }
     });
-    reducedMotion.addEventListener("change", setupLenis);
+    reducedMotion.addEventListener("change", setupScroll);
     window.addEventListener("load", refreshScrollTriggers);
+    window.addEventListener("portfolio:preloader-complete", refreshScrollTriggers);
 
     const resizeObserver = new ResizeObserver(() => {
       cancelAnimationFrame(refreshFrame);
@@ -93,12 +96,13 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
 
     return () => {
       disposed = true;
-      reducedMotion.removeEventListener("change", setupLenis);
+      reducedMotion.removeEventListener("change", setupScroll);
       window.removeEventListener("load", refreshScrollTriggers);
+      window.removeEventListener("portfolio:preloader-complete", refreshScrollTriggers);
       resizeObserver.disconnect();
       cancelAnimationFrame(refreshFrame);
       cancelAnimationFrame(initialHashFrame);
-      destroyLenis();
+      destroyScroll();
     };
   }, []);
 

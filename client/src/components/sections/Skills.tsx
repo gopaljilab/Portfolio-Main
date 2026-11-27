@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Code2, ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
+import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 
 const ICONS: Record<string, string> = {
@@ -135,7 +135,7 @@ export function Skills() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs"
+          className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-sm"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-semibold">
@@ -173,7 +173,7 @@ export function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-xs flex flex-col justify-between h-full"
+              className="bg-card border border-border rounded-xl p-5 sm:p-6 shadow-sm flex flex-col justify-between h-full"
             >
               <div>
                 {/* Header */}

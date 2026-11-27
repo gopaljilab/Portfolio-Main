@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { Github, Copy, CheckCheck, ArrowUpRight } from "lucide-react";
+import { Github, CheckCheck, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { CreationOfAdamIllustration } from "./CreationOfAdamIllustration";
 
@@ -59,7 +59,7 @@ export function Contact() {
 
       <div className="relative mx-auto -mt-2 flex max-w-4xl flex-col items-center text-center sm:-mt-8 lg:-mt-16">
         {/* Availability Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 dark:bg-[#25221E]/80 backdrop-blur-md border border-border/80 shadow-xs text-xs font-mono text-[#0A1A5E] dark:text-[#C8D5FF] tracking-wide mb-6 sm:mb-8 z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 dark:bg-[#25221E]/80 backdrop-blur-md border border-border/80 shadow-sm text-xs font-mono text-[#0A1A5E] dark:text-[#C8D5FF] tracking-wide mb-6 sm:mb-8 z-10">
           <span className="w-2 h-2 rounded-full bg-[#10B981] motion-safe:animate-pulse" />
           <span>Open to new work · Bengaluru or remote</span>
         </div>
@@ -92,7 +92,7 @@ export function Contact() {
           <button
             type="button"
             onClick={copyEmail}
-            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-xs cursor-pointer hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
           >
             {copied ? (
               <>
@@ -109,7 +109,7 @@ export function Contact() {
             href="https://www.linkedin.com/in/guptagopal001/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-xs hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-sm hover:-translate-y-0.5"
           >
             <span>LinkedIn ↗</span>
           </a>
@@ -119,7 +119,7 @@ export function Contact() {
             href="https://github.com/gopaljilab"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-xs hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-sm hover:-translate-y-0.5"
           >
             <Github className="w-3.5 h-3.5" />
             <span>GitHub</span>

@@ -2,9 +2,9 @@ import { LEETCODE, LEETCODE_SOLVED } from "@/data/leetCodeActivity";
 import eliteCodersCredential from "@assets/8fcc4eb8-0637-413a-984d-012525c12ed0_page-0001_1772355072284.jpg";
 import postmanCredential from "@assets/Print_Certificate_-_Canvas_Badges_page-0001_1772355032529.jpg";
 import winterOfCodeCredential from "@assets/WoCS2025_contributor_Gopal_Gupta_1772355110359.png";
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Award, Trophy, GitMerge, ExternalLink, Code2, Users, Flame, Star, ArrowUpRight } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { ChevronLeft, ChevronRight, Award, Trophy, GitMerge, Code2, Star, ArrowUpRight } from "lucide-react";
 
 export type TrophyCategory = "All" | "Hackathons" | "Open Source" | "Coding Milestones" | "Recognition";
 
@@ -123,18 +123,20 @@ export function TrophyCabinet() {
   const [activeYear, setActiveYear] = useState<string>("All");
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
+  // Dynamic available years based on active category
+  const categoryTrophies =
+    activeCategory === "All"
+      ? TROPHIES
+      : TROPHIES.filter((t) => t.category === activeCategory);
+  const availableYears = ["All", ...Array.from(new Set(categoryTrophies.map((t) => t.year)))];
+
   // Filter items
-  const filteredTrophies = TROPHIES.filter((t) => {
-    const matchCat = activeCategory === "All" || t.category === activeCategory;
-    const matchYear = activeYear === "All" || t.year.includes(activeYear);
-    return matchCat && matchYear;
-  });
+  const filteredTrophies = categoryTrophies.filter(
+    (t) => activeYear === "All" || t.year === activeYear
+  );
 
   const total = filteredTrophies.length;
   const current = filteredTrophies[activeIndex] || filteredTrophies[0] || TROPHIES[0];
-
-  // Dynamic available years based on category
-  const availableYears = ["All", ...Array.from(new Set(TROPHIES.map((t) => t.year)))];
 
   const handleNext = () => {
     if (total <= 1) return;
@@ -148,6 +150,12 @@ export function TrophyCabinet() {
 
   const handleCategorySelect = (cat: TrophyCategory) => {
     setActiveCategory(cat);
+    setActiveYear("All");
+    setActiveIndex(0);
+  };
+
+  const handleYearSelect = (year: string) => {
+    setActiveYear(year);
     setActiveIndex(0);
   };
 
@@ -217,7 +225,7 @@ export function TrophyCabinet() {
                   onClick={() => handleCategorySelect(cat)}
                   className={`px-3.5 py-1.5 rounded-full font-mono text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? "bg-primary text-primary-foreground font-semibold shadow-xs ring-2 ring-primary/20 scale-[1.02]"
+                      ? "bg-primary text-primary-foreground font-semibold shadow-sm ring-2 ring-primary/20 scale-[1.02]"
                       : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60"
                   }`}
                 >
@@ -229,6 +237,34 @@ export function TrophyCabinet() {
               );
             })}
           </div>
+
+          {/* Year Filter Pills */}
+          {availableYears.length > 2 && (
+            <div
+              className="flex flex-wrap items-center gap-1.5"
+              role="group"
+              aria-label="Trophy years"
+            >
+              {availableYears.map((year) => {
+                const isActive = activeYear === year;
+                return (
+                  <button
+                    key={year}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => handleYearSelect(year)}
+                    className={`px-2.5 py-1 rounded-full font-mono text-[11px] uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                      isActive
+                        ? "bg-foreground text-background font-semibold shadow-sm"
+                        : "bg-secondary/50 text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/50"
+                    }`}
+                  >
+                    {year === "All" ? "All yrs" : year}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Stepper Navigation Indicator */}
           <div className="flex items-center gap-3">

@@ -1,7 +1,7 @@
 import { Section } from "@/components/layout/Section";
 import { Calendar, ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll } from "motion/react";
 
 interface ExperienceItem {
   id: string;
@@ -86,8 +86,14 @@ export function Experience() {
   const reducedMotion = useReducedMotion();
   const timelineRef = useRef<HTMLOListElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const currentExperience = experiences[activeIndex];
+  const safeIndex = Math.min(Math.max(activeIndex, 0), experiences.length - 1);
+  const currentExperience = experiences[safeIndex] ?? experiences[0];
   const year = currentExperience.date.match(/\d{4}/)?.[0];
+
+  const { scrollYProgress: timelineProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 65%", "end 55%"],
+  });
 
   useEffect(() => {
     const timeline = timelineRef.current;
@@ -128,7 +134,7 @@ export function Experience() {
       description="Java development, open-source contributions, and project mentorship."
     >
       <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-10 lg:gap-16">
-        <div className="sticky top-20 z-20 self-start rounded-xl border border-border bg-card px-4 py-3 shadow-xs md:top-[30vh] md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+        <div className="sticky top-20 z-20 self-start rounded-xl border border-border bg-card px-4 py-3 shadow-sm md:top-[30vh] md:border-0 md:bg-transparent md:p-0 md:shadow-none">
           <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 md:block">
             <div className="relative h-[1.05em] min-w-[2.5em] overflow-hidden font-serif text-4xl leading-none tabular-nums text-primary sm:text-5xl md:text-[clamp(4rem,8vw,7rem)]">
               <span className="sr-only">{year}</span>
@@ -152,14 +158,22 @@ export function Experience() {
             </div>
           </div>
           <div className="mt-3 flex items-center gap-3 md:max-w-52" aria-hidden="true">
-            <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{String(activeIndex + 1).padStart(2, "0")} / {String(experiences.length).padStart(2, "0")}</span>
+            <span className="font-mono text-[11px] tabular-nums text-muted-foreground">{String(safeIndex + 1).padStart(2, "0")} / {String(experiences.length).padStart(2, "0")}</span>
             <span className="h-px flex-1 bg-border">
-              <span className="block h-full origin-left bg-primary motion-safe:transition-transform" style={{ transform: `scaleX(${(activeIndex + 1) / experiences.length})` }} />
+              <span className="block h-full origin-left bg-primary motion-safe:transition-transform" style={{ transform: `scaleX(${(safeIndex + 1) / experiences.length})` }} />
             </span>
           </div>
         </div>
 
-        <ol ref={timelineRef} className="ml-2 [--entry-gap:2rem] md:[--entry-gap:3rem]">
+        <div className="relative ml-2">
+          {!reducedMotion && (
+            <motion.span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-0 top-8 bottom-8 w-[1.5px] origin-top bg-primary/70 z-0"
+              style={{ scaleY: timelineProgress }}
+            />
+          )}
+          <ol ref={timelineRef} className="relative [--entry-gap:2rem] md:[--entry-gap:3rem]">
           {experiences.map((exp, index) => {
             const isActive = index === activeIndex;
             return (
@@ -169,13 +183,19 @@ export function Experience() {
                 className="relative pb-[var(--entry-gap)] pl-7 last:pb-0 sm:pl-10"
               >
                 {index < experiences.length - 1 && (
-                  <span aria-hidden="true" className={`absolute left-0 top-8 h-full w-px ${index < activeIndex ? "bg-primary/60" : "bg-border"}`} />
+                  <span aria-hidden="true" className={`absolute left-0 top-8 h-full w-px ${index < activeIndex ? "bg-primary/40" : "bg-border"}`} />
                 )}
                 <span
                   aria-hidden="true"
                   className={`absolute -left-1.5 top-[25px] z-10 size-3.5 rounded-full border-2 border-primary motion-safe:transition-colors ${isActive ? "bg-primary ring-4 ring-primary/15" : "bg-card"}`}
                 />
-                <article className={`rounded-2xl border bg-card p-5 shadow-xs motion-safe:transition-colors sm:p-8 ${isActive ? "border-primary/60" : "border-border"}`}>
+                <motion.article
+                  initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  className={`rounded-2xl border bg-card p-5 shadow-sm motion-safe:transition-colors sm:p-8 ${isActive ? "border-primary/60" : "border-border"}`}
+                >
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 mb-4 border-b border-border">
                     <div>
                       <span className="font-mono text-xs uppercase tracking-widest text-primary font-medium block mb-1">
@@ -222,11 +242,12 @@ export function Experience() {
                       </span>
                     ))}
                   </div>
-                </article>
+                </motion.article>
               </li>
             );
           })}
-        </ol>
+          </ol>
+        </div>
       </div>
     </Section>
   );

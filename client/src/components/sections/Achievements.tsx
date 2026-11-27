@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "motion/react";
 import { Award, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { TiltCard } from "@/components/ui/tilt-card";

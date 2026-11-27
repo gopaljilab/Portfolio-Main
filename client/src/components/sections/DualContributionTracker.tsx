@@ -1,5 +1,5 @@
 import { LEETCODE, LEETCODE_SOLVED } from "@/data/leetCodeActivity";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Code2, ExternalLink, Flame, Trophy, Sparkles, CheckCircle2 } from "lucide-react";
 
 export function LeetCodeActivity() {
@@ -14,7 +14,7 @@ export function LeetCodeActivity() {
       {/* Card Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-border gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary shadow-xs">
+          <div className="w-11 h-11 rounded-xl bg-secondary border border-border flex items-center justify-center text-primary shadow-sm">
             <Code2 className="w-5 h-5" />
           </div>
           <div>
@@ -37,7 +37,7 @@ export function LeetCodeActivity() {
           href={LEETCODE.profile}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors self-start sm:self-auto shadow-xs"
+          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors self-start sm:self-auto shadow-sm"
         >
           <span>View LeetCode Profile</span>
           <ExternalLink className="w-3.5 h-3.5 text-primary" />
@@ -71,7 +71,7 @@ export function LeetCodeActivity() {
           {/* Difficulty Trackers (8 cols on md) */}
           <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             {LEETCODE.difficulties.map(({ label, solved, color }) => (
-              <div key={label} className="rounded-xl border border-border bg-card p-4 shadow-xs">
+              <div key={label} className="rounded-xl border border-border bg-card p-4 shadow-sm">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="font-mono text-xs text-muted-foreground">{label}</span>
                   <span className="font-serif text-lg text-foreground">{solved}</span>

@@ -203,27 +203,10 @@
   }
 }
 
-/* Custom Cursor Rules (Only when active and on fine pointer desktop) */
-@media (pointer: fine) and (hover: hover) {
-  html.custom-cursor-active,
-  html.custom-cursor-active body,
-  html.custom-cursor-active a,
-  html.custom-cursor-active button {
-    cursor: none !important;
-  }
-
-  /* Preserve native I-beam cursor for editable text fields and text selection */
-  html.custom-cursor-active input,
-  html.custom-cursor-active textarea,
-  html.custom-cursor-active [contenteditable="true"] {
-    cursor: text !important;
-  }
-
-  /* Preserve disabled cursor */
-  html.custom-cursor-active :disabled,
-  html.custom-cursor-active .cursor-not-allowed {
-    cursor: not-allowed !important;
-  }
+/* The cursor component toggles this only while a custom pointer is visible. */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
 }
 
 /* ── Creation of Adam & Closing Atmospheric Hero Styles ── */
@@ -477,18 +460,11 @@
 
 .sanskrit-ink-line {
   position: relative;
-  width: fit-content;
-  max-width: 100%;
-  margin-inline: auto;
 }
 
 @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
-  .sanskrit-ink-line > span {
-    display: block;
-  }
-
   @supports (background-clip: text) {
-    .sanskrit-ink-line > span {
+    .sanskrit-phrase-script {
       background-image: linear-gradient(to right, currentColor var(--ink-progress, 100%), color-mix(in srgb, currentColor 35%, transparent) var(--ink-progress, 100%));
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -499,7 +475,7 @@
     content: "";
     position: absolute;
     pointer-events: none;
-    left: var(--ink-progress, 0%);
+    left: var(--pen-progress, 0%);
     top: 59%;
     width: 1.8rem;
     height: 0.28rem;

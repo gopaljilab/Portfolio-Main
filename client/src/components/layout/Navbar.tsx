@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import type { MouseEvent } from "react";
-import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -75,41 +75,81 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Close mobile menu on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-        menuButton.current?.focus();
-      }
+  useLayoutEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const root = document.documentElement;
+    const overflow = root.style.overflow;
+    root.style.overflow = "hidden";
+    menuButton.current?.focus({ preventScroll: true });
+
+    const desktop = window.matchMedia("(min-width: 1280px)");
+    const closeAtDesktop = () => {
+      if (desktop.matches) setIsMobileMenuOpen(false);
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    desktop.addEventListener("change", closeAtDesktop);
+    return () => {
+      root.style.overflow = overflow;
+      desktop.removeEventListener("change", closeAtDesktop);
+    };
   }, [isMobileMenuOpen]);
+
+  const handleMenuKeys = (event: KeyboardEvent<HTMLElement>) => {
+    if (!isMobileMenuOpen) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setIsMobileMenuOpen(false);
+      menuButton.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>("a[href], button"))
+      .filter((item) => item.getClientRects().length > 0 && !item.matches(":disabled"));
+    const first = items[0];
+    const last = items.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  };
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-card/90 dark:bg-card/95 backdrop-blur-md py-3.5 border-b border-border shadow-[0_2px_12px_rgba(37,42,41,0.04)]"
-          : "bg-transparent py-5 sm:py-6"
+      role={isMobileMenuOpen ? "dialog" : undefined}
+      aria-modal={isMobileMenuOpen || undefined}
+      aria-label={isMobileMenuOpen ? "Site menu" : undefined}
+      data-lenis-prevent={isMobileMenuOpen ? "" : undefined}
+      onKeyDown={handleMenuKeys}
+      className={`fixed inset-x-0 top-0 z-50 ${
+        isMobileMenuOpen
+          ? "flex h-dvh flex-col bg-card"
+          : isScrolled
+            ? "border-b border-border bg-card/90 py-3.5 shadow-[0_2px_12px_rgba(37,42,41,0.04)] backdrop-blur-md transition-all duration-300 dark:bg-card/95"
+            : "bg-transparent py-5 transition-all duration-300 sm:py-6"
       }`}
     >
       {/* Editorial Scroll Progress Bar powered by motion.dev useScroll */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary origin-left"
-        style={{ scaleX }}
-        aria-hidden="true"
-      />
+      {!isMobileMenuOpen && (
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary origin-left"
+          style={{ scaleX }}
+          aria-hidden="true"
+        />
+      )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+      <div className={`mx-auto w-full max-w-7xl shrink-0 px-4 sm:px-6 lg:px-8 ${isMobileMenuOpen ? "border-b border-border/70" : ""}`}>
+        <div className={`flex items-center justify-between gap-2 ${isMobileMenuOpen ? "h-[4.5rem] sm:h-20" : ""}`}>
           {/* Brand Wordmark */}
           <a
             href="#home"
-            className="group flex items-center gap-2.5 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+            data-cursor="Home"
+            data-cursor-tone="neutral"
+            onClick={isMobileMenuOpen ? (event) => handleMobileNavigation(event, "home") : undefined}
+            className={`group flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isMobileMenuOpen ? "rounded-lg bg-foreground px-3 py-2 text-background" : "rounded-sm"}`}
           >
-            <span className="font-serif text-2xl sm:text-[1.75rem] text-foreground tracking-tight group-hover:text-primary transition-colors">
+            <span className={isMobileMenuOpen ? "font-sans text-sm font-bold tracking-tight sm:text-base" : "font-serif text-xl tracking-tight text-foreground transition-colors group-hover:text-primary min-[360px]:text-2xl sm:text-[1.75rem]"}>
               Gopal Gupta
             </span>
             <span className="hidden 2xl:inline-block text-[11px] font-mono tracking-widest text-muted-foreground uppercase border-l border-border pl-2.5">
@@ -126,6 +166,8 @@ export function Navbar() {
                   <li key={link.name}>
                     <a
                       href={link.href}
+                      data-cursor={link.name}
+                      data-cursor-tone="neutral"
                       aria-current={isActive ? "location" : undefined}
                       className={`text-[12px] 2xl:text-[13px] font-medium tracking-wide whitespace-nowrap transition-colors relative py-1 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm ${
                         isActive
@@ -155,7 +197,7 @@ export function Navbar() {
                 size="sm"
                 className="rounded-full px-4 h-9 text-xs font-mono uppercase tracking-wider border-border hover:border-primary/60 hover:text-primary transition-all whitespace-nowrap"
               >
-                <a href="#contact" className="flex items-center gap-1">
+                <a href="#contact" data-cursor="Contact" data-cursor-tone="neutral" className="flex items-center gap-1">
                   <span>Get in Touch</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
@@ -165,72 +207,59 @@ export function Navbar() {
           </nav>
 
           {/* Mobile / Tablet Actions (< xl screens) */}
-          <div className="xl:hidden flex items-center gap-2">
-            <ThemeToggle />
+          <div className="flex shrink-0 items-center gap-1.5 xl:hidden sm:gap-2">
+            <div className={isMobileMenuOpen ? "rounded-full border border-border" : ""}>
+              <ThemeToggle />
+            </div>
             <button
               ref={menuButton}
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2.5 text-foreground hover:text-primary rounded-lg border border-border bg-card/60 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card/60 px-3.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              data-cursor={isMobileMenuOpen ? "Close menu" : "Menu"}
+              data-cursor-tone="neutral"
               aria-expanded={isMobileMenuOpen}
               aria-controls={isMobileMenuOpen ? "mobile-navigation" : undefined}
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isMobileMenuOpen ? "Close" : "Menu"}
+              {isMobileMenuOpen ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.24, ease: "easeInOut" }}
-            id="mobile-navigation"
-            className="xl:hidden max-h-[calc(100dvh-6rem)] overflow-y-auto bg-card border-b border-border px-4 py-5 shadow-lg"
-          >
-            <ul className="flex flex-col space-y-3">
-              {navLinks.map((link) => {
-                const isActive = activeSection === link.id;
-                return (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      aria-current={isActive ? "location" : undefined}
-                      onClick={(e) => handleMobileNavigation(e, link.id)}
-                      className={`flex items-center justify-between py-2.5 px-3 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "bg-primary/10 text-primary font-semibold"
-                          : "text-foreground hover:bg-secondary/60"
-                      }`}
-                    >
-                      <span className="font-serif text-lg">{link.name}</span>
-                      <span className="font-mono text-xs text-muted-foreground">{link.number}</span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="mt-5 pt-4 border-t border-border flex flex-col gap-3">
-              <Button asChild className="w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 h-11 font-mono text-xs uppercase tracking-wider">
-                <a
-                  href="#contact"
-                  onClick={(e) => handleMobileNavigation(e, "contact")}
-                  className="flex items-center justify-center gap-2"
-                >
-                  <span>Initiate Contact</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isMobileMenuOpen && (
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200 sm:px-6 xl:hidden"
+        >
+          <ul className="mx-auto max-w-7xl divide-y divide-border border-b border-border lg:mx-2">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.id;
+              return (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    data-cursor={link.name}
+                    data-cursor-tone="neutral"
+                    aria-current={isActive ? "location" : undefined}
+                    onClick={(e) => handleMobileNavigation(e, link.id)}
+                    className={`block py-3.5 font-sans text-[clamp(1.8rem,7.7vw,3.25rem)] font-bold leading-[1.08] tracking-tight outline-offset-[-2px] transition-colors sm:py-4 ${
+                      isActive
+                        ? "text-primary"
+                        : "text-foreground hover:text-primary"
+                    }`}
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }

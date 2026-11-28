@@ -1,136 +1,165 @@
-"use client";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
-import React, { useEffect, useRef, useState } from "react";
+const actionSelector = '[data-cursor], a[href], button, [role="button"], summary';
+const nativeCursorSelector = 'input, textarea, select, [contenteditable]:not([contenteditable="false"]), :disabled, [aria-disabled="true"], .cursor-not-allowed';
+
+function getActionLabel(action: Element | null) {
+  if (!action) return null;
+
+  const label = action.getAttribute("data-cursor");
+  if (label) return label;
+
+  if (action.matches("a[href]")) {
+    if (action.getAttribute("href")?.startsWith("mailto:")) return "Email";
+    if (action.hasAttribute("download")) return "Download";
+    return action.getAttribute("target") === "_blank" ? "Open ↗" : "Open";
+  }
+
+  if (action.getAttribute("aria-haspopup") === "dialog") return "Open";
+  if (action.hasAttribute("aria-expanded")) {
+    return action.getAttribute("aria-expanded") === "true" ? "Close" : "Open";
+  }
+  return "Select";
+}
+
+interface CursorPosition {
+  x: number;
+  y: number;
+  label: string | null;
+  showAccent: boolean;
+  container: HTMLElement;
+}
 
 export function CustomCursor() {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [cursor, setCursor] = useState<CursorPosition | null>(null);
+  const isVisible = cursor !== null;
 
-  // Position refs for 60fps RAF loop
-  const mousePos = useRef({ x: -100, y: -100 });
-  const labelPos = useRef({ x: -100, y: -100 });
-  const isMoving = useRef(false);
-  const rafId = useRef<number | null>(null);
-
-  const pointerRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (!isVisible) return;
+    const root = document.documentElement;
+    root.classList.add("custom-cursor-active");
+    return () => root.classList.remove("custom-cursor-active");
+  }, [isVisible]);
 
   useEffect(() => {
-    // 1. Strict fine-pointer & hover check: only enable on desktop with fine mouse pointer
-    const hasFinePointer = window.matchMedia("(pointer: fine) and (hover: hover)").matches;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const mouseSupport = window.matchMedia("(any-pointer: fine) and (any-hover: hover)");
+    const nativePreference = window.matchMedia("(prefers-reduced-motion: reduce), (forced-colors: active)");
+    let point: { x: number; y: number } | null = null;
+    let target: Element | null = null;
+    let frame: number | null = null;
 
-    if (!hasFinePointer || prefersReducedMotion) {
-      setIsEnabled(false);
-      return;
-    }
-
-    setIsEnabled(true);
-    document.documentElement.classList.add("custom-cursor-active");
-
-    const onMouseMove = (e: MouseEvent) => {
-      mousePos.current.x = e.clientX;
-      mousePos.current.y = e.clientY;
-
-      if (!isMoving.current) {
-        // First move: snap initial coordinates immediately
-        labelPos.current.x = e.clientX;
-        labelPos.current.y = e.clientY;
-        isMoving.current = true;
-      }
-
-      setIsVisible(true);
+    const hide = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = null;
+      point = null;
+      target = null;
+      setCursor(null);
     };
 
-    const onMouseEnter = () => setIsVisible(true);
-    const onMouseLeave = () => setIsVisible(false);
+    const scheduleUpdate = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        if (!point || !target || target.closest(nativeCursorSelector)) {
+          setCursor(null);
+          return;
+        }
 
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
-    document.addEventListener("mouseenter", onMouseEnter);
-    document.addEventListener("mouseleave", onMouseLeave);
-
-    // RAF smooth animation loop
-    const render = () => {
-      // Direct positioning for arrow pointer (0 lag)
-      if (pointerRef.current) {
-        pointerRef.current.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0)`;
-      }
-
-      // Smooth subtle spring-like lag for "You" label (lerp factor 0.22)
-      // Label target sits slightly below and to the right of pointer tip: (+12px X, +16px Y)
-      const targetLabelX = mousePos.current.x + 12;
-      const targetLabelY = mousePos.current.y + 16;
-
-      labelPos.current.x += (targetLabelX - labelPos.current.x) * 0.22;
-      labelPos.current.y += (targetLabelY - labelPos.current.y) * 0.22;
-
-      if (labelRef.current) {
-        labelRef.current.style.transform = `translate3d(${labelPos.current.x}px, ${labelPos.current.y}px, 0)`;
-      }
-
-      rafId.current = requestAnimationFrame(render);
+        const action = target.closest(actionSelector);
+        const label = getActionLabel(action);
+        setCursor({
+          ...point,
+          label,
+          showAccent: label !== null && action?.getAttribute("data-cursor-tone") !== "neutral",
+          container: target.closest<HTMLDialogElement>("dialog[open]") ?? document.body,
+        });
+      });
     };
 
-    rafId.current = requestAnimationFrame(render);
+    const onPointer = (event: PointerEvent) => {
+      if (!mouseSupport.matches || nativePreference.matches || event.pointerType !== "mouse" || !(event.target instanceof Element)) {
+        hide();
+        return;
+      }
+      point = { x: event.clientX, y: event.clientY };
+      target = event.target;
+      scheduleUpdate();
+    };
+
+    const onPointerOut = (event: PointerEvent) => {
+      if (!event.relatedTarget) hide();
+    };
+
+    const refreshTarget = () => {
+      if (!point) return;
+      target = document.elementFromPoint(point.x, point.y);
+      scheduleUpdate();
+    };
+
+    mouseSupport.addEventListener("change", hide);
+    nativePreference.addEventListener("change", hide);
+    window.addEventListener("pointerover", onPointer, { passive: true });
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("pointerout", onPointerOut);
+    window.addEventListener("pointercancel", hide);
+    window.addEventListener("blur", hide);
+    window.addEventListener("scroll", refreshTarget, { capture: true, passive: true });
+    window.addEventListener("resize", refreshTarget);
+    window.addEventListener("portfolio:preloader-complete", refreshTarget);
 
     return () => {
-      document.documentElement.classList.remove("custom-cursor-active");
-      window.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseenter", onMouseEnter);
-      document.removeEventListener("mouseleave", onMouseLeave);
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
-      }
+      if (frame !== null) cancelAnimationFrame(frame);
+      mouseSupport.removeEventListener("change", hide);
+      nativePreference.removeEventListener("change", hide);
+      window.removeEventListener("pointerover", onPointer);
+      window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("pointerout", onPointerOut);
+      window.removeEventListener("pointercancel", hide);
+      window.removeEventListener("blur", hide);
+      window.removeEventListener("scroll", refreshTarget, true);
+      window.removeEventListener("resize", refreshTarget);
+      window.removeEventListener("portfolio:preloader-complete", refreshTarget);
     };
   }, []);
 
-  if (!isEnabled) {
-    return null;
-  }
+  if (!cursor) return null;
 
-  return (
+  const { x, y, label, showAccent, container } = cursor;
+  const nearRightEdge = x > window.innerWidth - 200;
+  const nearBottomEdge = y > window.innerHeight - 50;
+
+  return createPortal(
     <div
       aria-hidden="true"
-      className={`fixed inset-0 pointer-events-none z-[9999] transition-opacity duration-200 ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
+      data-custom-cursor=""
+      className="pointer-events-none fixed left-0 top-0 z-[9999] select-none will-change-transform"
+      style={{ transform: `translate3d(${x}px, ${y}px, 0)` }}
     >
-      {/* Black & White Arrow Pointer (Tip aligned at 0,0) */}
-      <div
-        ref={pointerRef}
-        className="fixed top-0 left-0 will-change-transform"
-        style={{ transform: "translate3d(-100px, -100px, 0)" }}
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        className="absolute -left-[3px] -top-0.5 drop-shadow-[0_2px_3px_rgba(0,0,0,0.28)]"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
-        >
-          {/* Outer crisp white stroke and solid black fill matching reference */}
-          <path
-            d="M3 2L10.5 20.5L14 13.5L21 10L3 2Z"
-            fill="#111111"
-            stroke="#FFFFFF"
-            strokeWidth="1.75"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
+        <path
+          d="M3 2L10.5 20.5L14 13.5L21 10L3 2Z"
+          fill="#111111"
+          stroke="#FFFFFF"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+      </svg>
 
-      {/* Floating Black Rounded Rectangle Label "You" */}
       <div
-        ref={labelRef}
-        className="fixed top-0 left-0 will-change-transform"
-        style={{ transform: "translate3d(-100px, -100px, 0)" }}
+        className={`absolute whitespace-nowrap rounded-md px-2.5 py-1 font-sans text-[13px] font-medium leading-tight shadow-sm ${
+          showAccent ? "bg-[#bc3b25] text-white" : "bg-[#171717] text-white dark:bg-[#f5f2eb] dark:text-[#171717]"
+        } ${nearRightEdge ? "right-3" : "left-3.5"} ${nearBottomEdge ? "bottom-2.5" : "top-3.5"}`}
       >
-        <div className="bg-[#111111] text-[#FFFFFF] text-[15px] font-medium font-sans px-3 py-1 rounded-[10px] shadow-[0_3px_10px_rgba(0,0,0,0.28)] flex items-center justify-center select-none leading-tight border border-white/10">
-          <span>You</span>
-        </div>
+        {label ?? "You"}
       </div>
-    </div>
+    </div>,
+    container,
   );
 }

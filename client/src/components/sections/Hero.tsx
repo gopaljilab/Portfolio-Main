@@ -64,7 +64,7 @@ export function Hero() {
             </div>
 
             {/* Editorial Serif Headline */}
-            <h1 id="portfolio-heading" tabIndex={-1} className="hero-title-reveal text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-foreground tracking-tight leading-[0.98] mb-6">
+            <h1 id="portfolio-heading" tabIndex={-1} className="hero-title-reveal text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-foreground tracking-tight leading-[0.98] mb-6 focus-visible:outline-0">
               Crafting <span className="italic font-normal text-primary">thoughtful</span> digital experiences.
             </h1>
 
@@ -142,11 +142,7 @@ export function Hero() {
           </div>
 
           {/* Right: Architectural Portrait Frame (5 cols on lg) */}
-          <div
-            className="lg:col-span-5 flex justify-center lg:justify-end w-full"
-            data-scroll
-            data-scroll-speed="-0.12"
-          >
+          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
             <div className="hero-portrait-frame relative w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[400px] mx-auto lg:mr-0">
               {/* Asymmetrical Paper Framing Backing */}
               <div className="absolute -inset-2 sm:-inset-3 rounded-2xl border border-primary/25 bg-secondary/40 -rotate-1 pointer-events-none" />

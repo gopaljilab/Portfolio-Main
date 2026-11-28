@@ -244,6 +244,7 @@ export function OutInTheWorld() {
                   }}
                   className="group relative cursor-grab active:cursor-grabbing select-none data-[dragging=true]:will-change-[translate] motion-safe:transition-[rotate] motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:[rotate:3deg] motion-safe:focus-within:[rotate:3deg] motion-safe:data-[dragging=true]:[rotate:0deg]"
                   data-dragging={isDragging || undefined}
+                  data-cursor={isDragging ? "Dragging" : "Drag me"}
                 >
                   {/* Masking Tape Strip at Top Edge */}
                   <div
@@ -272,6 +273,7 @@ export function OutInTheWorld() {
                           setSelectedPhoto(item);
                         }}
                         aria-label={`Inspect photo: ${item.caption}`}
+                        data-cursor="Open"
                         className="absolute bottom-2 right-2 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm cursor-pointer focus-visible:opacity-100"
                       >
                         <ZoomIn className="w-3.5 h-3.5" />
@@ -322,6 +324,7 @@ export function OutInTheWorld() {
                       type="button"
                       onClick={() => setSelectedPhoto(item)}
                       aria-label={`Inspect photo: ${item.caption}`}
+                      data-cursor="Open"
                       className="absolute bottom-2 right-2 p-2 rounded-full bg-black/70 text-white"
                     >
                       <ZoomIn className="w-4 h-4" />

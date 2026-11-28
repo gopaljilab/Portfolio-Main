@@ -32,6 +32,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setDark((d) => !d)}
+      data-cursor="Lights"
       aria-label={dark ? "Switch to Nordic Paper light mode" : "Switch to Nordic Night dark mode"}
       className="rounded-full text-foreground/80 hover:text-primary hover:bg-primary/10 min-w-[44px] min-h-[44px] transition-colors"
     >

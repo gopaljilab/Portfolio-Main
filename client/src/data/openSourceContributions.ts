@@ -18,10 +18,6 @@ export interface OpenSourceRepo {
   tags: string[];
   summary: string;
   prs: MergedPullRequest[];
-  // SVG coordinate system geometry (1200 x 640)
-  lineY: number; // Destination station Y coordinate
-  targetX: number; // Destination station X coordinate
-  branchX: number; // Point along central trunk where route splits
   colorBg: string;
   colorBorder: string;
 }
@@ -39,9 +35,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "PM",
     tags: ["React", "TypeScript", "AI Triage", "API Docs"],
     summary: "AI-powered pull request triage engine engineered for high-velocity open-source maintainers.",
-    lineY: 80,
-    targetX: 840,
-    branchX: 280,
     colorBg: "rgba(224, 90, 54, 0.12)",
     colorBorder: "#E05A36",
     prs: [
@@ -71,9 +64,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "EP",
     tags: ["Service Worker", "a11y", "Cache Strategy", "WCAG AA"],
     summary: "Educational environmental gamification platform built with accessible web standards and offline resilience.",
-    lineY: 155,
-    targetX: 840,
-    branchX: 350,
     colorBg: "rgba(16, 185, 129, 0.12)",
     colorBorder: "#10B981",
     prs: [
@@ -109,9 +99,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "LC",
     tags: ["Supabase", "JSDoc", "API Routes", "Error Middleware"],
     summary: "Interactive collaborative problem-solving urban simulator powered by Supabase and structured API routes.",
-    lineY: 230,
-    targetX: 840,
-    branchX: 420,
     colorBg: "rgba(59, 130, 246, 0.12)",
     colorBorder: "#3B82F6",
     prs: [
@@ -141,9 +128,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "DV",
     tags: ["DevEx", "Feature Matrix", "Hero Design", "Docs"],
     summary: "Modern software testing and verification tooling with comprehensive documentation architecture.",
-    lineY: 305,
-    targetX: 840,
-    branchX: 490,
     colorBg: "rgba(139, 92, 246, 0.12)",
     colorBorder: "#8B5CF6",
     prs: [
@@ -173,9 +157,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "BB",
     tags: ["Upstash Redis", "Rate Limiting", "Sliding Window", "Distributed"],
     summary: "High-throughput community automation bot with distributed low-latency rate limiting.",
-    lineY: 380,
-    targetX: 840,
-    branchX: 560,
     colorBg: "rgba(245, 158, 11, 0.12)",
     colorBorder: "#F59E0B",
     prs: [
@@ -199,9 +180,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "TA",
     tags: ["Java", "Data Structures", "JUnit 5", "Clean Code"],
     summary: "World-renowned open-source algorithm repository maintained by 1,000+ contributors globally.",
-    lineY: 455,
-    targetX: 840,
-    branchX: 630,
     colorBg: "rgba(220, 38, 38, 0.12)",
     colorBorder: "#DC2626",
     prs: [
@@ -225,9 +203,6 @@ export const OPEN_SOURCE_REPOS: OpenSourceRepo[] = [
     code: "FC",
     tags: ["Git Workflow", "Community", "Open Source"],
     summary: "Global onboarding gateway helping software engineers master Git forks, branches, and upstream merges.",
-    lineY: 530,
-    targetX: 840,
-    branchX: 700,
     colorBg: "rgba(5, 150, 105, 0.12)",
     colorBorder: "#059669",
     prs: [

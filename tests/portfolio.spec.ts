@@ -1,10 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-test("intro dismisses automatically on a fresh load and can be skipped after refresh", async ({ page }) => {
+test("scrolling at the entry screen reveals the hero, and the intro can be skipped after refresh", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("dialog", { name: "Portfolio Introduction" })).toBeVisible();
+  const intro = page.getByRole("dialog", { name: "Portfolio Introduction" });
+  await expect(intro).toBeVisible();
   await expect(page.getByRole("button", { name: "Skip intro" })).toBeFocused();
-  await expect(page.getByRole("dialog", { name: "Portfolio Introduction" })).toHaveCount(0, { timeout: 9_000 });
+  await expect(intro.getByRole("button", { name: "Tap to enter" })).toBeEnabled();
+  await page.mouse.move(300, 240);
+  await page.mouse.wheel(0, 400);
+  await expect(intro).toHaveCount(0);
+  await expect(page.locator("#portfolio-heading")).toBeFocused();
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
   await page.reload();
   await page.getByRole("button", { name: "Skip intro" }).click();
@@ -28,22 +34,21 @@ test("a deep link opens at its section with reduced motion", async ({ page, requ
   expect(anchorIds).toEqual([]);
 });
 
-test("scrolling moves the portrait and live reduced motion clears parallax", async ({ page }) => {
+test("the portrait scrolls with the hero without parallax", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
 
-  const portrait = page.locator("[data-scroll]").filter({ has: page.locator(".hero-portrait-frame") });
-  const offset = () => portrait.evaluate((element) =>
-    new DOMMatrixReadOnly(getComputedStyle(element).transform).m42
+  const portraitColumn = page.locator(".hero-portrait-frame").locator("..");
+  const offset = () => portraitColumn.evaluate((element) =>
+    element.getBoundingClientRect().top - element.closest("section")!.getBoundingClientRect().top
   );
-  await expect.poll(offset).toBeCloseTo(0);
+  const initialOffset = await offset();
   await page.mouse.wheel(0, 350);
-  await expect.poll(offset).toBeGreaterThan(20);
-
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(portrait).toHaveCSS("transform", "none");
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(250);
+  expect(await offset()).toBeCloseTo(initialOffset);
+  await expect(portraitColumn).toHaveCSS("transform", "none");
 });
 
 test("desktop project depth reverses and covered links can receive visible focus", async ({ page }) => {

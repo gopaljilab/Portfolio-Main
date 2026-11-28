@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback, useId } from "react";
 import { gsap } from "@/lib/gsap";
 import { CreationOfAdamIllustration } from "@/components/sections/CreationOfAdamIllustration";
 
@@ -6,7 +6,11 @@ interface PreloaderProps {
   onComplete?: () => void;
 }
 
+const columnWidth = 11;
+const rowHeight = 15;
+
 export function Preloader({ onComplete }: PreloaderProps) {
+  const pixelFilterId = useId();
   const [isReducedMotion, setIsReducedMotion] = useState(() =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
@@ -23,7 +27,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
   const textContainerRef = useRef<HTMLDivElement>(null);
   const sparkGlowRef = useRef<HTMLDivElement>(null);
 
-  const binarySceneRef = useRef<HTMLDivElement>(null);
+  const gateBackdropRef = useRef<HTMLDivElement>(null);
+  const gatePromptRef = useRef<HTMLDivElement>(null);
+  const revealPosition = useRef<{ x: number; y: number; radius: number } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const skipButtonRef = useRef<HTMLButtonElement>(null);
   const finishing = useRef(false);
@@ -109,8 +115,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
     onComplete?.();
   }, [onComplete]);
 
-  // Transition from Stage 1 (Welcome Connection) -> Stage 2 (Binary Screen)
-  const transitionToBinary = useCallback(() => {
+  // Transition from the welcome scene to the entry gate.
+  const transitionToGate = useCallback(() => {
     if (finishing.current) return;
     const welcomeScene = welcomeSceneRef.current;
     if (!welcomeScene) {
@@ -122,8 +128,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     transitionTween.current?.kill();
     transitionTween.current = gsap.to(welcomeScene, {
       opacity: 0,
-      scale: 0.98,
-      duration: 0.7,
+      duration: 0.38,
       ease: "power2.inOut",
       onComplete: () => {
         setStage((current) => current === 1 ? 2 : current);
@@ -170,8 +175,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
       const tl = gsap.timeline({
         onComplete: () => {
-          // Pause briefly for user appreciation then crossfade cleanly to Stage 2 (Binary screen)
-          transitionToBinary();
+          transitionToGate();
         },
       });
 
@@ -187,19 +191,19 @@ export function Preloader({ onComplete }: PreloaderProps) {
       .to(sparkGlow, { scale: 1, opacity: 1, duration: 0.6, ease: "power2.out" }, "<")
 
       // 4. Text reveal: "Welcome to my corner of the internet."
-      .to(textContainer, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, "-=0.3")
-      .to({}, { duration: 1.6 });
+      .to(textContainer, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, "-=0.3")
+      .to({}, { duration: 0.53 });
 
     }, welcomeScene);
 
     return () => {
       ctx.revert();
     };
-  }, [stage, isReducedMotion, transitionToBinary, handleFinish]);
+  }, [stage, isReducedMotion, transitionToGate, handleFinish]);
 
-  // Stage 2 (and pre-rendered under Stage 1): Canvas Binary Cyber-Gate Background & Throttled Shimmer Loop
+  // Draw the binary grid beneath the welcome scene.
   useEffect(() => {
-    if (stage === 3) return;
+    if (!isOpen) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -207,116 +211,65 @@ export function Preloader({ onComplete }: PreloaderProps) {
     if (!ctx) return;
 
     let animId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
+    let width: number;
+    let height: number;
+    let lastRadius: number | undefined;
     const onResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      initGrid();
+      lastRadius = undefined;
+      const scale = Math.min(window.devicePixelRatio || 1, 2);
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
     };
 
+    onResize();
     window.addEventListener("resize", onResize, { passive: true });
 
-    // Binary grid configuration
-    const fontSize = 14;
-    const colStep = 18;
-    const rowStep = 22;
-    let cols = Math.ceil(width / colStep);
-    let rows = Math.ceil(height / rowStep);
-
-    interface BinaryCell {
-      char: string;
-      baseOpacity: number;
-      opacity: number;
-      phase: number;
-      speed: number;
-    }
-
-    let grid: BinaryCell[][] = [];
-
-    const initGrid = () => {
-      cols = Math.ceil(width / colStep);
-      rows = Math.ceil(height / rowStep);
-      grid = [];
-      for (let c = 0; c < cols; c++) {
-        grid[c] = [];
-        for (let r = 0; r < rows; r++) {
-          const base = 0.08 + Math.random() * 0.16;
-          grid[c][r] = {
-            char: Math.random() > 0.5 ? "1" : "0",
-            baseOpacity: base,
-            opacity: base,
-            phase: Math.random() * Math.PI * 2,
-            speed: 0.015 + Math.random() * 0.02,
-          };
-        }
-      }
-    };
-
-    initGrid();
-
-    // If user prefers reduced motion, draw once and don't animate
-    if (isReducedMotion) {
-      ctx.clearRect(0, 0, width, height);
-      ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-
-      for (let c = 0; c < cols; c++) {
-        const x = c * colStep + colStep / 2;
-        for (let r = 0; r < rows; r++) {
-          const cell = grid[c][r];
-          ctx.fillStyle = `rgba(30, 35, 33, ${cell.baseOpacity})`;
-          ctx.fillText(cell.char, x, r * rowStep + rowStep / 2);
-        }
-      }
-      return () => {
-        window.removeEventListener("resize", onResize);
-      };
-    }
-
-    let lastBitFlip = performance.now();
+    const grain = Array.from({ length: 4096 }, () => Math.random());
+    const bits = Uint8Array.from(grain, () => Number(Math.random() < 0.5));
     let lastDraw = -Infinity;
-    const BIT_FLIP_INTERVAL = 120; // Throttled updates every 120ms keeping CPU low and crisp
+    let lastFlip = performance.now();
 
     const render = (time: number) => {
-      // Keep the final grid frame in place while the reveal animates.
-      if (revealTween.current) return;
-
       animId = requestAnimationFrame(render);
-      const elapsed = time - lastDraw;
-      if (elapsed < 1000 / 30 - 1) return;
+      if (time - lastDraw < 1000 / 30 - 1) return;
+      const reveal = revealPosition.current;
+      const radius = reveal?.radius ?? 0;
+      const shouldFlip = !reveal && time - lastFlip >= 140;
+      if (radius === lastRadius && !shouldFlip) return;
+      if (shouldFlip) {
+        lastFlip = time;
+        for (let index = 0; index < bits.length; index++) {
+          if (Math.random() < 0.12) bits[index] = 1 - bits[index];
+        }
+      }
       lastDraw = time;
+      lastRadius = radius;
       ctx.clearRect(0, 0, width, height);
-      ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+      ctx.font = "600 11px monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      const shouldFlipBits = time - lastBitFlip > BIT_FLIP_INTERVAL;
-      if (shouldFlipBits) {
-        lastBitFlip = time;
-      }
+      for (let row = 0; row * rowHeight < height; row++) {
+        const y = (row + 0.5) * rowHeight;
+        for (let column = 0; column * columnWidth < width; column++) {
+          const x = (column + 0.5) * columnWidth;
+          const index = (column * 31 + row * 67) % grain.length;
+          const noise = grain[index];
+          const distance = reveal ? Math.hypot(x - reveal.x, y - reveal.y) - reveal.radius : Infinity;
+          if (distance < -noise * 70) continue;
 
-      for (let c = 0; c < cols; c++) {
-        const x = c * colStep + colStep / 2;
-        for (let r = 0; r < rows; r++) {
-          const cell = grid[c][r];
-          // Gentle sinusoidal shimmer without aggressive flickering
-          cell.phase += cell.speed * Math.min(elapsed / (1000 / 60), 4);
-          const shimmer = Math.sin(cell.phase) * 0.05;
-          const currentOpacity = Math.max(0.04, Math.min(0.32, cell.baseOpacity + shimmer));
-
-          // Throttled random bit flip across small subset of characters
-          if (shouldFlipBits && Math.random() < 0.025) {
-            cell.char = cell.char === "1" ? "0" : "1";
-          }
-
-          ctx.fillStyle = `rgba(30, 35, 33, ${currentOpacity})`;
-          ctx.fillText(cell.char, x, r * rowStep + rowStep / 2);
+          ctx.globalAlpha = noise * 0.16;
+          ctx.fillStyle = "#221e1b";
+          ctx.fillRect(column * columnWidth, row * rowHeight, columnWidth, rowHeight);
+          ctx.globalAlpha = distance < 36 ? 0.7 + noise * 0.25 : 0.45 + noise * 0.4;
+          ctx.fillStyle = "#fff6e7";
+          ctx.fillText(bits[index] === 0 ? "0" : "1", x, y);
         }
       }
+      ctx.globalAlpha = 1;
     };
 
     animId = requestAnimationFrame(render);
@@ -325,49 +278,68 @@ export function Preloader({ onComplete }: PreloaderProps) {
       window.removeEventListener("resize", onResize);
       cancelAnimationFrame(animId);
     };
-  }, [stage, isReducedMotion]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) return;
-    if (isReducedMotion) {
-      handleFinish();
-      return;
-    }
-    const timeout = window.setTimeout(handleFinish, 7300);
-    return () => window.clearTimeout(timeout);
+    if (isOpen && isReducedMotion) handleFinish();
   }, [isOpen, isReducedMotion, handleFinish]);
 
-  const handleEnterClick = useCallback(() => {
-    const scene = binarySceneRef.current;
+  const revealPortfolio = useCallback((origin?: { x: number; y: number }) => {
+    const backdrop = gateBackdropRef.current;
+    const prompt = gatePromptRef.current;
     const dialog = containerRef.current;
-    if (stage !== 2 || revealTween.current || !scene || !dialog) return;
-    if (isReducedMotion) {
-      handleFinish();
-      return;
-    }
+    if (stage !== 2 || revealTween.current || !backdrop || !prompt || !dialog) return;
 
-    const reveal = { radius: 0 };
-    const { width, height } = dialog.getBoundingClientRect();
-    const edge = Math.hypot(width / 2, height / 2);
+    const bounds = dialog.getBoundingClientRect();
+    const x = origin ? origin.x - bounds.left : bounds.width / 2;
+    const y = origin ? origin.y - bounds.top : bounds.height / 2;
+    const reveal = { x, y, radius: 0 };
+    revealPosition.current = reveal;
+    const edge = Math.hypot(Math.max(x, bounds.width - x), Math.max(y, bounds.height - y));
     revealTween.current = gsap.to(reveal, {
-      radius: edge + 72,
-      duration: 0.95,
-      ease: "power1.inOut",
+      radius: edge + 80,
+      duration: 0.85,
+      ease: "power2.inOut",
       onUpdate: () => {
-        const feather = Math.min(72, reveal.radius);
-        const mask = `radial-gradient(circle at center, transparent ${reveal.radius - feather}px, black ${reveal.radius}px)`;
-        scene.style.maskImage = mask;
-        scene.style.webkitMaskImage = mask;
+        const innerRadius = Math.max(0, reveal.radius - 40);
+        backdrop.style.maskImage = `radial-gradient(circle at ${x}px ${y}px, transparent ${innerRadius}px, black ${reveal.radius}px)`;
+        prompt.style.opacity = String(Math.max(0, 1 - reveal.radius / 100));
       },
       onComplete: handleFinish,
     });
-  }, [stage, isReducedMotion, handleFinish]);
+  }, [stage, handleFinish]);
 
   useEffect(() => {
-    if (stage !== 2) return;
-    const timeout = window.setTimeout(handleEnterClick, 1250);
-    return () => window.clearTimeout(timeout);
-  }, [stage, handleEnterClick]);
+    const dialog = containerRef.current;
+    if (stage !== 2 || !dialog) return;
+
+    let touchStart: Touch | undefined;
+    const onWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      if (event.cancelable) event.preventDefault();
+      revealPortfolio({ x: event.clientX, y: event.clientY });
+    };
+    const onTouchStart = (event: TouchEvent) => {
+      touchStart = event.touches.length === 1 ? event.touches[0] : undefined;
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (!touchStart || event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      const verticalDistance = Math.abs(touch.clientY - touchStart.clientY);
+      if (verticalDistance < 24 || verticalDistance <= Math.abs(touch.clientX - touchStart.clientX)) return;
+      revealPortfolio({ x: touch.clientX, y: touch.clientY });
+      touchStart = undefined;
+    };
+
+    dialog.addEventListener("wheel", onWheel, { passive: false });
+    dialog.addEventListener("touchstart", onTouchStart, { passive: true });
+    dialog.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => {
+      dialog.removeEventListener("wheel", onWheel);
+      dialog.removeEventListener("touchstart", onTouchStart);
+      dialog.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [stage, revealPortfolio]);
 
   // If intro has completed, unmount from DOM completely
   if (stage === 3) return null;
@@ -375,7 +347,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
   return (
     <dialog
       ref={containerRef}
-      className="fixed inset-0 m-0 h-full w-full max-h-none max-w-none overflow-hidden border-0 p-0 select-none bg-transparent backdrop:bg-transparent"
+      className="fixed inset-0 m-0 h-full w-full max-h-none max-w-none touch-pinch-zoom overflow-hidden overscroll-none border-0 p-0 select-none bg-transparent backdrop:bg-transparent"
+      data-lenis-prevent
       onKeyDown={(event) => {
         if (event.key !== "Tab") return;
         event.preventDefault();
@@ -394,82 +367,53 @@ export function Preloader({ onComplete }: PreloaderProps) {
         ref={skipButtonRef}
         type="button"
         onClick={handleFinish}
+        data-cursor="Skip"
         className="absolute bottom-16 right-4 z-30 rounded-full border border-[#D5D0C5] bg-[#F5F2EB] px-4 py-2 font-mono text-xs text-[#292C28] focus-visible:outline focus-visible:outline-2"
       >
         Skip intro
       </button>
-      {/* ===================================================================== */}
-      {/* SCENE TWO (STAGE 2): BINARY CYBER-GATE SCREEN WITH "TAP TO ENTER →"    */}
-      {/* Mounted underneath in background so it's seamlessly revealed          */}
-      {/* ===================================================================== */}
       <div
-        ref={binarySceneRef}
         aria-hidden={stage === 1}
-        onClick={handleEnterClick}
-        className="absolute inset-0 z-10 w-full h-full bg-[#E5E5E3] flex flex-col items-center justify-between py-8 px-4 sm:px-8 cursor-pointer"
+        onClick={(event) => revealPortfolio(event.detail ? { x: event.clientX, y: event.clientY } : undefined)}
+        className="absolute inset-0 z-10 cursor-pointer"
       >
-        {/* Dense Canvas Binary Background */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full pointer-events-none"
+        {/* Sample the live page once per cell, then expand each sample to fill its tile. */}
+        <svg className="pointer-events-none absolute" width="0" height="0" aria-hidden="true">
+          <filter id={pixelFilterId} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+            <feFlood floodColor="white" x={(columnWidth - 1) / 2} y={(rowHeight - 1) / 2} width="1" height="1" result="sample" />
+            <feComposite in="sample" in2="sample" operator="in" x="0" y="0" width={columnWidth} height={rowHeight} result="tile" />
+            <feTile in="tile" result="grid" />
+            <feComposite in="SourceGraphic" in2="grid" operator="in" />
+            <feMorphology operator="dilate" radius={`${(columnWidth - 1) / 2} ${(rowHeight - 1) / 2}`} />
+          </filter>
+        </svg>
+        <div
+          ref={gateBackdropRef}
+          className="absolute inset-0 bg-black/15 backdrop-blur-sm"
+          style={{ backdropFilter: `url("#${pixelFilterId}") brightness(0.8) saturate(1.1)` }}
           aria-hidden="true"
         />
-
-        {/* Top Identifier */}
-        <div className="relative z-10 font-mono text-[11px] sm:text-xs uppercase tracking-[0.25em] text-[#555856] flex items-center gap-2 select-none">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#DCA48B]" />
-          <span>Gopal Gupta • Cyber-Gate Entry</span>
-        </div>
-
-        {/* Centered Entry Trigger: TAP TO ENTER → with High Contrast & Soft Halo Legibility */}
-        <div className="relative z-10 my-auto flex flex-col items-center justify-center pointer-events-auto">
-          {/* Soft Radial Backing to soften binary digits behind the central trigger */}
-          <div className="absolute inset-0 -m-10 bg-[#E5E5E3]/85 rounded-full blur-xl pointer-events-none" />
-
+        <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
+        <div ref={gatePromptRef} className="absolute inset-x-0 bottom-[max(1.25rem,env(safe-area-inset-bottom))] flex justify-center sm:bottom-9">
           <button
             ref={ctaButtonRef}
+            data-cursor="Enter"
             disabled={stage === 1}
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEnterClick();
+            onKeyDown={(event) => {
+              if (event.key !== "Enter") return;
+              event.preventDefault();
+              revealPortfolio();
             }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && e.repeat) e.preventDefault();
-            }}
-            className="group relative inline-flex items-center gap-3.5 px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-[#F5F2EB] text-[#292C28] border border-[#D5D0C5] shadow-[0_16px_40px_rgba(37,42,41,0.18)] hover:shadow-[0_20px_50px_rgba(37,42,41,0.25)] hover:scale-[1.04] active:scale-[0.98] transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DCA48B]"
-            aria-label="Tap to enter portfolio"
+            className="inline-flex items-center gap-2.5 rounded-full border border-[#d5d0c5] bg-[#f5f2eb] px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-[#292c28] shadow-lg transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-6 sm:py-3"
           >
-            {/* Terracotta Circular Indicator with pulse hover */}
-            <span className="w-2.5 h-2.5 rounded-full bg-[#DCA48B] shadow-[0_0_10px_rgba(220,164,139,0.9)] group-hover:scale-125 transition-transform" />
-
-            {/* Dark Brown Monospaced Lettering */}
-            <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-[#292C28]">
-              TAP TO ENTER
-            </span>
-
-            {/* Arrow with subtle movement */}
-            <span className="font-mono text-sm sm:text-base font-bold text-[#DCA48B] group-hover:translate-x-1.5 transition-transform">
-              →
-            </span>
+            <span className="size-1.5 rounded-full bg-[#b44b32]" aria-hidden="true" />
+            Tap to enter
+            <span aria-hidden="true">→</span>
           </button>
-
-          {/* Subtle Helper hint */}
-          <span className="relative z-10 mt-3 font-mono text-[10px] tracking-wider uppercase text-[#757876] select-none opacity-80 group-hover:opacity-100">
-            Click anywhere or press Enter
-          </span>
-        </div>
-
-        {/* Bottom subtle coordinate indicator */}
-        <div className="relative z-10 font-mono text-[10px] text-[#7A7E7B] tracking-widest uppercase select-none">
-          [SYS_READY // BENGALURU_IN]
         </div>
       </div>
 
-      {/* ===================================================================== */}
-      {/* SCENE ONE (STAGE 1): WELCOME / CONNECTION ANIMATION                   */}
-      {/* Positioned on top (z-20) with solid background, crossfading to Scene 2*/}
-      {/* ===================================================================== */}
       {stage === 1 && (
         <div
           ref={welcomeSceneRef}
@@ -487,18 +431,18 @@ export function Preloader({ onComplete }: PreloaderProps) {
             <div className="cxi-grain" />
 
             {/* Central Glow Diffusion Behind Contact Nexus */}
-            <div 
+            <div
               ref={sparkGlowRef}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[320px] bg-blue-500/25 rounded-full blur-[90px] pointer-events-none"
             />
           </div>
 
           {/* Central Content Area */}
-          <div className="relative z-10 w-full max-w-4xl flex flex-col items-center justify-center my-auto px-2">
+          <div className="relative z-10 w-full max-w-[1376px] flex flex-col items-center justify-center my-auto">
             {/* Hand Illustrations */}
             <div
               ref={handsContainerRef}
-              className="relative w-full max-w-[420px] sm:max-w-[720px] md:max-w-[840px] lg:max-w-[980px] px-2 flex items-center justify-center"
+              className="relative w-full flex items-center justify-center"
             >
               <CreationOfAdamIllustration />
             </div>
@@ -508,14 +452,10 @@ export function Preloader({ onComplete }: PreloaderProps) {
               ref={textContainerRef}
               className="relative z-10 flex flex-col items-center text-center mt-2 sm:mt-6 max-w-xl px-4"
             >
-              <div className="cxi-hl-block px-5 sm:px-10 py-2.5 sm:py-3.5 text-center rounded-2xl shadow-[0_14px_38px_rgba(8,28,140,0.55)]">
-                <p className="font-serif text-base sm:text-2xl lg:text-[32px] text-white tracking-tight leading-snug">
-                  Welcome to my corner of the internet.
-                </p>
-              </div>
-
-              <p className="font-mono text-[10px] sm:text-xs text-[#0A1A5E]/80 tracking-widest uppercase mt-3">
-                Gopal Gupta • Portfolio &amp; Engineering Showcase
+              <p className="text-center text-lg font-semibold leading-[1.23] tracking-tight text-white sm:text-3xl">
+                <span className="inline-block rounded bg-[#234bd4] px-2">Welcome to my <em className="font-serif font-normal">corner</em></span>
+                <br />
+                <span className="inline-block rounded bg-[#234bd4] px-2">of the internet.</span>
               </p>
             </div>
           </div>

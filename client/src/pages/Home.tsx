@@ -46,7 +46,7 @@ export default function Home() {
         >
           <ScrollBasedVelocity
             text="SYSTEMS ARCHITECTURE · OPEN SOURCE · FULL-STACK TYPESCRIPT · GSAP & LENIS · DISTRIBUTED CLOUD ·"
-            defaultVelocity={1.8}
+            defaultVelocity={0.5}
             className="font-mono text-xs sm:text-sm uppercase tracking-[0.22em] text-muted-foreground/85"
           />
         </div>

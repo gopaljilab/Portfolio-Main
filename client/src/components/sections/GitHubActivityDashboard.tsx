@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Github, RotateCcw } from "lucide-react";
 import calendar from "@/data/githubActivity.json";
 import { OPEN_SOURCE_STATS } from "@/data/openSourceContributions";
@@ -20,23 +20,36 @@ const center = 200;
 const ringRadius = (index: number) => 84 + index * 25;
 const monthFormat = new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" });
 const snapshotFormat = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeZone: "UTC" });
+const playbackStart = Date.parse(calendar.start) - 1;
+const playbackEnd = Date.parse(calendar.end);
+const playbackDuration = 3600;
 
 function point(radius: number, fraction: number) {
   const angle = fraction * 2 * Math.PI - Math.PI / 2;
   return [center + Math.cos(angle) * radius, center + Math.sin(angle) * radius] as const;
 }
 
+function positionInYear(day: Date) {
+  const month = day.getUTCMonth();
+  const monthLength = new Date(Date.UTC(day.getUTCFullYear(), month + 1, 0)).getUTCDate();
+  const dayFraction = (day.getUTCHours() * 60 + day.getUTCMinutes()) / (24 * 60);
+  return (month + (day.getUTCDate() - 0.5 + dayFraction) / monthLength) / 12;
+}
+
 const days = calendar.days.map(([date, count, level]) => {
   const day = new Date(String(date));
   return {
     date: String(date),
+    timestamp: day.getTime(),
     count: Number(count),
     level: Number(level),
     year: day.getUTCFullYear(),
     weekday: (day.getUTCDay() + 6) % 7,
-    position: (day.getUTCMonth() + (day.getUTCDate() - 0.5) / 31) / 12,
+    position: positionInYear(day),
   };
 });
+const dayCounts = weekdays.map((_, index) => days.filter((day) => day.weekday === index).length);
+const busiestWeekday = Math.max(1, ...dayCounts);
 
 const intensityLabels = ["Low", "Medium", "High", "Very high"];
 type ActivityFilter = { kind: "level" | "weekday"; value: number };
@@ -51,7 +64,10 @@ const totals = [
 ] as const;
 
 export function GitHubActivityDashboard() {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const chartHasEntered = useInView(chartRef, { once: true, amount: 0.3 });
   const [replay, setReplay] = useState(0);
+  const [playhead, setPlayhead] = useState<number | null>(playbackStart);
   const [selectedFilter, setSelectedFilter] = useState<ActivityFilter | null>(null);
   const [hoverFilter, setHoverFilter] = useState<PointerFilter>(null);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -60,9 +76,20 @@ export function GitHubActivityDashboard() {
   const [hoveredBadge, setHoveredBadge] = useState<(typeof achievements)[number] | null>(null);
   const previewBadge = hoveredBadge ?? selectedBadge;
   const reducedMotion = useReducedMotion();
+  const playbackTime = reducedMotion ? null : playhead;
+  const visibleDays = playbackTime === null ? days : days.filter((day) => day.timestamp <= playbackTime);
+  const visibleDayCounts = playbackTime === null ? dayCounts : weekdays.map(() => 0);
+  if (playbackTime !== null) {
+    for (const day of visibleDays) visibleDayCounts[day.weekday] += 1;
+  }
+  const playbackDate = playbackTime === null || !chartHasEntered
+    ? null
+    : new Date(Math.max(playbackStart + 1, playbackTime));
+  const markerYear = playbackDate ? years.indexOf(playbackDate.getUTCFullYear()) : 0;
+  const markerRadius = ringRadius(markerYear);
+  const markerAngle = playbackDate ? (markerYear + positionInYear(playbackDate)) * 360 : 0;
   const filter = hoverFilter ?? selectedFilter;
-  const activeDays = filter ? days.filter((day) => day[filter.kind] === filter.value) : days;
-  const dayCounts = weekdays.map((_, index) => days.filter((day) => day.weekday === index).length);
+  const activeDays = filter ? visibleDays.filter((day) => day[filter.kind] === filter.value) : visibleDays;
   const inspectedIndex = hoveredDay ?? selectedDay;
   const inspectedDay = inspectedIndex === null ? null : days[inspectedIndex];
   const isSelected = (next: ActivityFilter) =>
@@ -73,12 +100,43 @@ export function GitHubActivityDashboard() {
     setSelectedDay(null);
   };
 
+  useEffect(() => {
+    if (reducedMotion || !chartHasEntered) return;
+
+    const start = performance.now();
+    let lastUpdate = start;
+    let frame: number;
+    const advance = (now: number) => {
+      const progress = (now - start) / playbackDuration;
+      if (progress >= 1) {
+        setPlayhead(null);
+        return;
+      }
+      if (now - lastUpdate >= 32) {
+        lastUpdate = now;
+        setPlayhead(playbackStart + progress * (playbackEnd - playbackStart));
+      }
+      frame = requestAnimationFrame(advance);
+    };
+
+    frame = requestAnimationFrame(advance);
+    return () => cancelAnimationFrame(frame);
+  }, [chartHasEntered, reducedMotion, replay]);
+
+  const replayChart = () => {
+    setHoveredDay(null);
+    setSelectedDay(null);
+    setPlayhead(playbackStart);
+    setReplay((value) => value + 1);
+  };
+
   const detail = inspectedDay
     ? `${snapshotFormat.format(new Date(inspectedDay.date))} · ${inspectedDay.count} ${inspectedDay.count === 1 ? "contribution" : "contributions"}`
     : filter
       ? `${filter.kind === "level" ? intensityLabels[filter.value - 1] : weekdays[filter.value]} · ${activeDays.length} active days`
-      : `${monthFormat.format(new Date(calendar.start))} – ${monthFormat.format(new Date(calendar.end))}`;
-  const busiestWeekday = Math.max(1, ...dayCounts);
+      : playbackDate
+        ? monthFormat.format(playbackDate)
+        : `${monthFormat.format(new Date(calendar.start))} – ${monthFormat.format(new Date(calendar.end))}`;
 
   return (
     <article className="rounded-[2rem] border border-foreground/25 bg-card p-5 text-card-foreground shadow-sm sm:p-8" aria-label="GitHub activity dashboard">
@@ -94,7 +152,7 @@ export function GitHubActivityDashboard() {
       </header>
 
       <div className="mt-6 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)_minmax(0,1fr)]">
-        <div className="relative mx-auto w-full max-w-[460px] lg:col-start-2 lg:row-start-1">
+        <div ref={chartRef} className="relative mx-auto w-full max-w-[460px] lg:col-start-2 lg:row-start-1">
           <svg tabIndex={0} onBlur={() => setSelectedDay(null)} onKeyDown={(event) => {
             if (event.key === "Escape") {
               setSelectedDay(null);
@@ -104,7 +162,7 @@ export function GitHubActivityDashboard() {
             if (!offset) return;
             event.preventDefault();
             setHoveredDay(null);
-            const indices = days.flatMap((day, index) => !filter || day[filter.kind] === filter.value ? [index] : []);
+            const indices = visibleDays.flatMap((day, index) => !filter || day[filter.kind] === filter.value ? [index] : []);
             setSelectedDay((current) => {
               const position = current === null ? -1 : indices.indexOf(current);
               if (position < 0) return (offset === 1 ? indices[0] : indices.at(-1)) ?? null;
@@ -125,8 +183,8 @@ export function GitHubActivityDashboard() {
                 </g>
               );
             })}
-            <motion.g key={replay} initial={reducedMotion ? false : { opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: reducedMotion ? 0 : 0.75 }}>
-              {days.map((day, index) => {
+            <g>
+              {visibleDays.map((day, index) => {
                 const radius = ringRadius(years.indexOf(day.year));
                 const [x1, y1] = point(radius - 10, day.position);
                 const [x2, y2] = point(radius + 10, day.position);
@@ -141,7 +199,17 @@ export function GitHubActivityDashboard() {
                   </line>
                 );
               })}
-            </motion.g>
+            </g>
+            {playbackDate && (
+              <g
+                aria-hidden="true"
+                className="pointer-events-none text-primary motion-safe:transition-transform motion-safe:[transition-duration:32ms] motion-safe:ease-linear"
+                style={{ transform: `rotate(${markerAngle}deg)`, transformOrigin: `${center}px ${center}px` }}
+              >
+                <line x1={center} y1={center - markerRadius + 15} x2={center} y2={center - markerRadius - 14} stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <circle cx={center} cy={center - markerRadius - 14} r="2.75" fill="currentColor" />
+              </g>
+            )}
             {years.map((year, index) => (
               <text key={year} x={center + 5} y={center - ringRadius(index) + 3} fill="currentColor" className="font-mono text-[9px] text-muted-foreground">{year}</text>
             ))}
@@ -150,9 +218,10 @@ export function GitHubActivityDashboard() {
             <span className="text-[clamp(1.5rem,5vw,3.5rem)] font-bold leading-none tracking-tighter tabular-nums">{activeDays.length}</span>
             <span className="mt-1 text-xs font-medium sm:text-sm">active days</span>
             {!reducedMotion && (
-              <button type="button" onClick={() => setReplay((value) => value + 1)} aria-label="Replay chart animation" className="pointer-events-auto mt-1 rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-                <RotateCcw className="size-3.5" aria-hidden="true" />
-              </button>
+              <>
+                <RotateCcw className="mt-2 size-3.5 text-muted-foreground" aria-hidden="true" />
+                <button type="button" onClick={replayChart} data-cursor="Replay" aria-label="Replay chart animation" className="pointer-events-auto absolute -inset-2 rounded-xl hover:bg-foreground/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" />
+              </>
             )}
           </div>
         </div>
@@ -168,6 +237,7 @@ export function GitHubActivityDashboard() {
           <div className="mt-3 flex flex-wrap justify-center gap-2" role="group" aria-label="GitHub achievement badges">
             {achievements.map((badge) => (
               <button key={badge.id} type="button" onClick={() => { setSelectedBadge(badge); setHoveredBadge(null); }}
+                data-cursor="Show badge"
                 onPointerEnter={(event) => { if (event.pointerType !== "touch") setHoveredBadge(badge); }}
                 onPointerLeave={() => setHoveredBadge(null)}
                 aria-pressed={badge.id === selectedBadge.id} aria-label={badge.tier ? `${badge.name} ${badge.tier}` : badge.name} title={badge.name}
@@ -192,6 +262,7 @@ export function GitHubActivityDashboard() {
           <div className="mt-2 grid gap-1">
             {intensityLabels.map((label, index) => (
               <button key={label} type="button" aria-pressed={isSelected({ kind: "level", value: index + 1 })}
+                data-cursor="Show"
                 onClick={() => toggleFilter({ kind: "level", value: index + 1 })}
                 onPointerEnter={(event) => { if (event.pointerType !== "touch") setHoverFilter({ kind: "level", value: index + 1 }); }}
                 onPointerLeave={() => setHoverFilter(null)}
@@ -205,14 +276,17 @@ export function GitHubActivityDashboard() {
           <h4 className="mt-6 text-sm font-semibold">Active days by weekday</h4>
           <ul className="mt-2 grid grid-cols-7 gap-1">
             {weekdays.map((day, index) => (
-              <li key={day} title={`${day}: ${dayCounts[index]} active days`} className="min-w-0">
+              <li key={day} title={`${day}: ${visibleDayCounts[index]} active days`} className="min-w-0">
                 <button type="button" aria-pressed={isSelected({ kind: "weekday", value: index })}
+                  data-cursor="Show"
                   onClick={() => toggleFilter({ kind: "weekday", value: index })}
                   onPointerEnter={(event) => { if (event.pointerType !== "touch") setHoverFilter({ kind: "weekday", value: index }); }}
                   onPointerLeave={() => setHoverFilter(null)}
                   className="flex h-full w-full flex-col items-center justify-end gap-1 rounded-sm font-mono text-xs tabular-nums hover:text-primary aria-pressed:text-primary">
-                <span>{dayCounts[index]}</span>
-                <span aria-hidden="true" className="w-full rounded-t-sm bg-foreground/85" style={{ height: 44 * dayCounts[index] / busiestWeekday }} />
+                <span>{visibleDayCounts[index]}</span>
+                <span aria-hidden="true" className="relative h-11 w-full">
+                  <span className="absolute inset-x-0 bottom-0 rounded-t-sm bg-foreground/85" style={{ height: 44 * visibleDayCounts[index] / busiestWeekday }} />
+                </span>
                 <span className="text-muted-foreground"><span aria-hidden="true">{day[0]}</span><span className="sr-only">{day}</span></span>
                 </button>
               </li>

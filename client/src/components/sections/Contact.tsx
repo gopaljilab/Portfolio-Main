@@ -92,6 +92,7 @@ export function Contact() {
           <button
             type="button"
             onClick={copyEmail}
+            data-cursor="Copy"
             className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-3 rounded-full bg-white/85 dark:bg-[#25221E]/85 hover:bg-white text-[#0A1A5E] dark:text-[#E2E8F0] border border-white/60 dark:border-border font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-sm cursor-pointer hover:-translate-y-0.5"
           >
             {copied ? (

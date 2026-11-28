@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { useLenis } from "@/components/layout/SmoothScrollProvider";
@@ -26,20 +26,41 @@ function BengaluruClock() {
   );
 }
 
-const studentTraits = [
-  { sanskrit: "काकचेष्टा", roman: "Kāka-ceṣṭā", meaning: "Persist like a crow and keep trying until you find the answer." },
-  { sanskrit: "बको ध्यानं", roman: "Bako dhyānaṃ", meaning: "Focus like a heron: still, patient, and attentive." },
-  { sanskrit: "श्वाननिद्रा · अल्पहारी", roman: "Śvāna-nidrā · Alpāhārī", meaning: "Sleep lightly like a dog and eat in moderation." },
-  { sanskrit: "गृहत्यागी", roman: "Gṛhatyāgī", meaning: "Be willing to leave familiar comforts behind to pursue learning." },
+const verseLines = [
+  [
+    { sanskrit: "काकचेष्टा", roman: "Kāka-ceṣṭā", meaning: "Persist like a crow." },
+    { sanskrit: "बको ध्यानं", roman: "Bako dhyānaṃ", meaning: "Focus like a heron." },
+    { sanskrit: "श्वाननिद्रा तथैव च\u00a0।", roman: "Śvāna-nidrā tathaiva ca", meaning: "Sleep lightly like a dog." },
+  ],
+  [
+    { sanskrit: "अल्पहारी", roman: "Alpāhārī", meaning: "Eat in moderation." },
+    { sanskrit: "गृहत्यागी", roman: "Gṛhatyāgī", meaning: "Leave familiar comforts to learn." },
+    { sanskrit: "विद्यार्थी पञ्च लक्षणम्\u00a0॥", roman: "Vidyārthī pañca lakṣaṇam", meaning: "The five marks of a learner." },
+  ],
 ];
 
 function SanskritPlaque() {
+  const plaqueId = useId();
   const [selected, setSelected] = useState<string | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [focused, setFocused] = useState<string | null>(null);
   const meaning = hovered ?? focused ?? selected;
 
   const plaqueRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!meaning) return;
+
+    const dismissMeaning = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      setHovered(null);
+      setFocused(null);
+      setSelected(null);
+    };
+
+    window.addEventListener("keydown", dismissMeaning);
+    return () => window.removeEventListener("keydown", dismissMeaning);
+  }, [meaning]);
 
   useLayoutEffect(() => {
     const plaque = plaqueRef.current;
@@ -51,16 +72,19 @@ function SanskritPlaque() {
       const translation = plaque.querySelector("figcaption");
       if (!translation) return;
 
-      gsap.set(lines, { "--ink-progress": "0%", "--pen-opacity": 0 });
+      gsap.set(lines, { "--pen-progress": "0%", "--pen-opacity": 0 });
+      gsap.set(plaque.querySelectorAll(".sanskrit-phrase-script"), { "--ink-progress": "0%" });
       gsap.set(translation, { opacity: 0, y: 12 });
       const reveal = gsap.timeline({
         scrollTrigger: { trigger: plaque, start: "top 80%", once: true },
       });
 
       lines.forEach((line) => {
+        const phrases = line.querySelectorAll(".sanskrit-phrase-script");
         reveal
           .to(line, { "--pen-opacity": 1, duration: 0.2, ease: "sine.out" })
-          .to(line, { "--ink-progress": "100%", duration: 1.55, ease: "sine.inOut" })
+          .to(line, { "--pen-progress": "100%", duration: 1.55, ease: "sine.inOut" })
+          .to(phrases, { "--ink-progress": "100%", duration: 0.65, stagger: 0.45, ease: "sine.inOut" }, "<")
           .to(line, { "--pen-opacity": 0, duration: 0.22, ease: "sine.in" }, "-=0.06");
       });
 
@@ -80,43 +104,49 @@ function SanskritPlaque() {
           <circle cx="9" cy="63" r="3.6" fill="currentColor" />
           <path d="M 9 64 L 4 68 M 9 64 L 10 69 M 9 64 L 14 67" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
         </svg>
-        <blockquote lang="sa" className="sanskrit-script text-[clamp(1.4rem,4vw,3rem)] leading-[1.7]">
-          <p className="sanskrit-ink-line"><span>काकचेष्टा बको ध्यानं श्वाननिद्रा तथैव च ।</span></p>
-          <p className="sanskrit-ink-line"><span>अल्पहारी गृहत्यागी विद्यार्थी पञ्च लक्षणम् ॥</span></p>
+        <blockquote aria-label="Sanskrit verse with phrase meanings" className="mx-auto grid gap-1 sm:gap-3">
+          {verseLines.map((line, lineIndex) => (
+            <div key={line[0].sanskrit} className="sanskrit-ink-line grid grid-cols-2 gap-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.65fr)] sm:gap-x-3">
+              {line.map((phrase, phraseIndex) => {
+                const isActive = meaning === phrase.meaning;
+                const tooltipId = `${plaqueId}-${lineIndex}-${phraseIndex}`;
+
+                return (
+                  <div
+                    key={phrase.sanskrit}
+                    className={`relative flex min-w-0 justify-center last:col-span-2 sm:last:col-span-1 ${isActive ? "z-10" : ""}`}
+                    onPointerEnter={(event) => { if (event.pointerType !== "touch") setHovered(phrase.meaning); }}
+                    onPointerLeave={() => setHovered(null)}
+                  >
+                    <button
+                      type="button"
+                      aria-pressed={selected === phrase.meaning}
+                      aria-describedby={tooltipId}
+                      data-cursor="Open"
+                      data-cursor-tone="neutral"
+                      data-active={isActive}
+                      onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setFocused(phrase.meaning); }}
+                      onBlur={() => setFocused(null)}
+                      onClick={() => setSelected((current) => current === phrase.meaning ? null : phrase.meaning)}
+                      className="sanskrit-phrase w-full rounded-xl px-2 py-2 sm:px-3 sm:py-3"
+                    >
+                      <span lang="sa" className="sanskrit-script sanskrit-phrase-script block text-[clamp(1.3rem,3.4vw,2.65rem)] leading-relaxed">{phrase.sanskrit}</span>
+                      <span lang="sa-Latn" className="block font-serif text-base italic leading-tight opacity-80 sm:text-xl">{phrase.roman}</span>
+                    </button>
+                    <span
+                      id={tooltipId}
+                      role="tooltip"
+                      hidden={!isActive}
+                      className="absolute bottom-full left-1/2 w-max max-w-36 -translate-x-1/2 rounded-md bg-[#332219] px-3 py-1.5 font-sans text-sm font-medium leading-snug text-[#fff2d7] shadow-md after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-x-[6px] after:border-t-[6px] after:border-x-transparent after:border-t-[#332219] sm:max-w-48 lg:max-w-56"
+                    >
+                      {phrase.meaning}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </blockquote>
-        <div lang="sa-Latn" className="mt-2 font-serif text-lg italic leading-snug sm:text-2xl">
-          <p>Kāka-ceṣṭā bako dhyānaṃ śvāna-nidrā tathaiva ca |</p>
-          <p>Alpāhārī gṛhatyāgī vidyārthī pañca lakṣaṇam ||</p>
-        </div>
-        <div role="group" aria-label="Meanings of the Sanskrit phrases" className="mx-auto mt-5 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4">
-          {studentTraits.map((trait) => (
-            <button
-              type="button"
-              key={trait.sanskrit}
-              aria-pressed={selected === trait.meaning}
-              onPointerEnter={(event) => { if (event.pointerType !== "touch") setHovered(trait.meaning); }}
-              onPointerLeave={() => setHovered(null)}
-              onFocus={(event) => { if (event.currentTarget.matches(":focus-visible")) setFocused(trait.meaning); }}
-              onBlur={() => setFocused(null)}
-              onClick={() => setSelected((current) => current === trait.meaning ? null : trait.meaning)}
-              className="sanskrit-phrase rounded-lg border border-current/25 px-1 py-1.5 sm:px-2"
-              data-active={meaning === trait.meaning}
-            >
-              <span lang="sa" className="sanskrit-script block text-base leading-relaxed sm:text-xl">{trait.sanskrit}</span>
-              <span lang="sa-Latn" className="block font-serif text-sm italic opacity-80 sm:text-base">{trait.roman}</span>
-            </button>
-          ))}
-        </div>
-        <div className="mx-auto mt-3 grid max-w-3xl items-center font-mono text-xs">
-          {studentTraits.map((trait) => (
-            <span key={trait.sanskrit} aria-hidden="true" className="invisible col-start-1 row-start-1">
-              {trait.meaning}
-            </span>
-          ))}
-          <p className="col-start-1 row-start-1" aria-live="polite">
-            {meaning ?? "Select a phrase to see its meaning."}
-          </p>
-        </div>
       </div>
       <figcaption className="mx-auto mt-6 max-w-3xl space-y-2 px-2 sm:mt-8">
         <p className="font-serif text-xl italic leading-snug text-foreground sm:text-3xl">

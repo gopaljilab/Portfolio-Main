@@ -45,9 +45,7 @@ function ParallaxText({
     damping: 50,
     stiffness: 400,
   });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 4], {
-    clamp: false,
-  });
+  const velocityFactor = useTransform(smoothVelocity, [-1000, 0, 1000], [-1, 0, 1]);
 
   const x = useTransform(baseX, (v) => `${wrap(-12.5, 0, v)}%`);
   const directionFactor = useRef<number>(1);
@@ -55,7 +53,6 @@ function ParallaxText({
   useAnimationFrame((_t, delta) => {
     if (reducedMotion || !isActive) return;
 
-    let moveBy = directionFactor.current * baseVelocity * (Math.min(delta, 100) / 1000);
     const vf = velocityFactor.get();
 
     if (vf < 0) {
@@ -64,7 +61,8 @@ function ParallaxText({
       directionFactor.current = 1;
     }
 
-    moveBy += directionFactor.current * moveBy * vf;
+    const speed = directionFactor.current * baseVelocity * (1 + Math.abs(vf));
+    const moveBy = speed * (Math.min(delta, 100) / 1000);
     baseX.set(baseX.get() + moveBy);
   });
 
